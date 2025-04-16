@@ -1,0 +1,82 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Coleccion {
+    - titulo: String
+    - descripcion: String
+    - fuente : Fuente
+    ' - listaHechos: List<Hecho>
+    - criterioPertenencia : Criterio
+    + crearColeccion()
+}
+
+class Criterio {
+
+}
+
+class Fuente {
+    - archivo: File
+    - listaHechos: List<Hecho>
+    + importarHechos()
+    + eliminarHecho()
+}
+
+class Hecho {
+    - titulo: String
+    - descripcion: String
+    - categoría: Categoria
+    - coordenadas: Coordenadas
+    - fechaAcontecimiento: LocalDateTime
+    - fechaCarga: LocalDateTime
+    - origen: Origen
+    + importarHecho()
+    + eliminarDeColecciones()
+}
+
+class HechoMultimedia extends Hecho {
+   - contenidoMultimedia: String
+}
+
+
+class Categoria {
+    - nombre: String
+    - hechos: List<Hechos>
+}
+
+
+enum Origen {
+    cargaManual
+    dataset
+    contribuyente
+}
+
+class Contribuyente {
+    - id : Integer
+    - nombre: String
+    - apellido: String
+    - edad: Integer
+}
+
+class Coordenadas {
+    - latitud: Float
+    - longitud: Float
+}
+
+' TODO:
+class SolicitudEliminacion {
+    - hecho: Hecho
+    - causa: String /'debe ser máximo 500 caracteres'/
+    + crearSolicitud()
+    + aceptarSolicitud()
+    + rechazarSolicitud()
+}
+
+Hecho -- Fuente
+Hecho -- Categoria
+Hecho -- Origen
+Hecho -- SolicitudEliminacion
+Hecho -- Coordenadas
+Coleccion -- Fuente
+Coleccion -- Criterio
+
+@enduml

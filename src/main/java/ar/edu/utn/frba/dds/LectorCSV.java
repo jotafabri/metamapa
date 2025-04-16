@@ -1,21 +1,19 @@
-package ar.edu.utn.frba.dds.lectorCSV;
+package ar.edu.utn.frba.dds;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class lectorCSV {
+public class LectorCSV {
 
-    private final File archivo;
-    private final Logger logger = Logger.getLogger(LectorCSV.class.getName());
-    private final List<Hecho> hechos = new ArrayList<>();
+    private File archivo;
+    //private final Logger logger = Logger.getLogger(LectorCSV.class.getName());
+    private List<Hecho> hechos = new ArrayList<>();
 
     public LectorCSV(String rutaCSV) {
         if (rutaCSV.endsWith(".csv")) {
@@ -33,11 +31,11 @@ public class lectorCSV {
                     try {
                         hechos.add(parsearHecho(linea));
                     } catch (Exception e) {
-                        logger.log(Level.WARNING, "Error al procesar la línea " + linea + ".", e);
+                        //logger.log(Level.WARNING, "Error al procesar la línea " + linea + ".", e);
                     }
                 });
             } catch (IOException ex) {
-                logger.log(Level.SEVERE, "Error al leer el archivo CSV", ex);
+                //logger.log(Level.SEVERE, "Error al leer el archivo CSV", ex);
             }
         } else {
             throw new RuntimeException("El archivo CSV no existe en la ruta indicada.");
@@ -54,11 +52,10 @@ public class lectorCSV {
         String titulo = campos[0];
         String descripcion = campos[1];
         String categoria = campos[2];
-        double latitud = Double.parseDouble(campos[3]);
-        double longitud = Double.parseDouble(campos[4]);
-        LocalDate fechaAcontecimiento = LocalDate.parse(campos[5], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        LocalDate fechaCarga = LocalDate.now();
+        Coordenadas coordenadas = new Coordenadas(Float.parseFloat(campos[3]),Float.parseFloat(campos[4]));
+        LocalDateTime fechaAcontecimiento = LocalDateTime.parse(campos[5], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDateTime fechaCarga = LocalDateTime.now();
 
-        return new Hecho(titulo, descripcion, categoria, latitud, longitud, fechaAcontecimiento, fechaCarga);
+        return new Hecho(titulo, descripcion, categoria, coordenadas, fechaAcontecimiento, fechaCarga, Origen.dataset);
     }
 }
