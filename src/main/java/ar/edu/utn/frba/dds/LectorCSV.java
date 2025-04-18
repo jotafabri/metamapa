@@ -12,20 +12,15 @@ import java.util.List;
 
 public class LectorCSV {
 
-    private File archivo;
-    //private final Logger logger = Logger.getLogger(LectorCSV.class.getName());
-    private List<Hecho> hechos = new ArrayList<>();
-
-
-    public LectorCSV(String rutaCSV) {
+    public List<Hecho> obtenerHechos(String rutaCSV) {
+        List<Hecho> hechos = new ArrayList<>();
+        File archivo;
         if (rutaCSV.endsWith(".csv")) {
-            this.archivo = new File(rutaCSV);
+            archivo = new File(rutaCSV);
         } else {
             throw new IllegalArgumentException("La ruta del archivo debe tener extensión .csv.");
         }
-    }
 
-    public List<Hecho> obtenerHechos() {
         if (archivo.exists()) {
             try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
                 String cabecera = lector.readLine();
@@ -64,14 +59,14 @@ public class LectorCSV {
 
         String titulo = campos.get(0).replaceAll("^\"|\"$", ""); // quitar comillas
         String descripcion = campos.get(1).replaceAll("^\"|\"$", "");
-        String categoria = campos.get(2);
+        String categoria = campos.get(2); //Todavía no está resuelto esto de las categorías
         float lat = Float.parseFloat(campos.get(3));
         float lon = Float.parseFloat(campos.get(4));
         LocalDate fecha = LocalDate.parse(campos.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
         LocalDateTime fechaCarga = LocalDateTime.now();
 
-        return new Hecho(titulo, descripcion, categoria, new Coordenadas(lat, lon), fechaAcontecimiento, fechaCarga, Origen.dataset);
+        return new Hecho(titulo, descripcion, null, new Coordenadas(lat, lon), fechaAcontecimiento, fechaCarga, Origen.dataset);
     }
 
     public static List<String> splitCSV(String linea) {

@@ -15,18 +15,18 @@ public class CSVTest {
 
     @BeforeEach
     public void init(){
-        this.lector = new LectorCSV(ruta);
+        this.lector = new LectorCSV();
     }
 
     @Test
     @DisplayName("La lista de hechos no esta vacía")
     public void ListaNoVacia() {
-        this.listaHechos = this.lector.obtenerHechos();
+        this.listaHechos = this.lector.obtenerHechos(ruta);
 
         Assertions.assertFalse(this.listaHechos.isEmpty());
 
         for (Hecho elemento : this.listaHechos) {
-            System.out.println(elemento.getCategoria());
+            System.out.println(elemento.getFechaAcontecimiento());
         }
     }
 }
