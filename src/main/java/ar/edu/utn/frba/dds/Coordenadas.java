@@ -1,5 +1,8 @@
 package ar.edu.utn.frba.dds;
 
+import lombok.Getter;
+
+@Getter
 public class Coordenadas {
   private Float latitud;
   private Float longitud;

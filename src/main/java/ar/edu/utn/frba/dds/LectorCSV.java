@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("checkstyle:Indentation")
 public class LectorCSV {
 
   public List<Hecho> obtenerHechos(String rutaCSV) {
@@ -30,7 +31,10 @@ public class LectorCSV {
               System.out.println("Línea vacía ignorada");
               return;
             }
-            hechos.add(parsearHecho(linea));
+            Hecho hecho = parsearHecho(linea);
+            if (!existeHechoConMismoTitulo(hecho, hechos)) {
+              hechos.add(hecho);
+            }
           } catch (Exception e) {
             System.err.println("Error al procesar línea: " + linea);
             e.printStackTrace();
@@ -50,7 +54,6 @@ public class LectorCSV {
   private Hecho parsearHecho(String linea) {
     //String[] campos = linea.split(",");
     List<String> campos = splitCSV(linea);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     if (campos.size() < 6) {
       System.out.println(0);
@@ -64,9 +67,8 @@ public class LectorCSV {
     float lon = Float.parseFloat(campos.get(4));
     LocalDate fecha = LocalDate.parse(campos.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
-    LocalDateTime fechaCarga = LocalDateTime.now();
 
-    return new Hecho(titulo, descripcion, null, new Coordenadas(lat, lon), fechaAcontecimiento, fechaCarga, Origen.dataset);
+    return new Hecho(titulo, descripcion, categoria, new Coordenadas(lat, lon), fechaAcontecimiento, Origen.dataset);
   }
 
   public static List<String> splitCSV(String linea) {
@@ -90,4 +92,17 @@ public class LectorCSV {
     return campos;
   }
 
+  public boolean existeHechoConMismoTitulo(Hecho hecho, List<Hecho> hechos) {
+    for (Hecho h : hechos) {
+      if (h.getTitulo().equalsIgnoreCase(hecho.getTitulo())) {
+        h.setDescripcion(hecho.getDescripcion());
+        h.setCategoria(hecho.getCategoria());
+        h.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+        h.setFechaCarga(hecho.getFechaCarga());
+        h.setOrigen(hecho.getOrigen());
+        return true;
+      }
+    }
+    return false;
+  }
 }

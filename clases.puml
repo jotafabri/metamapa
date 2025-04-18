@@ -5,13 +5,22 @@ class Coleccion {
     - titulo: String
     - descripcion: String
     - fuente : Fuente
-    ' - listaHechos: List<Hecho>
-    - criterioPertenencia : Criterio
+    - criterioPertenencia : CriterioPertenencia
     + crearColeccion()
+    + Navegar()
 }
 
-class Criterio {
+interface CriterioPertenencia {
+    + cumple()
+}
 
+class CriterioFechaAcontecimiento extends CriterioPertenencia {
+     - desde: LocalDateTime;
+     - hasta: LocalDateTime;
+}
+
+class CriterioCategoria extends CriterioPertenencia {
+    - categoriaBuscada: String
 }
 
 class Fuente {
@@ -36,13 +45,6 @@ class Hecho {
 class HechoMultimedia extends Hecho {
    - contenidoMultimedia: String
 }
-
-
-class Categoria {
-    - nombre: String
-    - hechos: List<Hechos>
-}
-
 
 enum Origen {
     cargaManual
@@ -77,6 +79,7 @@ Hecho -- Origen
 Hecho -- SolicitudEliminacion
 Hecho -- Coordenadas
 Coleccion -- Fuente
-Coleccion -- Criterio
+Coleccion -- CriterioPertenencia
+CriterioCategoria -- Categoria
 
 @enduml
