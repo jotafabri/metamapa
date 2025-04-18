@@ -9,24 +9,24 @@ import java.util.List;
 
 public class CSVTest {
 
-    private LectorCSV lector;
-    private String ruta = "src/test/desastres_naturales_argentina.csv";
-    private List<Hecho> listaHechos;
+  private LectorCSV lector;
+  private String ruta = "src/test/desastres_naturales_argentina.csv";
+  private List<Hecho> listaHechos;
 
-    @BeforeEach
-    public void init(){
-        this.lector = new LectorCSV();
+  @BeforeEach
+  public void init() {
+    this.lector = new LectorCSV();
+  }
+
+  @Test
+  @DisplayName("La lista de hechos no esta vacía")
+  public void ListaNoVacia() {
+    this.listaHechos = this.lector.obtenerHechos(ruta);
+
+    Assertions.assertFalse(this.listaHechos.isEmpty());
+
+    for (Hecho elemento : this.listaHechos) {
+      System.out.println(elemento.getFechaAcontecimiento());
     }
-
-    @Test
-    @DisplayName("La lista de hechos no esta vacía")
-    public void ListaNoVacia() {
-        this.listaHechos = this.lector.obtenerHechos(ruta);
-
-        Assertions.assertFalse(this.listaHechos.isEmpty());
-
-        for (Hecho elemento : this.listaHechos) {
-            System.out.println(elemento.getFechaAcontecimiento());
-        }
-    }
+  }
 }
