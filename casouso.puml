@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+
+:Administrador: --> (Crear Colección)
+:Administrador: --> (Importar hechos desde CSV)
+:Administrador: --> (Administrar solicitud)
+
+:Visualizadora: --> (Navegar Colección)
+(Navegar Colección) <.. (Aplicar Filtros) : <<extend>>
+
+:Contribuyente: --> (Solicitar eliminacion de un hecho)
+
+(Administrar solicitud) ..> (Solicitar eliminacion de un hecho) : <<include>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml
