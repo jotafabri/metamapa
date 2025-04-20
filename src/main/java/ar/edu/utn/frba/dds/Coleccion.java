@@ -3,44 +3,53 @@ package ar.edu.utn.frba.dds;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Coleccion {
   private String titulo;
   private String descripcion;
+  @Setter
   private Fuente fuente;
-  private List<Hecho> listaHechos;
   public List<CriterioPertenencia> criterios;
 
   public Coleccion(String titulo, String descripcion, Fuente fuente, List<CriterioPertenencia> criterios) {
     this.titulo = titulo;
     this.descripcion = descripcion;
     this.fuente = fuente;
-    this.criterios = criterios;
-    this.listaHechos = new ArrayList<>();
+    if(null == criterios){ this.criterios= new ArrayList();}
+    else{this.criterios = criterios;}
   }
 
-  public void importarHechos() {
+  public void agregarCriterio(CriterioPertenencia criterio){
+    this.criterios.add(criterio);
+  }
+
+  public List<Hecho> importarHechos() {
+    List<Hecho> listaHechos = new ArrayList<>();
     List<Hecho> hechosFuente = this.fuente.getListaHechos();
     for (Hecho hecho : hechosFuente) {
       boolean cumpleTodos = criterios.stream().allMatch(criterio -> criterio.cumple(hecho));
-      if (cumpleTodos) {
+      if (cumpleTodos || criterios.isEmpty()) {
         listaHechos.add(hecho);
       }
     }
+    return listaHechos;
   }
 
-  public void navegar(Hecho filtro) {
-    List<Hecho> listaFiltrada = this.listaHechos.stream()
-//        .filter(h -> filtro.getTitulo() == null | h.getTitulo().equals(filtro.getTitulo()))
-//        .filter(h -> filtro.getDescripcion() == null | h.getDescripcion().equals(filtro.getDescripcion()))
-//        .filter(h -> filtro.getCategoria() == null | h.getCategoria().equals(filtro.getCategoria()))
-//        .filter(h -> filtro.getCoordenadas() == null | h.getCoordenadas().equals(filtro.getCoordenadas()))
-//        .filter(h -> filtro.getFechaAcontecimiento() == null | h.getFechaAcontecimiento().equals(filtro.getFechaAcontecimiento()))
-        .toList();
-    for (Hecho hecho : listaFiltrada) {
-      System.out.println(hecho.printHecho());
-      System.out.println("-----------------------------");
+  public void navegar(List<CriterioPertenencia> criterios) {
+    for (Hecho hecho : this.importarHechos()) {
+      if(criterios != null){
+        boolean cumpleTodos = criterios.stream().allMatch(criterio -> criterio.cumple(hecho));
+        if (cumpleTodos) {
+          System.out.println(hecho.printHecho());
+          System.out.println("-----------------------------");
+        }
+      }
+      else{
+        System.out.println(hecho.printHecho());
+        System.out.println("-----------------------------");
+      }
     }
   }
 

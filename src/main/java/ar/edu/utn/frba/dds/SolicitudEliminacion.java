@@ -1,8 +1,11 @@
 package ar.edu.utn.frba.dds;
+import lombok.Getter;
 
+@Getter
 public class SolicitudEliminacion {
   private Hecho hecho;
   private String causa;
+
 
   public SolicitudEliminacion(Hecho hecho, String causa){
     this.hecho = hecho;
@@ -14,7 +17,4 @@ public class SolicitudEliminacion {
         hecho.getTitulo(), hecho.getDescripcion(),hecho.getCategoria(), hecho.getCoordenadas().getLatitud(), hecho.getCoordenadas().getLongitud(), hecho.getFechaAcontecimiento(),
     causa);
   }
-  public void aceptarSolicitud(){}
-  public void rechazarSolicitud(){}
-
 }

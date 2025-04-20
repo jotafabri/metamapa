@@ -1,19 +1,9 @@
 package ar.edu.utn.frba.dds;
-
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Fuente {
-    private String ruta;
-    private List<Hecho> listaHechos;
-
-    public Fuente(String ruta){
-        this.ruta = ruta;
-    }
-
-    public void importarHechos(LectorCSV lector){
-        this.listaHechos = lector.obtenerHechos(ruta);
-    }
+public abstract class Fuente {
+    protected List<Hecho> listaHechos = new ArrayList<>();
 
     public List<Hecho> getListaHechos() {
         return listaHechos;

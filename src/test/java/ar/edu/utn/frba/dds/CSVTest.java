@@ -17,7 +17,6 @@ public class CSVTest {
 
   private LectorCSV lector;
   private String ruta = "src/test/desastres_naturales_argentina.csv";
-  private Fuente fuente;
   private List<Hecho> listaHechos;
   private List<Hecho> listaFiltrada;
   private List<CriterioPertenencia> listaCriterios;
@@ -47,12 +46,11 @@ public class CSVTest {
   @Test
   @DisplayName("Cargo y visualizo una colección")
   public void VisualizoColeccion() {
-    this.fuente = new Fuente(ruta);
-    fuente.importarHechos(lector);
+    FuenteEstatica fuente = new FuenteEstatica();
+    fuente.importarHechos(lector, ruta);
     Coleccion coleccion = new Coleccion("Coleccion de Prueba", "Coleccion de prueba descripcion",
         fuente, this.listaCriterios);
-    coleccion.importarHechos();
-    Assertions.assertFalse(coleccion.getListaHechos().isEmpty());
+    Assertions.assertFalse(coleccion.importarHechos().isEmpty());
     coleccion.navegar(null);
   }
 
