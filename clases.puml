@@ -5,41 +5,51 @@ class Coleccion {
     - titulo: String
     - descripcion: String
     - fuente : Fuente
-    - criterioPertenencia : CriterioPertenencia
-    + crearColeccion()
-    + Navegar()
+    - criterios : List<CriterioPertenencia>
+    + agregarCriterio(criterio: CriterioPertenencia)
+    + importarHechos(): List<Hecho>
+    + navegar(criterios: List<CriterioPertenencia>)
 }
 
 interface CriterioPertenencia {
-    + cumple()
+    + cumple(hecho: Hecho)
 }
 
 class CriterioFechaAcontecimiento extends CriterioPertenencia {
-     - desde: LocalDateTime;
-     - hasta: LocalDateTime;
+     - desde: LocalDateTime
+     - hasta: LocalDateTime
 }
 
 class CriterioCategoria extends CriterioPertenencia {
     - categoriaBuscada: String
 }
 
-class Fuente {
-    - archivo: File
-    - listaHechos: List<Hecho>
-    + importarHechos()
-    + eliminarHecho()
+class CriterioTitulo extends CriterioPertenencia {
+    - tituloBuscado: String
+}
+
+abstract Fuente {
+    # listaHechos: List<Hecho>
+    + getListaHechos()
+}
+
+class FuenteEstatica extends Fuente {
+    + importarHechos(lector, ruta)
+}
+
+class FuenteDinamica extends Fuente {
+    + solicitudesEliminacion: List<SolicitudEliminacion>
 }
 
 class Hecho {
     - titulo: String
     - descripcion: String
-    - categoría: Categoria
+    - categoría: String
     - coordenadas: Coordenadas
     - fechaAcontecimiento: LocalDateTime
     - fechaCarga: LocalDateTime
     - origen: Origen
-    + importarHecho()
-    + eliminarDeColecciones()
+    + printHecho(): String
 }
 
 class HechoMultimedia extends Hecho {
@@ -52,13 +62,6 @@ enum Origen {
     contribuyente
 }
 
-class Contribuyente {
-    - id : Integer
-    - nombre: String
-    - apellido: String
-    - edad: Integer
-}
-
 class Coordenadas {
     - latitud: Float
     - longitud: Float
@@ -68,18 +71,35 @@ class Coordenadas {
 class SolicitudEliminacion {
     - hecho: Hecho
     - causa: String /'debe ser máximo 500 caracteres'/
-    + crearSolicitud()
-    + aceptarSolicitud()
-    + rechazarSolicitud()
+    + consultarSolicitud(): String
 }
 
-Hecho -- Fuente
-Hecho -- Categoria
+abstract class Visitante {
+}
+
+class Administrador extends Visitante {
+    - nombre: String
+    + revisarSolicitudes(fuente: FuenteDinamica)
+    - decidirAceptar()
+}
+
+class Contribuyente extends Visitante {
+    + nombre: String
+    + apellido: String
+    + edad: Integer
+}
+
+class LectorCSV {
+    + obtenerHechos(ruta: String): List<Hecho>
+    + splitCSV(linea: String): List<String>
+    + existeHechoConMismoTitulo(hecho: Hecho, hechos: List<Hecho>): Boolean
+    - parsearHecho(linea: String): Hecho
+}
+
 Hecho -- Origen
-Hecho -- SolicitudEliminacion
 Hecho -- Coordenadas
 Coleccion -- Fuente
 Coleccion -- CriterioPertenencia
-CriterioCategoria -- Categoria
+FuenteDinamica -- SolicitudEliminacion
 
 @enduml
