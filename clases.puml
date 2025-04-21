@@ -52,8 +52,9 @@ class Hecho {
     + printHecho(): String
 }
 
-class HechoMultimedia extends Hecho {
-   - contenidoMultimedia: String
+class HechoMultimedia {
+    - hecho: Hecho
+    - contenidoMultimedia: String
 }
 
 enum Origen {
@@ -98,6 +99,7 @@ class LectorCSV {
 
 Hecho -- Origen
 Hecho -- Coordenadas
+Hecho -- HechoMultimedia
 Coleccion -- Fuente
 Coleccion -- CriterioPertenencia
 FuenteDinamica -- SolicitudEliminacion
