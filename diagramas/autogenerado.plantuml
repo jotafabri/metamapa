@@ -1,0 +1,155 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Administrador {
+  - nombre: String
+  + revisarSolicitudes(FuenteDinamica): void
+  - decidirAceptar(): boolean
+}
+class Coleccion {
+  - fuente: Fuente
+  - descripcion: String
+  - titulo: String
+  + criterios: List<CriterioPertenencia>
+  + getTitulo(): String
+  + getDescripcion(): String
+  + getFuente(): Fuente
+  + getCriterios(): List<CriterioPertenencia>
+  + setTitulo(String): void
+  + setDescripcion(String): void
+  + setFuente(Fuente): void
+  + setCriterios(List<CriterioPertenencia>): void
+  + navegar(List<CriterioPertenencia>): void
+  + importarHechos(): List<Hecho>
+  + agregarCriterio(CriterioPertenencia): void
+}
+class Contribuyente {
+  + apellido: String
+  + nombre: String
+  + edad: Integer
+}
+class Coordenadas {
+  - latitud: Float
+  - longitud: Float
+  + getLatitud(): Float
+  + getLongitud(): Float
+}
+class CriterioCategoria {
+  - categoriaBuscada: String
+  + cumple(Hecho): boolean
+}
+class CriterioFechaAcontecimiento {
+  - desde: LocalDateTime
+  - hasta: LocalDateTime
+  + cumple(Hecho): boolean
+}
+interface CriterioPertenencia << interface >> {
+  + cumple(Hecho): boolean
+}
+class CriterioTitulo {
+  - tituloBuscado: String
+  + cumple(Hecho): boolean
+}
+enum Estado << enumeration >> {
+  + aceptada: 
+  + pendiente: 
+  + rechazada: 
+  + values(): Estado[]
+  + valueOf(String): Estado
+}
+class Fuente {
+  # listaHechos: List<Hecho>
+  + buscarHechoPorTitulo(String): Hecho
+  + etiquetarPorTitulo(String, String): void
+  + getListaHechos(): List<Hecho>
+  + listarHechos(): void
+}
+class FuenteDinamica {
+  + solicitudesEliminacion: List<SolicitudEliminacion>
+  ~ agregarHecho(Hecho): void
+  + consultarSolicitudesPendientes(): void
+  + listarSolicitudesEliminacion(): void
+  + generarSolicitudEliminacionPorTitulo(String, String): void
+  + rechazarSolicitud(SolicitudEliminacion): void
+  + getSolicitudesEliminacion(): List<SolicitudEliminacion>
+  + aceptarSolicitud(SolicitudEliminacion): void
+}
+class FuenteEstatica {
+  + importarHechos(LectorCSV, String): void
+}
+class Hecho {
+  - multimedia: Multimedia
+  - fechaAcontecimiento: LocalDateTime
+  - descripcion: String
+  - fechaCarga: LocalDateTime
+  - origen: Origen
+  - categoria: String
+  - titulo: String
+  - coordenadas: Coordenadas
+  + etiquetas: List<String>
+  + getCategoria(): String
+  + getTitulo(): String
+  + getDescripcion(): String
+  + getCoordenadas(): Coordenadas
+  + getFechaAcontecimiento(): LocalDateTime
+  + getFechaCarga(): LocalDateTime
+  + setDescripcion(String): void
+  + getOrigen(): Origen
+  + getMultimedia(): Multimedia
+  + setEtiquetas(List<String>): void
+  + setCategoria(String): void
+  + setFechaCarga(LocalDateTime): void
+  + getEtiquetas(): List<String>
+  + setFechaAcontecimiento(LocalDateTime): void
+  + setOrigen(Origen): void
+  + setCoordenadas(Coordenadas): void
+  + setTitulo(String): void
+  + setMultimedia(Multimedia): void
+  + printEtiquetas(): void
+  + agregarEtiqueta(String): void
+  + printHecho(): String
+}
+class LectorCSV {
+  + obtenerHechos(String): List<Hecho>
+  + existeHechoConMismoTitulo(Hecho, List<Hecho>): boolean
+  + splitCSV(String): List<String>
+  - parsearHecho(String): Hecho
+}
+class Multimedia {
+  - tipo: String
+  - formato: String
+  - tamaño: long
+  - fechaSubida: LocalDateTime
+  - url: String
+}
+enum Origen << enumeration >> {
+  + dataset: 
+  + contribuyente: 
+  + cargaManual: 
+  + values(): Origen[]
+  + valueOf(String): Origen
+}
+class SolicitudEliminacion {
+  - causa: String
+  - estado: Estado
+  - hecho: Hecho
+  + rechazarSolicitud(): void
+  + getHecho(): Hecho
+  + getCausa(): String
+  + getEstado(): Estado
+  + aceptarSolicitud(): void
+  + consultarSolicitud(): String
+}
+class Visitante
+
+Administrador                -[#000082,plain]-^  Visitante                   
+Contribuyente                -[#000082,plain]-^  Visitante                   
+CriterioCategoria            -[#008200,dashed]-^  CriterioPertenencia         
+CriterioFechaAcontecimiento  -[#008200,dashed]-^  CriterioPertenencia         
+CriterioTitulo               -[#008200,dashed]-^  CriterioPertenencia         
+FuenteDinamica               -[#000082,plain]-^  Fuente                      
+FuenteEstatica               -[#000082,plain]-^  Fuente                      
+@enduml

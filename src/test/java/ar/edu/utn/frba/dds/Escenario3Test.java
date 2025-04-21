@@ -1,18 +1,15 @@
 package ar.edu.utn.frba.dds;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Escenario1Test {
+public class Escenario3Test {
     private FuenteDinamica fuenteDinamica = new FuenteDinamica();
     private List<Hecho> hechosAgregar = new ArrayList();
 
@@ -33,33 +30,21 @@ public class Escenario1Test {
         hechosAgregar.add(new Hecho("Devastador Derrumbe en obra en construcción afecta a Presidencia Roque Sáenz Peña","Un grave derrumbe en obra en construcción se registró en Presidencia Roque Sáenz Peña, Chaco. El incidente generó preocupación entre las autoridades provinciales. El intendente local se ha trasladado al lugar para supervisar las operaciones.",
                 "Derrumbe en obra en construcción",new Coordenadas((float)-26.780008, (float)-60.458782),
                 LocalDate.parse("04/06/2016", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), Origen.cargaManual));
+        hechosAgregar.add(new Hecho("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe","Grave brote de enfermedad contagiosa ocurrió en las inmediaciones de San Lorenzo, Santa Fe. El incidente dejó varios heridos y daños materiales. Se ha declarado estado de emergencia en la región para facilitar la asistencia.",
+                "Evento sanitario",new Coordenadas((float)-32.786098, (float)-60.741543),
+                LocalDate.parse("05/07/2005", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), Origen.cargaManual));
         for(Hecho hecho: hechosAgregar){
             fuenteDinamica.agregarHecho(hecho);
         }
     }
-
     @Test
-    @DisplayName("Escenario 1. Desde el rol del administrador")
-    public void escenario1() {
-        Coleccion coleccionPrueba = new Coleccion("Colección prueba", "Esto es una prueba", null, null);
-        coleccionPrueba.setFuente(fuenteDinamica);
-        coleccionPrueba.navegar(null);
-        System.out.println("Ahora le agrego criterios");
-        coleccionPrueba.agregarCriterio(new CriterioFechaAcontecimiento(LocalDate.parse("01/01/2000", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), LocalDate.parse("01/01/2010", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay()));
-        coleccionPrueba.navegar(null);
-        Assertions.assertEquals(3, coleccionPrueba.importarHechos().size());
-        System.out.println("Ahora le agrego un criterio más");
-        coleccionPrueba.agregarCriterio(new CriterioCategoria("Caída de aeronave"));
-        coleccionPrueba.navegar(null);
-        Assertions.assertEquals(2, coleccionPrueba.importarHechos().size());
-        System.out.println("Ahora busco con filtros y da vacío");
-        CriterioPertenencia[] array = {new CriterioCategoria("Caída de Aeronave"),new CriterioTitulo("un título")};
-        coleccionPrueba.navegar(Arrays.asList(array));
-        System.out.println("Como bien se pudo ver, no mostró nada por pantalla.");
-        System.out.println("Ahora lo etiqueto");
-        fuenteDinamica.etiquetarPorTitulo("Caída de aeronave impacta en Olavarría", "Olavarría");
-        fuenteDinamica.etiquetarPorTitulo("Caída de aeronave impacta en Olavarría", "Grave");
-        Assertions.assertEquals(2, fuenteDinamica.buscarHechoPorTitulo("Caída de aeronave impacta en Olavarría").getEtiquetas().size());
-        fuenteDinamica.buscarHechoPorTitulo("Caída de aeronave impacta en Olavarría").printEtiquetas();
+    @DisplayName("Escenario 2. Una parte desde el rol de un contribuyente y otra parte del rol de un administrador.")
+    public void escenario3(){
+        //contribuyente
+        fuenteDinamica.generarSolicitudEliminacionPorTitulo("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe", "Lorem ipsum dolor sit amet consectetur adipiscing elit, turpis arcu magnis himenaeos suspendisse lacus congue vel, netus quam faucibus sociosqu ultricies venenatis. Justo molestie convallis interdum aenean sed enim, quam phasellus egestas libero magna nisi, rutrum auctor dictum habitasse venenatis. Et mauris ut consequat morbi orci torquent potenti accumsan duis, in himenaeos eleifend habitant diam pellentesque class cras, taciti per nisl justo molestie etiam placerat egestas. Ultrices fermentum habitant orci nibh quis hac magna duis aliquam, interdum proin rutrum imperdiet hendrerit porta co.");
+
+        //admin
+        fuenteDinamica.listarSolicitudesEliminacion();
+        fuenteDinamica.aprobarSolicitudPorTitulo("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe");
     }
 }

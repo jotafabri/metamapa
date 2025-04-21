@@ -25,9 +25,16 @@ public class FuenteDinamica extends Fuente {
             System.out.println("---------------");
         }
     }
-    public void agregarSolicitud(SolicitudEliminacion solicitud) {
-        solicitudesEliminacion.add(solicitud);
+    public void generarSolicitudEliminacionPorTitulo(String titulo, String causa) {
+        Hecho hecho = this.buscarHechoPorTitulo(titulo);
+        if (hecho != null) {
+            SolicitudEliminacion solicitud = new SolicitudEliminacion(hecho, causa);
+            solicitudesEliminacion.add(solicitud);
+        }
+        else {System.out.println("Por favor ingrese un título de hecho válido.");};
     }
+
+
     public void aceptarSolicitud(SolicitudEliminacion solicitud) {
         Hecho hechoAEliminar = solicitud.getHecho();
         listaHechos.removeIf(h -> h.getTitulo().equalsIgnoreCase(hechoAEliminar.getTitulo()));
@@ -39,5 +46,10 @@ public class FuenteDinamica extends Fuente {
 
     public List<SolicitudEliminacion> getSolicitudesEliminacion() {
         return solicitudesEliminacion;
+    }
+    public void listarSolicitudesEliminacion(){
+        for(SolicitudEliminacion solicitud : solicitudesEliminacion){
+            System.out.println(solicitud.consultarSolicitud());
+        }
     }
 }

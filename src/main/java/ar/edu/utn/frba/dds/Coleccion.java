@@ -5,11 +5,10 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public class Coleccion {
   private String titulo;
   private String descripcion;
-  @Setter
   private Fuente fuente;
   public List<CriterioPertenencia> criterios;
 

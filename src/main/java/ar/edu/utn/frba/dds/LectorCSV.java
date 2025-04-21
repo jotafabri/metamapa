@@ -32,6 +32,7 @@ public class LectorCSV {
               return;
             }
             Hecho hecho = parsearHecho(linea);
+            //habría que hacerlo para que respete los que están previamente cargados en la fuente
             if (!existeHechoConMismoTitulo(hecho, hechos)) {
               hechos.add(hecho);
             }

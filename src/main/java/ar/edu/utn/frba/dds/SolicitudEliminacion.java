@@ -5,6 +5,7 @@ import lombok.Getter;
 public class SolicitudEliminacion {
   private Hecho hecho;
   private String causa;
+  private Estado estado = Estado.pendiente;
 
 
   public SolicitudEliminacion(Hecho hecho, String causa){
@@ -12,9 +13,15 @@ public class SolicitudEliminacion {
     this.causa = causa;
   }
 
+  public void aceptarSolicitud(){
+    this.estado = Estado.aceptada;
+  }
+  public void rechazarSolicitud(){
+    this.estado = Estado.rechazada;
+  }
   public String consultarSolicitud(){
-    return String.format("Se ha solicitad eliminar este hecho:\nTitulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha: %s\nCausa: %s",
-        hecho.getTitulo(), hecho.getDescripcion(),hecho.getCategoria(), hecho.getCoordenadas().getLatitud(), hecho.getCoordenadas().getLongitud(), hecho.getFechaAcontecimiento(),
+    return String.format("Se ha solicitado eliminar este hecho:\nTitulo: %s\nCausa: %s",
+        hecho.getTitulo(),
     causa);
   }
 }

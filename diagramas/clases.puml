@@ -49,12 +49,16 @@ class Hecho {
     - fechaAcontecimiento: LocalDateTime
     - fechaCarga: LocalDateTime
     - origen: Origen
+    - multimedia: Multimedia
     + printHecho(): String
 }
 
-class HechoMultimedia {
-    - hecho: Hecho
-    - contenidoMultimedia: String
+class Multimedia {
+    - url: String
+    - tipo: String
+    - formato: String
+    - tamaño: Long
+    - fechaSubida: LocalDateTime
 }
 
 enum Origen {
@@ -73,6 +77,12 @@ class SolicitudEliminacion {
     - hecho: Hecho
     - causa: String /'debe ser máximo 500 caracteres'/
     + consultarSolicitud(): String
+}
+
+enum Estado {
+    pendiente
+    aceptada
+    rechazada
 }
 
 abstract class Visitante {
@@ -99,7 +109,7 @@ class LectorCSV {
 
 Hecho -- Origen
 Hecho -- Coordenadas
-Hecho -- HechoMultimedia
+Hecho -- Multimedia
 Coleccion -- Fuente
 Coleccion -- CriterioPertenencia
 FuenteDinamica -- SolicitudEliminacion

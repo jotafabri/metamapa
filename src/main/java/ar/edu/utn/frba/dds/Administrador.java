@@ -12,15 +12,19 @@ public class Administrador extends Visitante {
 
     public void revisarSolicitudes(FuenteDinamica fuente) {
         List<SolicitudEliminacion> solicitudes = fuente.getSolicitudesEliminacion();
-        if (solicitudes.isEmpty()) {
+        List<SolicitudEliminacion> solicitudesPendientes = solicitudes.stream()
+                .filter(s -> s.getEstado() == Estado.pendiente)
+                .toList();
+
+        if (solicitudesPendientes.isEmpty()) {
             System.out.println("No hay solicitudes pendientes.");
             return;
         }
 
-        for (SolicitudEliminacion solicitud : solicitudes) {
+        for (SolicitudEliminacion solicitud : solicitudesPendientes) {
             System.out.println(solicitud.consultarSolicitud());
 
-            // Simulamos una decisión automática por ahora
+            // Simulamos una decisión por consola
             if (decidirAceptar()) {
                 fuente.aceptarSolicitud(solicitud);
                 System.out.println("✅ Solicitud aceptada y hecho eliminado.");
