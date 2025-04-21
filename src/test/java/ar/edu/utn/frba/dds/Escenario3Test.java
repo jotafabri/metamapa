@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +46,21 @@ public class Escenario3Test {
 
         //admin
         fuenteDinamica.listarSolicitudesEliminacion();
-        fuenteDinamica.aprobarSolicitudPorTitulo("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe");
+        fuenteDinamica.rechazarSolicitudPorTitulo("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe");
+        fuenteDinamica.listarSolicitudesEliminacion();
+        Coleccion coleccionPrueba = new Coleccion("Segunda colección prueba", "Esto es otra prueba", fuenteDinamica, null);
+        coleccionPrueba.navegar(null);
+        Assertions.assertTrue(coleccionPrueba.importarHechos().stream().anyMatch(h -> h.getTitulo().equalsIgnoreCase("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe")),
+                "No se encontró un hecho con el título esperado");
+
+        fuenteDinamica.generarSolicitudEliminacionPorTitulo("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe", "Lorem ipsum dolor sit amet consectetur adipiscing elit, turpis arcu magnis himenaeos suspendisse lacus congue vel, netus quam faucibus sociosqu ultricies venenatis. Justo molestie convallis interdum aenean sed enim, quam phasellus egestas libero magna nisi, rutrum auctor dictum habitasse venenatis. Et mauris ut consequat morbi orci torquent potenti accumsan duis, in himenaeos eleifend habitant diam pellentesque class cras, taciti per nisl justo molestie etiam placerat egestas. Ultrices fermentum habitant orci nibh quis hac magna duis aliquam, interdum proin rutrum imperdiet hendrerit porta co.");
+        fuenteDinamica.aceptarSolicitudPorTitulo("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe");
+        fuenteDinamica.listarSolicitudesEliminacion();
+        coleccionPrueba.navegar(null);
+        Assertions.assertFalse(
+                coleccionPrueba.importarHechos().stream().anyMatch(h -> h.getTitulo().equalsIgnoreCase("Brote de enfermedad contagiosa causa estragos en San Lorenzo, Santa Fe")),
+                "Se encontró un hecho con un título no deseado"
+        );
+
     }
 }

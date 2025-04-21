@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FuenteDinamica extends Fuente {
     public List<SolicitudEliminacion> solicitudesEliminacion = new ArrayList();
@@ -20,7 +21,10 @@ public class FuenteDinamica extends Fuente {
     }
 
     public void consultarSolicitudesPendientes() {
-        for (SolicitudEliminacion s : solicitudesEliminacion) {
+        List<SolicitudEliminacion> solicitudesPendientes = solicitudesEliminacion.stream()
+                .filter(s -> s.getEstado() == Estado.pendiente)
+                .toList();
+        for (SolicitudEliminacion s : solicitudesPendientes) {
             System.out.println(s.consultarSolicitud());
             System.out.println("---------------");
         }
@@ -34,14 +38,30 @@ public class FuenteDinamica extends Fuente {
         else {System.out.println("Por favor ingrese un título de hecho válido.");};
     }
 
+    public void aceptarSolicitudPorTitulo(String titulo){
+        for(SolicitudEliminacion solicitud: solicitudesEliminacion){
+            if(Objects.equals(titulo, solicitud.getHecho().getTitulo())){
+                aceptarSolicitud(solicitud);
+            }
+        }
+    }
+    public void rechazarSolicitudPorTitulo(String titulo){
+        for(SolicitudEliminacion solicitud: solicitudesEliminacion){
+            if(Objects.equals(titulo, solicitud.getHecho().getTitulo())){
+                rechazarSolicitud(solicitud);
+            }
+        }
+    }
 
     public void aceptarSolicitud(SolicitudEliminacion solicitud) {
         Hecho hechoAEliminar = solicitud.getHecho();
         listaHechos.removeIf(h -> h.getTitulo().equalsIgnoreCase(hechoAEliminar.getTitulo()));
-        solicitudesEliminacion.remove(solicitud);
+        solicitud.aceptarSolicitud();
+        // solicitudesEliminacion.remove(solicitud);
     }
     public void rechazarSolicitud(SolicitudEliminacion solicitud) {
-        solicitudesEliminacion.remove(solicitud);
+        solicitud.rechazarSolicitud();
+        // solicitudesEliminacion.remove(solicitud);
     }
 
     public List<SolicitudEliminacion> getSolicitudesEliminacion() {

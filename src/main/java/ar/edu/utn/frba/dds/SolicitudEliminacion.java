@@ -20,8 +20,8 @@ public class SolicitudEliminacion {
     this.estado = Estado.rechazada;
   }
   public String consultarSolicitud(){
-    return String.format("Se ha solicitado eliminar este hecho:\nTitulo: %s\nCausa: %s",
+    return String.format("Se ha solicitado eliminar este hecho:\nTitulo: %s\nCausa: %s\nEstado: %s",
         hecho.getTitulo(),
-    causa);
+    causa, this.getEstado());
   }
 }
