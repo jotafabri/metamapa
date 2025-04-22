@@ -11,10 +11,6 @@ left to right direction
 
 :Contribuyente: --> (Solicitar eliminacion de un hecho)
 
-
-(Solicitar eliminacion de un hecho) ..> (Aceptar o Rechazar solicitud de eliminacion) : <<extend>>
-
-
 (Crear Colección) ..> (Ïniciar Sesion) : <<include>>
 (Importar hechos desde CSV) ..> (Ïniciar Sesion) : <<include>>
 (Aceptar o Rechazar solicitud de eliminacion) ..> (Ïniciar Sesion) : <<include>>
