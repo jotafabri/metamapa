@@ -10,6 +10,10 @@ public abstract class Fuente {
         return listaHechos;
     }
     public Hecho buscarHechoPorTitulo(String titulo){
+
+
+        //  filter + findAny
+        //listaHechos.stream().filter(h -> titulo.equals(h.getTitulo())).findFirst();
         for(Hecho hecho: listaHechos){
             if(Objects.equals(titulo, hecho.getTitulo())){
                 return hecho;
@@ -24,7 +28,9 @@ public abstract class Fuente {
                 hecho.agregarEtiqueta(etiqueta);
             }
         }
+        //reutilizar buscarHechoPorTitulo
     }
+
     public void listarHechos(){
         for (Hecho hecho : listaHechos){
             System.out.println(hecho.getTitulo());

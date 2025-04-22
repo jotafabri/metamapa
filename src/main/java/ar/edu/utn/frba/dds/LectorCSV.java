@@ -38,6 +38,7 @@ public class LectorCSV {
             }
           } catch (Exception e) {
             System.err.println("Error al procesar línea: " + linea);
+            // es mejor agregar excepciones y sacar estas cosas de testeo. el usuario no se entera
             e.printStackTrace();
           }
         });

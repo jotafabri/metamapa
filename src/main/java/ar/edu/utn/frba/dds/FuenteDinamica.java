@@ -7,7 +7,7 @@ import java.util.Objects;
 public class FuenteDinamica extends Fuente {
     public List<SolicitudEliminacion> solicitudesEliminacion = new ArrayList();
     void agregarHecho (Hecho hecho){
-        for(Hecho hecho2 : listaHechos){
+        for(Hecho hecho2 : listaHechos){ // find
             if(hecho2.getTitulo().equalsIgnoreCase(hecho.getTitulo())){
                 hecho2.setDescripcion(hecho.getDescripcion());
                 hecho2.setCategoria(hecho.getCategoria());
@@ -55,6 +55,7 @@ public class FuenteDinamica extends Fuente {
 
     public void aceptarSolicitud(SolicitudEliminacion solicitud) {
         Hecho hechoAEliminar = solicitud.getHecho();
+        //cambiar por un booleano que diga si esta eliminado o no
         listaHechos.removeIf(h -> h.getTitulo().equalsIgnoreCase(hechoAEliminar.getTitulo()));
         solicitud.aceptarSolicitud();
         // solicitudesEliminacion.remove(solicitud);

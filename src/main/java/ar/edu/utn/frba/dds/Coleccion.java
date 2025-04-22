@@ -24,10 +24,12 @@ public class Coleccion {
     this.criterios.add(criterio);
   }
 
+  // TODO darHechos seria un nombre mas apropiado
   public List<Hecho> importarHechos() {
     List<Hecho> listaHechos = new ArrayList<>();
     List<Hecho> hechosFuente = this.fuente.getListaHechos();
     for (Hecho hecho : hechosFuente) {
+      //pasar a filter
       boolean cumpleTodos = criterios.stream().allMatch(criterio -> criterio.cumple(hecho));
       if (cumpleTodos || criterios.isEmpty()) {
         listaHechos.add(hecho);
@@ -36,7 +38,8 @@ public class Coleccion {
     return listaHechos;
   }
 
-  public void navegar(List<CriterioPertenencia> criterios) {
+  // TODO Esto tendria que devolver una lista de hechos, sin printlns
+  public void navegar(List<CriterioPertenencia> criterios /* TODO asumir que viene como lista vacia para no usar null*/) {
     for (Hecho hecho : this.importarHechos()) {
       if(criterios != null){
         boolean cumpleTodos = criterios.stream().allMatch(criterio -> criterio.cumple(hecho));
