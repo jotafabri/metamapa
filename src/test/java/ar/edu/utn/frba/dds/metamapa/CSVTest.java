@@ -1,9 +1,16 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.CriterioFechaAcontecimiento;
+import ar.edu.utn.frba.dds.metamapa.models.entities.CriterioPertenencia;
+import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteEstatica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,8 +1,7 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Fuente {
   protected List<Hecho> listaHechos = new ArrayList<>();

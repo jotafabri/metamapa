@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import lombok.Getter;
 
@@ -7,7 +7,6 @@ public class SolicitudEliminacion {
   private Hecho hecho;
   private String causa;
   private Estado estado = Estado.PENDIENTE;
-
 
   public SolicitudEliminacion(Hecho hecho, String causa) {
     this.hecho = hecho;
@@ -22,9 +21,4 @@ public class SolicitudEliminacion {
     this.estado = Estado.RECHAZADA;
   }
 
-  public String consultarSolicitud() {
-    return String.format("Se ha solicitado eliminar este hecho:\nTitulo: %s\nCausa: %s\nEstado: %s",
-        hecho.getTitulo(),
-        causa, this.getEstado());
-  }
 }

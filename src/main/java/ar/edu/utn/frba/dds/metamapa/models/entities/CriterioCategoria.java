@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 public class CriterioCategoria implements CriterioPertenencia {
   private final String categoriaBuscada;

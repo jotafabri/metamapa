@@ -1,5 +1,7 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteEstatica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import lombok.Getter;
 

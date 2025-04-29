@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import java.io.BufferedReader;
 import java.io.File;
