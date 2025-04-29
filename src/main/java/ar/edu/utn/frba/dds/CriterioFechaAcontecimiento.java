@@ -19,5 +19,3 @@ public class CriterioFechaAcontecimiento implements CriterioPertenencia {
         (fecha.isEqual(hasta) || fecha.isBefore(hasta));
   }
 }
-
-

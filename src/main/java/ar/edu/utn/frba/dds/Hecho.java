@@ -7,7 +7,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class Hecho {
   private String titulo;
   private String descripcion;
@@ -29,15 +30,17 @@ public class Hecho {
     this.origen = origen;
   }
 
-  public void agregarEtiqueta(String etiqueta){
+  public void agregarEtiqueta(String etiqueta) {
     etiquetas.add(etiqueta);
   }
+
   public String printHecho() {
-    return String.format("Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha: %s\n", this.titulo, this.descripcion,this.categoria, this.coordenadas.getLatitud(), this.coordenadas.getLongitud(), this.fechaAcontecimiento);
+    return String.format("Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha: %s\n", this.titulo, this.descripcion, this.categoria, this.coordenadas.getLatitud(), this.coordenadas.getLongitud(), this.fechaAcontecimiento);
   }
-  public void printEtiquetas(){
+
+  public void printEtiquetas() {
     System.out.println("Estas son las etiquetas que tiene el hecho:");
-    for (String etiqueta : etiquetas){
+    for (String etiqueta : etiquetas) {
       System.out.println(etiqueta);
     }
   }

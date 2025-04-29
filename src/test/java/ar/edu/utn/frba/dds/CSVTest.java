@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +49,7 @@ public class CSVTest {
     fuente.importarHechos(lector, ruta);
     Coleccion coleccion = new Coleccion("Coleccion de Prueba", "Coleccion de prueba descripcion",
         fuente, this.listaCriterios);
-    Assertions.assertFalse(coleccion.importarHechos().isEmpty());
+    Assertions.assertFalse(coleccion.darHechos().isEmpty());
     coleccion.navegar(null);
   }
 

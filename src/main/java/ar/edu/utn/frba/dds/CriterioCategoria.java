@@ -13,4 +13,3 @@ public class CriterioCategoria implements CriterioPertenencia {
     return (hecho.getCategoria().equals(categoriaBuscada));
   }
 }
-
