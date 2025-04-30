@@ -8,48 +8,44 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("checkstyle:Indentation")
 public class LectorCSV {
 
-  public List<Hecho> obtenerHechos(String rutaCSV) {
-    List<Hecho> hechos = new ArrayList<>();
-    File archivo;
-    if (rutaCSV.endsWith(".csv")) {
-      archivo = new File(rutaCSV);
-    } else {
-      throw new IllegalArgumentException("La ruta del archivo debe tener extensión .csv.");
+  private BufferedReader lector;
+
+  public List<Hecho> inicializarLectura(String rutaCSV) {
+    if (!rutaCSV.endsWith(".csv")) {
+      return Collections.emptyList();
     }
 
-    if (archivo.exists()) {
-      try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
-        String cabecera = lector.readLine();
-        lector.lines().forEach(linea -> {
-          try {
-            if (linea.trim().isEmpty()) {
-              System.out.println("Línea vacía ignorada");
-              return;
-            }
-            Hecho hecho = parsearHecho(linea);
-            //habría que hacerlo para que respete los que están previamente cargados en la fuente
-            if (!existeHechoConMismoTitulo(hecho, hechos)) {
-              hechos.add(hecho);
-            }
-          } catch (Exception e) {
-            System.err.println("Error al procesar línea: " + linea);
-            // es mejor agregar excepciones y sacar estas cosas de testeo. el usuario no se entera
-            e.printStackTrace();
-          }
-        });
-      } catch (IOException ex) {
-        System.out.println(0);
-        //logger.log(Level.SEVERE, "Error al leer el archivo CSV", ex);
-      }
-    } else {
-      System.out.println(0);
-      throw new RuntimeException("El archivo CSV no existe en la ruta indicada.");
+    List<Hecho> hechos = new ArrayList<>();
+    File archivo = new File(rutaCSV);
+
+    if (!archivo.exists()) {
+      return Collections.emptyList();
     }
+
+    // Si o si tiene que haber un try catch aca para que pueda leer el archivo...
+    // Piensa en el peor caso donde no hay un archivo cargado
+    // En ese caso devolveria una lista vacia
+    try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
+      String cabecera = lector.readLine();
+      lector.lines().forEach(linea -> {
+        if (linea.trim().isEmpty()) {
+          return;
+        }
+        Hecho hecho = parsearHecho(linea);
+        //habría que hacerlo para que respete los que están previamente cargados en la fuente
+        if (!existeHechoConMismoTitulo(hecho, hechos)) {
+          hechos.add(hecho);
+        }
+      });
+    } catch (IOException e) {
+      return Collections.emptyList();
+    }
+
     return hechos;
   }
 
@@ -58,8 +54,7 @@ public class LectorCSV {
     List<String> campos = splitCSV(linea);
 
     if (campos.size() < 6) {
-      System.out.println(0);
-      throw new IllegalArgumentException("Hecho incompleto: " + linea);
+      return null;
     }
 
     String titulo = campos.get(0).replaceAll("^\"|\"$", ""); // quitar comillas

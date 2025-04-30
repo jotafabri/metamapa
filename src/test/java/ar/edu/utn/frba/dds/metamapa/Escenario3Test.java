@@ -1,5 +1,10 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.metamapa;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Coordenadas;
+import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteDinamica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Origen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

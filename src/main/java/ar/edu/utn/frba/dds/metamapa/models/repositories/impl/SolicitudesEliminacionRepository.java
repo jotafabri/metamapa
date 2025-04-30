@@ -22,8 +22,7 @@ public class SolicitudesEliminacionRepository implements ISolicitudesEliminacion
   }
 
   @Override
-  public void agregarSolicitud(Hecho hecho, String causa) {
-    SolicitudEliminacion solicitud = new SolicitudEliminacion(hecho, causa);
+  public void agregarSolicitud(SolicitudEliminacion solicitud) {
     solicitudesEliminacion.add(solicitud);
   }
 

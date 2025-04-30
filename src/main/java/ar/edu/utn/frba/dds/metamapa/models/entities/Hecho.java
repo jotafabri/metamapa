@@ -38,6 +38,14 @@ public class Hecho {
     return String.format("Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha: %s\n", this.titulo, this.descripcion, this.categoria, this.coordenadas.getLatitud(), this.coordenadas.getLongitud(), this.fechaAcontecimiento);
   }
 
+  public void actualizarHecho(Hecho hecho){
+    this.setDescripcion(hecho.getDescripcion());
+    this.setCategoria(hecho.getCategoria());
+    this.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+    this.setFechaCarga(hecho.getFechaCarga());
+    this.setOrigen(hecho.getOrigen());
+  }
+
   public void printEtiquetas() {
     System.out.println("Estas son las etiquetas que tiene el hecho:");
     for (String etiqueta : etiquetas) {
