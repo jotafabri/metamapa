@@ -12,7 +12,6 @@ public abstract class Fuente {
   }
 
   public Hecho buscarHechoPorTitulo(String titulo) {
-    //  filter + findAny
     return listaHechos.stream().filter(h -> titulo.equals(h.getTitulo())).findFirst().orElse(null);
   }
 
