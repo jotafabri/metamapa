@@ -32,7 +32,7 @@ public class LectorCSV {
 
   public List<String> conseguirSiguienteLinea() {
     try {
-      String linea =  lector.readLine(); // Devuelve null si llegó al final
+      String linea = lector.readLine(); // Devuelve null si llegó al final
       return splitCSV(linea);
 
     } catch (IOException e) {
@@ -41,10 +41,10 @@ public class LectorCSV {
   }
 
 
-
-
   public static List<String> splitCSV(String linea) {
-    if(linea== null){return null;}
+    if (linea == null) {
+      return null;
+    }
     List<String> campos = new ArrayList<>();
     StringBuilder actual = new StringBuilder();
     boolean dentroDeComillas = false;

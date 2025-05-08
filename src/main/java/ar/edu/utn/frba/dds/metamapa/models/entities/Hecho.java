@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Hecho {
+  private Long id;
   private String titulo;
   private String descripcion;
   private String categoria; //esto va a ser una clase
