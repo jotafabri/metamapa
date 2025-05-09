@@ -6,9 +6,9 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
 
 public interface IColeccionesRepository {
 
-  public List<Coleccion> findAll();
+  List<Coleccion> findAll();
 
-  public void save(Coleccion coleccion);
+  void save(Coleccion coleccion);
 
-  public Coleccion findById(Long id);
+  Coleccion findById(Long id);
 }

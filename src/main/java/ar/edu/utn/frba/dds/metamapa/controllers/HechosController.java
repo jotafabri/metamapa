@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
+import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HechosController {
   @Autowired
   private IHechosService hechosService;
+
+  @Autowired
+  private ISeederService seederService;
 
   @GetMapping
   public List<HechoDTO> getHechosWithParams(
@@ -32,5 +36,11 @@ public class HechosController {
         fecha_acontecimiento_desde,
         fecha_acontecimiento_hasta,
         ubicacion);
+  }
+
+  @GetMapping("/inicializar")
+  public boolean inicializarDatos() {
+    this.seederService.init();
+    return true;
   }
 }
