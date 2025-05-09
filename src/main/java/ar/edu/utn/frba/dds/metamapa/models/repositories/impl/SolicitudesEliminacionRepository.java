@@ -2,7 +2,6 @@ package ar.edu.utn.frba.dds.metamapa.models.repositories.impl;
 
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.SolicitudEliminacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import org.springframework.stereotype.Repository;
@@ -23,7 +22,8 @@ public class SolicitudesEliminacionRepository implements ISolicitudesEliminacion
 
   @Override
   public void agregarSolicitud(SolicitudEliminacion solicitud) {
-    solicitudesEliminacion.add(solicitud);
+    solicitud.setId((long) this.solicitudesEliminacion.size());
+    this.solicitudesEliminacion.add(solicitud);
   }
 
 }

@@ -1,7 +1,8 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
-import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.SolicitudEliminacion;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.services.ISolicitudesEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,14 +11,15 @@ import org.springframework.stereotype.Service;
 public class SolicitudesEliminacionService implements ISolicitudesEliminacionService {
 
   @Autowired
-  private ISolicitudesEliminacionService solicitudesRepository;
+  private ISolicitudesEliminacionRepository solicitudesRepository;
 
   @Override
-  private SolicitudEliminacionDTO crear_solicitudDTO(SolicitudEliminacion solicitud){
-    SolicitudEliminacionDTO solicitudDTO = new SolicitudEliminacionDTO(solicitud.getHecho(), solicitud.getCausa());
-    return solicitudDTO;
+  public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
+    var solicitud = new SolicitudEliminacion(
+        solicitudDTO.getHecho(),
+        solicitudDTO.getRazon());
+    this.solicitudesRepository.agregarSolicitud(solicitud);
   }
-
 
 
 }

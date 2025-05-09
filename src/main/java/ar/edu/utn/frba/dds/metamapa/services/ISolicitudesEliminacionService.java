@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.dds.metamapa.services;
 
+import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionDTO;
+
 public interface ISolicitudesEliminacionService {
 
-  private void crear_solicitud();
+  public void crearSolicitud(SolicitudEliminacionDTO solicitud);
 }
