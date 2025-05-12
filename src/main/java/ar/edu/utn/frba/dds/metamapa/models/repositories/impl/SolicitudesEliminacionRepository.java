@@ -8,7 +8,7 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionR
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolicitudesEliminacionRepository implements ISolicitudesEliminacionRepository {
+public abstract class SolicitudesEliminacionRepository implements ISolicitudesEliminacionRepository {
 
   private List<SolicitudEliminacion> solicitudesEliminacion;
 

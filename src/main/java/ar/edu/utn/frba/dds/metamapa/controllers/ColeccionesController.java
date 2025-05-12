@@ -25,3 +25,4 @@ public class ColeccionesController {
         return "index"; // plantilla Thymeleaf en /templates/index.html
     }
 }
+

@@ -43,17 +43,14 @@ public class Coleccion {
     List<Hecho> hechosFiltrados= new ArrayList<>();
     for(Fuente fuente1 : fuentes){
       List<Hecho> hechosFuente = fuente1.getListaHechos();
-      hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList())
+      hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList());
     }
     return hechosFiltrados;
   }
 
-  public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
+  /*public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
     var listaHechos = this.darHechos();
     var listaFiltrada = listaHechos.stream().filter(h -> criterios.stream().allMatch(c -> c.cumple(h))).toList();
     return listaFiltrada;
-  }
-
-//  Como persona visualizadora, deseo navegar todos los hechos disponibles de una colección.
-//  Como persona visualizadora, deseo navegar los hechos disponibles de una colección, aplicando filtros.
+  }*/
 }
