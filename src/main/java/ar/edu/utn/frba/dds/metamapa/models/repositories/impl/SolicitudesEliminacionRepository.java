@@ -15,15 +15,5 @@ public class SolicitudesEliminacionRepository implements ISolicitudesEliminacion
   public SolicitudesEliminacionRepository(List<SolicitudEliminacion> solicitudesEliminacion) {
     this.solicitudesEliminacion = solicitudesEliminacion;
   }
-
-  @Override
-  public List<SolicitudEliminacion> findAll() {
-    return this.solicitudesEliminacion;
-  }
-
-  @Override
-  public void agregarSolicitud(SolicitudEliminacion solicitud) {
-    solicitudesEliminacion.add(solicitud);
-  }
-
 }
+

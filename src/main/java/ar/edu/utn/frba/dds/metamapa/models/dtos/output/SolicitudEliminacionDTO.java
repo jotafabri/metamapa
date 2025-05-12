@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class SolicitudEliminacionDTO {
   private Hecho hecho;
-  private String razon;
+  private String causa;
   
 }
