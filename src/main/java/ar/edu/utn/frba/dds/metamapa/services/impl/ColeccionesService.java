@@ -27,7 +27,4 @@ public class ColeccionesService implements IColeccionesService {
         String handle = generarHandleUnico(coleccionDTO.getTitulo());
         coleccionRepo.save(new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion(),handle, null, null));
     }
-
-
-
 }

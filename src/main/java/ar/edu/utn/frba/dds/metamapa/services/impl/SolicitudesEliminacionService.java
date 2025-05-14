@@ -3,7 +3,11 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.SolicitudesEliminacionRepository;
+
+import ar.edu.utn.frba.dds.metamapa.services.impl.SolicitudesEliminacionService;
 import ar.edu.utn.frba.dds.metamapa.services.ISolicitudesEliminacionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,10 +17,7 @@ import java.util.Objects;
 @Service
 public class SolicitudesEliminacionService implements ISolicitudesEliminacionService {
 
-
-    @Qualifier("ISolicitudesEliminacionRepository")
-    @Autowired
-  private ISolicitudesEliminacionRepository solicitudesRepository;
+  private SolicitudesEliminacionRepository solicitudesRepository;
 
   @Override
   public void crear_solicitudDTO(SolicitudEliminacionDTO solicitudDTO){

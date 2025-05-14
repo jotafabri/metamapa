@@ -15,5 +15,9 @@ public abstract class SolicitudesEliminacionRepository implements ISolicitudesEl
   public SolicitudesEliminacionRepository(List<SolicitudEliminacion> solicitudesEliminacion) {
     this.solicitudesEliminacion = solicitudesEliminacion;
   }
+
+  public void save(SolicitudEliminacion solicitud){
+    solicitudesEliminacion.add(solicitud);
+  }
 }
 

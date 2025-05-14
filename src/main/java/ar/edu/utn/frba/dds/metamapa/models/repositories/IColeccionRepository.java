@@ -5,8 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Objects;
 
-public interface IColeccionRepository extends JpaRepository<Coleccion, Long> {
+public interface IColeccionRepository{
 
-    public void saveDistinto(Coleccion coleccion);
 }
 

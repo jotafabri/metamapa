@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
-public abstract class ColeccionRepository implements IColeccionRepository {
+public class ColeccionRepository implements IColeccionRepository {
 
     private List<Coleccion> colecciones;
 
@@ -27,8 +27,7 @@ public abstract class ColeccionRepository implements IColeccionRepository {
     }
 
 
-    @Override
-    public void saveDistinto(Coleccion coleccion) {
+    public void save(Coleccion coleccion) {
         boolean i = true;
         for (Coleccion c : colecciones) {
             if(Objects.equals(c.getHandle(), coleccion.getHandle())){
@@ -40,5 +39,10 @@ public abstract class ColeccionRepository implements IColeccionRepository {
             colecciones.add(coleccion);
         }
     }
+
+    public List<Coleccion> findAll(){
+        return colecciones;
+    }
+
 }
 
