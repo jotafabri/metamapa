@@ -21,7 +21,7 @@ public class SolicitudesEliminacionRepository implements ISolicitudesEliminacion
   }
 
   @Override
-  public void agregarSolicitud(SolicitudEliminacion solicitud) {
+  public void save(SolicitudEliminacion solicitud) {
     solicitud.setId((long) this.solicitudesEliminacion.size());
     this.solicitudesEliminacion.add(solicitud);
   }

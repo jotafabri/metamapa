@@ -5,14 +5,12 @@ import lombok.Data;
 
 @Data
 public class ColeccionDTO {
-  private Long id;
   private String titulo;
   private String descripcion;
 
   // Mapper
   public static ColeccionDTO fromColeccion(Coleccion coleccion) {
     var dto = new ColeccionDTO();
-    dto.setId(coleccion.getId());
     dto.setTitulo(coleccion.getTitulo());
     dto.setDescripcion(coleccion.getDescripcion());
     return dto;

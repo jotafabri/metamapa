@@ -1,10 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa.controllers;
-
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
+import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/colecciones")
 public class ColeccionesController {
+  @Autowired
+  private final AgregacionService agregacionService;
+
   @Autowired
   private IColeccionService coleccionService;
 
@@ -42,4 +46,5 @@ public class ColeccionesController {
         fecha_acontecimiento_hasta,
         ubicacion);
   }
+
 }

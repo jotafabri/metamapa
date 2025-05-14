@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Hecho {
-  private Long id;
   private String titulo;
   private String descripcion;
   private String categoria; //esto va a ser una clase
@@ -20,6 +19,7 @@ public class Hecho {
   private Origen origen;
   private Multimedia multimedia = null;
   public List<String> etiquetas = new ArrayList();
+  private Boolean eliminado = false;
 
   public Hecho(String titulo, String descripcion, String categoria, Coordenadas coordenadas, LocalDateTime fechaAcontecimiento, Origen origen) {
     this.titulo = titulo;
@@ -35,10 +35,6 @@ public class Hecho {
     etiquetas.add(etiqueta);
   }
 
-  public String printHecho() {
-    return String.format("Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha: %s\n", this.titulo, this.descripcion, this.categoria, this.coordenadas.getLatitud(), this.coordenadas.getLongitud(), this.fechaAcontecimiento);
-  }
-
   public void actualizarHecho(Hecho hecho){
     this.setDescripcion(hecho.getDescripcion());
     this.setCategoria(hecho.getCategoria());
@@ -47,10 +43,8 @@ public class Hecho {
     this.setOrigen(hecho.getOrigen());
   }
 
-  public void printEtiquetas() {
-    System.out.println("Estas son las etiquetas que tiene el hecho:");
-    for (String etiqueta : etiquetas) {
-      System.out.println(etiqueta);
-    }
+  public void eliminar(){
+    this.eliminado = true;
   }
+
 }
