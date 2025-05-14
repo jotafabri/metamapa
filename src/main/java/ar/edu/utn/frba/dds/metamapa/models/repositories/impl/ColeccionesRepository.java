@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
@@ -10,33 +12,36 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ColeccionesRepository implements IColeccionesRepository {
-  private List<Coleccion> colecciones;
-
-  public ColeccionesRepository() {
-    this.colecciones = new ArrayList<>();
-  }
+  //  private List<Coleccion> colecciones;
+  private final Map<String, Coleccion> colecciones = new HashMap<>();
 
   @Override
   public List<Coleccion> findAll() {
-    return this.colecciones;
+    return new ArrayList<>(colecciones.values());
   }
 
   @Override
   public void save(Coleccion coleccion) {
-    boolean i = true;
-    for (Coleccion c : colecciones) {
-      if (Objects.equals(c.getHandle(), coleccion.getHandle())) {
-        i = false;
-        c.actualizarColeccion(coleccion);
-      }
-    }
-    if (i) {
-      colecciones.add(coleccion);
+    if (coleccion.getHandle() == null) {
+      String handle = generarHandleUnico(coleccion.getTitulo());
+      coleccion.setHandle(handle);
+      colecciones.put(handle, coleccion);
+    } else {
+      colecciones.put(coleccion.getHandle(), coleccion);
     }
   }
 
   @Override
   public Coleccion findByHandle(String handle) {
-    return this.colecciones.stream().filter(c -> c.getHandle().equals(handle)).findFirst().orElse(null);
+    return this.colecciones.get(handle);
+  }
+
+  private String generarHandleUnico(String baseTitulo) {
+    String base = baseTitulo.toLowerCase().replaceAll("[^a-z0-9]", "");
+    String candidato = base;
+    for (int i = 1; this.colecciones.containsKey(candidato); i++) {
+      candidato = base + i;
+    }
+    return candidato;
   }
 }

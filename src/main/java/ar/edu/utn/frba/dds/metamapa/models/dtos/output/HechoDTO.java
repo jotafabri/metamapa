@@ -18,7 +18,7 @@ public class HechoDTO {
 
   public static HechoDTO fromHecho(Hecho hecho) {
     var dto = new HechoDTO();
-    dto.setId(hecho.getId());
+    //dto.setId(hecho.getId());
     dto.setTitulo(hecho.getTitulo());
     dto.setDescripcion(hecho.getDescripcion());
     dto.setCategoria(hecho.getCategoria());

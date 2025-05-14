@@ -3,6 +3,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
 
@@ -27,9 +28,9 @@ public class ColeccionesController {
     return this.coleccionService.getAllColecciones();
   }
 
-  @GetMapping("/{id}/hechos")
-  public List<HechoDTO> getHechosById(
-      @PathVariable Long id,
+  @GetMapping("/{handle}/hechos")
+  public List<HechoDTO> getHechosByHandle(
+      @PathVariable String handle,
       @RequestParam(required = false) String categoria,
       @RequestParam(required = false) String fecha_reporte_desde,
       @RequestParam(required = false) String fecha_reporte_hasta,
@@ -37,8 +38,8 @@ public class ColeccionesController {
       @RequestParam(required = false) String fecha_acontecimiento_hasta,
       @RequestParam(required = false) String ubicacion
   ) {
-    return coleccionService.getHechosById(
-        id,
+    return coleccionService.getHechosByHandle(
+        handle,
         categoria,
         fecha_reporte_desde,
         fecha_reporte_hasta,

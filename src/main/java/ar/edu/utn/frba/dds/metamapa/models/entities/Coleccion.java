@@ -13,14 +13,12 @@ public class Coleccion {
   private String handle;
   private String titulo;
   private String descripcion;
-  private Fuente fuente;
-  private List<CriterioPertenencia> criterios = new ArrayList<>();
+  private List<Fuente> fuentes = new ArrayList<Fuente>();
+  private List<CriterioPertenencia> criterios = new ArrayList<CriterioPertenencia>();
 
-  public Coleccion(String titulo, String descripcion, String handle, Fuente fuente, List<CriterioPertenencia> criterios) {
+  public Coleccion(String titulo, String descripcion, List<CriterioPertenencia> criterios) {
     this.titulo = titulo;
     this.descripcion = descripcion;
-    this.handle = handle;
-    this.fuente = fuente;
     if (null == criterios) {
       this.criterios = new ArrayList();
     } else {
@@ -39,18 +37,18 @@ public class Coleccion {
   }
 
   //puede ser por parámetro la lista o puede estar en un atributo, depende de lo que nos respondan por discord
-  public List<Hecho> darHechos(List<Fuente> fuentes) {
-    List<Hecho> hechosFiltrados= new ArrayList<>();
-    for(Fuente fuente1 : fuentes){
+  public List<Hecho> darHechos() {
+    List<Hecho> hechosFiltrados = new ArrayList<>();
+    for (Fuente fuente1 : fuentes) {
       List<Hecho> hechosFuente = fuente1.getListaHechos();
       hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList());
     }
     return hechosFiltrados;
   }
 
-  /*public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
+  public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
     var listaHechos = this.darHechos();
     var listaFiltrada = listaHechos.stream().filter(h -> criterios.stream().allMatch(c -> c.cumple(h))).toList();
     return listaFiltrada;
-  }*/
+  }
 }

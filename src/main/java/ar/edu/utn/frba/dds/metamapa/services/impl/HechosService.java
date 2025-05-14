@@ -38,11 +38,4 @@ public class HechosService implements IHechosService {
         .map(HechoDTO::fromHecho)
         .toList();
   }
-
-  private LocalDateTime parseFecha(String fecha) {
-    if (fecha == null || fecha.isEmpty()) {
-      return null;
-    }
-    return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
-  }
 }

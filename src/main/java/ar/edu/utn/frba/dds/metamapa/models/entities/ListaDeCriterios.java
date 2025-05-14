@@ -53,6 +53,6 @@ public class ListaDeCriterios {
     if (fecha == null || fecha.isEmpty()) {
       return null;
     }
-    return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+    return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd-MM-yyyy")).atStartOfDay();
   }
 }
