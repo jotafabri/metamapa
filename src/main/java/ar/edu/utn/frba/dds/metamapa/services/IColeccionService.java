@@ -6,8 +6,8 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 
 public interface IColeccionService {
-  public List<ColeccionDTO> getAllColecciones();
-  public List<HechoDTO> getHechosById(Long id,
+  List<ColeccionDTO> getAllColecciones();
+  List<HechoDTO> getHechosById(Long id,
                                       String categoria,
                                       String fecha_reporte_desde,
                                       String fecha_reporte_hasta,

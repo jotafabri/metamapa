@@ -6,9 +6,9 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 
 public interface IHechosRepository {
-  List<Hecho> findAll();
+  public List<Hecho> findAll();
 
-  void save(Hecho hecho);
+  public void save(Hecho hecho);
 
-  Hecho findById(Long id);
+  public Hecho findById(Long id);
 }

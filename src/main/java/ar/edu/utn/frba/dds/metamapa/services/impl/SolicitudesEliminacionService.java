@@ -19,7 +19,7 @@ public class SolicitudesEliminacionService implements ISolicitudesEliminacionSer
 
   @Override
   public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
-    var hecho = this.hechosRepository.findById(solicitudDTO.getHecho().getId());
+    var hecho = this.hechosRepository.findById(solicitudDTO.getIdHecho());
     if (hecho != null) {
       var solicitud = new SolicitudEliminacion(
           hecho,

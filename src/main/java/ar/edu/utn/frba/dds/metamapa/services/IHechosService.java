@@ -5,7 +5,7 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 
 public interface IHechosService {
-  public List<HechoDTO> getHechosWithParams(
+  List<HechoDTO> getHechosWithParams(
       String categoria,
       String fecha_reporte_desde,
       String fecha_reporte_hasta,
