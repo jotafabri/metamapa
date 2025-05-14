@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/colecciones")
 public class ColeccionesController {
   @Autowired
-  private final AgregacionService agregacionService;
+  private AgregacionService agregacionService;
 
   @Autowired
   private IColeccionService coleccionService;

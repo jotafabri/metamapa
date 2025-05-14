@@ -10,5 +10,5 @@ public interface IColeccionesRepository {
 
   void save(Coleccion coleccion);
 
-  Coleccion findById(Long id);
+  Coleccion findByHandle(String handle);
 }

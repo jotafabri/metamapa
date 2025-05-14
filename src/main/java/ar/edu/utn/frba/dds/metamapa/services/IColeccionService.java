@@ -14,4 +14,5 @@ public interface IColeccionService {
                                       String fecha_acontecimiento_desde,
                                       String fecha_acontecimiento_hasta,
                                       String ubicacion);
+  void crearDesdeDTO(ColeccionDTO coleccionDTO);
 }
