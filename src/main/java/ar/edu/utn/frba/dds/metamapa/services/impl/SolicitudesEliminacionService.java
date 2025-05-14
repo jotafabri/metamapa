@@ -27,7 +27,7 @@ public class SolicitudesEliminacionService implements ISolicitudesEliminacionSer
       var solicitud = new SolicitudEliminacion(
           hecho,
           solicitudDTO.getRazon());
-      this.solicitudesRepository.agregarSolicitud(solicitud);
+      this.solicitudesRepository.save(solicitud);
     }
   }
 

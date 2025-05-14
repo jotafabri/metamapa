@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
+package ar.edu.utn.frba.dds.metamapa.models.dtos.input;
 
 import lombok.Data;
 
