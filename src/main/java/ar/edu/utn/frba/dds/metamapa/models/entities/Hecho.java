@@ -1,56 +1,79 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 public class Hecho {
+
+  private int limiteDiasEdicion;
+  private boolean visible;
+
   private Long id;
   private String titulo;
   private String descripcion;
   private String categoria; //esto va a ser una clase
   private Coordenadas coordenadas;
-  private LocalDateTime fechaAcontecimiento;
-  private LocalDateTime fechaCarga;
   private Origen origen;
-  private Multimedia multimedia = null;
-  public List<String> etiquetas = new ArrayList();
+  private Contribuyente contribuyente;
+  private Multimedia multimedia;
+  private final LocalDateTime fechaCarga;
+  private LocalDateTime fechaAcontecimiento;
 
-  public Hecho(String titulo, String descripcion, String categoria, Coordenadas coordenadas, LocalDateTime fechaAcontecimiento, Origen origen) {
-    this.titulo = titulo;
-    this.descripcion = descripcion;
-    this.categoria = categoria;
-    this.coordenadas = coordenadas;
-    this.fechaAcontecimiento = fechaAcontecimiento;
+  private List<String> etiquetas = new ArrayList<>();
+
+
+  Hecho() {
     this.fechaCarga = LocalDateTime.now();
-    this.origen = origen;
+  }
+
+  public LocalDateTime getFechaCarga() {
+    return this.fechaCarga;
   }
 
   public void agregarEtiqueta(String etiqueta) {
-    etiquetas.add(etiqueta);
+    this.etiquetas.add(etiqueta);
   }
 
-  public String printHecho() {
-    return String.format("Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha: %s\n", this.titulo, this.descripcion, this.categoria, this.coordenadas.getLatitud(), this.coordenadas.getLongitud(), this.fechaAcontecimiento);
+  public boolean esEditable() {
+    if (this.contribuyente == null || this.contribuyente.isEsAnonimo()) {
+      return false;
+    }
+    long diasDesdeCarga = ChronoUnit.DAYS.between(this.fechaCarga, LocalDateTime.now());
+    return diasDesdeCarga <= limiteDiasEdicion;
   }
 
-  public void actualizarHecho(Hecho hecho){
+  public void actualizarHecho(Hecho hecho) {
+    if (!esEditable()) {
+      throw new IllegalStateException("El hecho no es editable.");
+    }
     this.setDescripcion(hecho.getDescripcion());
     this.setCategoria(hecho.getCategoria());
     this.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-    this.setFechaCarga(hecho.getFechaCarga());
     this.setOrigen(hecho.getOrigen());
+    this.setMultimedia(hecho.getMultimedia());
+    this.getEtiquetas().clear();
+    this.getEtiquetas().addAll(hecho.getEtiquetas());
   }
 
-  public void printEtiquetas() {
-    System.out.println("Estas son las etiquetas que tiene el hecho:");
-    for (String etiqueta : etiquetas) {
-      System.out.println(etiqueta);
-    }
-  }
+
+
+  @Override
+  public String toString() {
+    String contribuyenteInfo = this.contribuyente != null ? this.contribuyente.getNombre() : "Anónimo";
+    return String.format(
+            "Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha Acontecimiento: %s\nFecha Carga: %s\nVisible: %b\nContribuyente: %s\n",
+            this.titulo, this.descripcion, this.categoria,
+            this.coordenadas.getLatitud(), this.coordenadas.getLongitud(),
+            this.fechaAcontecimiento, this.fechaCarga,
+            this.visible, contribuyenteInfo
+    );
+}
+
 }

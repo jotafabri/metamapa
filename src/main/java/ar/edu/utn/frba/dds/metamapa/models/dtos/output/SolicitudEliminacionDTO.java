@@ -1,11 +1,15 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import lombok.Data;
+import lombok.*;
 
-@Data
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class SolicitudEliminacionDTO {
   private Hecho hecho;
-  private String razon;
-  
+  private String causa;
+
 }
