@@ -12,13 +12,13 @@ public abstract class Fuente {
   }
 
   public Hecho buscarHechoPorTitulo(String titulo) {
-    return listaHechos.stream().filter(h -> titulo.equals(h.getTitulo())).findFirst().orElse(null);
+    return getListaHechos().stream().filter(h -> titulo.equals(h.getTitulo())).findFirst().orElse(null);
   }
 
   public void agregarHecho(Hecho hecho) {
-    Optional<Hecho> hecho2 = listaHechos.stream().filter(h -> h.getTitulo().equalsIgnoreCase(hecho.getTitulo())).findFirst();
+    Optional<Hecho> hecho2 = getListaHechos().stream().filter(h -> h.getTitulo().equalsIgnoreCase(hecho.getTitulo())).findFirst();
     hecho2.ifPresentOrElse(h ->
-      h.actualizarHecho(hecho), () -> listaHechos.add(hecho));
+      h.actualizarHecho(hecho), () -> getListaHechos().add(hecho));
   }
 
   public void etiquetarPorTitulo(String titulo, String etiqueta) {

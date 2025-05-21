@@ -11,8 +11,8 @@ public class HechoDTO {
   private String titulo;
   private String descripcion;
   private String categoria;
-  private Float latitud;
-  private Float longitud;
+  private Double latitud;
+  private Double longitud;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
 
@@ -22,8 +22,8 @@ public class HechoDTO {
     dto.setTitulo(hecho.getTitulo());
     dto.setDescripcion(hecho.getDescripcion());
     dto.setCategoria(hecho.getCategoria());
-    dto.setLatitud(hecho.getCoordenadas().getLatitud());
-    dto.setLongitud(hecho.getCoordenadas().getLongitud());
+    dto.setLatitud(hecho.getLatitud());
+    dto.setLongitud(hecho.getLongitud());
     dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
     dto.setFechaCarga(hecho.getFechaCarga());
     return dto;

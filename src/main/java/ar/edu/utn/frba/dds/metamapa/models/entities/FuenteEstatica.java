@@ -37,8 +37,8 @@ public class FuenteEstatica extends Fuente {
     String titulo = campos.get(0).replaceAll("^\"|\"$", ""); // quitar comillas
     String descripcion = campos.get(1).replaceAll("^\"|\"$", "");
     String categoria = campos.get(2); //Todavía no está resuelto esto de las categorías
-    float lat = Float.parseFloat(campos.get(3));
-    float lon = Float.parseFloat(campos.get(4));
+    Double lat = Double.parseDouble(campos.get(3));
+    Double lon = Double.parseDouble(campos.get(4));
     LocalDate fecha = LocalDate.parse(campos.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
 

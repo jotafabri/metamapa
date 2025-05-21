@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,20 +24,21 @@ public class Hecho {
   private String categoria;
 
   @CsvBindByName(column = "Latitud")
-  private Float latitud;
+  private Double latitud;
 
   @CsvBindByName(column = "Longitud")
-  private Float longitud;
+  private Double longitud;
 
-  @CsvBindByName(column = "Fecha del hecho")
+  @CsvCustomBindByName(column = "Fecha del hecho", converter = LocalDateTimeConverter.class)
   private LocalDateTime fechaAcontecimiento;
+
   private LocalDateTime fechaCarga;
   private Origen origen;
   private Multimedia multimedia = null;
-  public List<String> etiquetas = new ArrayList();
+  private List<String> etiquetas = new ArrayList();
   private Boolean eliminado = false;
 
-  public Hecho(String titulo, String descripcion, String categoria, Float latitud, Float longitud, LocalDateTime fechaAcontecimiento, Origen origen) {
+  public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento, Origen origen) {
     this.titulo = titulo;
     this.descripcion = descripcion;
     this.categoria = categoria;
@@ -48,7 +50,7 @@ public class Hecho {
   }
 
   public void agregarEtiqueta(String etiqueta) {
-    etiquetas.add(etiqueta);
+    this.etiquetas.add(etiqueta);
   }
 
   public void actualizarHecho(Hecho hecho){

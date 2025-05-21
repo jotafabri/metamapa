@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,7 +37,7 @@ public class CSVTest {
         LocalDateTime.now());
     this.listaCriterios.add(critFecha);
   }
-
+/*
   @Test
   @DisplayName("La lista de hechos no esta vacía")
   public void ListaNoVacia() {
@@ -65,5 +66,16 @@ public class CSVTest {
     this.listaHechos = this.lector.obtenerHechos(ruta);
     Assertions.assertFalse(this.listaHechos.isEmpty());
     System.out.println(listaFiltrada);
+  }*/
+
+  @Test
+  @DisplayName("Test de nuevo lector")
+  public void NuevoLectorTest() {
+    try {
+      var lectorNuevo = LectorCSV.main("static/csv/desastres_naturales_argentina.csv");
+      Assertions.assertFalse(lectorNuevo.isEmpty());
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

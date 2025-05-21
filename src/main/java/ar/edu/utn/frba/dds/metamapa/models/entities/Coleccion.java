@@ -26,6 +26,10 @@ public class Coleccion {
     }
   }
 
+  public void agregarFuente(Fuente fuente) {
+    this.fuentes.add(fuente);
+  }
+
   public void agregarCriterio(CriterioPertenencia criterio) {
     this.criterios.add(criterio);
   }
@@ -48,7 +52,7 @@ public class Coleccion {
 
   public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
     var listaHechos = this.darHechos();
-    var listaFiltrada = listaHechos.stream().filter(h -> criterios.stream().allMatch(c -> c.cumple(h))).toList();
+    var listaFiltrada = listaHechos.stream().filter(h -> !h.getEliminado() && criterios.stream().allMatch(c -> c.cumple(h))).toList();
     return listaFiltrada;
   }
 }
