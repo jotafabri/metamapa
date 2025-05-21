@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,7 +12,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+
 public class LectorCSV {
+  public static List<Hecho> main(String rutaCSV) throws FileNotFoundException {
+    FileReader reader = new FileReader(rutaCSV);
+
+    CsvToBean<Hecho> csvToBean = new CsvToBeanBuilder<Hecho>(reader)
+        .withType(Hecho.class)
+        .withIgnoreLeadingWhiteSpace(true)
+        .build();
+
+    List<Hecho> hechos = csvToBean.parse();
+    return hechos;
+  }
 
   private BufferedReader lector;
 
