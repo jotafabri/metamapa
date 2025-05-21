@@ -41,9 +41,8 @@ public class ListaDeCriterios {
       this.listaCriterios.add(new CriterioFechaCarga(fCargaDesde, fCargaHasta));
     }
 
-    var coordenadas = Coordenadas.fromString(ubicacion);
-    if (coordenadas != null) {
-      this.listaCriterios.add(new CriterioUbicacion(coordenadas));
+    if (ubicacion != null) {
+      this.listaCriterios.add(CriterioUbicacion.fromString(ubicacion));
     }
 
     return this.listaCriterios;

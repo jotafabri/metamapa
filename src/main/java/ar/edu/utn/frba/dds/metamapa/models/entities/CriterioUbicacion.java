@@ -1,21 +1,25 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
-import java.time.LocalDateTime;
-
 public class CriterioUbicacion implements CriterioPertenencia {
 
   private Float latitud;
   private Float longitud;
 
-  public CriterioUbicacion(Coordenadas coordenadas) {
-    this.latitud = coordenadas.getLatitud();
-    this.longitud = coordenadas.getLongitud();
+  public CriterioUbicacion(Float latitud, Float longitud) {
+    this.latitud = latitud;
+    this.longitud = longitud;
+  }
+
+  public static CriterioUbicacion fromString(String string) {
+    String[] partes = string.split(",");
+    float lat = Float.parseFloat(partes[0].trim());
+    float lon = Float.parseFloat(partes[1].trim());
+    return new CriterioUbicacion(lat,lon);
   }
 
   @Override
   public boolean cumple(Hecho hecho) {
-    Coordenadas ubicacion = hecho.getCoordenadas();
-    return (ubicacion.getLatitud().equals(this.latitud))
-        && (ubicacion.getLongitud().equals(this.longitud));
+    return (hecho.getLatitud().equals(this.latitud))
+        && (hecho.getLongitud().equals(this.longitud));
   }
 }

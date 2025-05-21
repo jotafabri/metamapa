@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coordenadas;
 import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
@@ -34,10 +33,10 @@ public class SeederService implements ISeederService {
   public void init() {
     FuenteDinamica fuenteDinamica = new FuenteDinamica();
     List<Hecho> hechosAgregar = new ArrayList();
-    hechosAgregar.add(new Hecho("Caída de aeronave impacta en Olavarría","Grave caída de aeronave ocurrió en las inmediaciones de Olavarría, Buenos Aires. El incidente provocó pánico entre los residentes locales. Voluntarios de diversas organizaciones se han sumado a las tareas de auxilio.",
-        "Caída de aeronave",new Coordenadas((float)-36.868375, (float)-60.343297),
+    hechosAgregar.add(new Hecho("Caída de aeronave impacta en Olavarría", "Grave caída de aeronave ocurrió en las inmediaciones de Olavarría, Buenos Aires. El incidente provocó pánico entre los residentes locales. Voluntarios de diversas organizaciones se han sumado a las tareas de auxilio.",
+        "Caída de aeronave", (float) -36.868375, (float) -60.343297,
         LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), Origen.CARGA_MANUAL));
-    for(Hecho hecho: hechosAgregar){
+    for (Hecho hecho : hechosAgregar) {
       fuenteDinamica.agregarHecho(hecho);
     }
     Coleccion coleccionPrueba = new Coleccion("Colección prueba", "Esto es una prueba", null, null);

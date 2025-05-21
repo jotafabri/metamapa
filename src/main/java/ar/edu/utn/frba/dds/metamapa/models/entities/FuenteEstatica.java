@@ -42,6 +42,6 @@ public class FuenteEstatica extends Fuente {
     LocalDate fecha = LocalDate.parse(campos.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
 
-    return new Hecho(titulo, descripcion, categoria, new Coordenadas(lat, lon), fechaAcontecimiento, Origen.DATASET);
+    return new Hecho(titulo, descripcion, categoria, lat, lon, fechaAcontecimiento, Origen.DATASET);
   }
 }
