@@ -1,24 +1,22 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
-import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.ListaDeCriterios;
-import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoOutputDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.EstadoHecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class HechosService implements IHechosService {
-  private IHechosRepository hechosRepository;
-  private IColeccionesRepository coleccionesRepository;
+    @Autowired
+    private IHechosRepository hechosRepository;
 
-  @Override
+
+    @Override
   public List<HechoDTO> getHechosWithParams(String categoria,
                                             String fecha_reporte_desde,
                                             String fecha_reporte_hasta,
@@ -38,4 +36,19 @@ public class HechosService implements IHechosService {
         .map(HechoDTO::fromHecho)
         .toList();
   }
+
+
+
+    private HechoOutputDTO hechosOutputDTO(Hecho hecho){
+        HechoOutputDTO dto = new HechoOutputDTO();
+        dto.setId(hecho.getId());
+        dto.setTitulo(hecho.getTitulo());
+        dto.setDescripcion(hecho.getDescripcion());
+        dto.setCategoria(hecho.getCategoria().getNombre());
+        dto.setMultimediaURL(hecho.getMultimedia().getUrl());
+        dto.setLongitudCoordenada(hecho.getCoordenada().getLongitud());
+        dto.setLatitudCoordenada(hecho.getCoordenada().getLatitud());
+        dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+        return dto;
+    }
 }

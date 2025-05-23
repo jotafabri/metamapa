@@ -1,12 +1,17 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+@Getter
+@Setter
 public class Multimedia {
   private String url;
-  private String tipo;
+
+  /*private String tipo;
   private String formato;
   private long tamanio;
-  private LocalDateTime fechaSubida;
+  private LocalDateTime fechaSubida;*/
 
 }
