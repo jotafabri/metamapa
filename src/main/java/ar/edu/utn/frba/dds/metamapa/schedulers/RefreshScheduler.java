@@ -13,6 +13,7 @@ public class RefreshScheduler {
         this.servicioDeAgregacion = servicioDeAgregacion;
     }
 
+    // @Scheduled(cron = "*/10 * * * * *") // Cada 10 segundos
     // Refresca las colecciones una vez por hora
     @Scheduled(cron = "0 0 * * * *") // Cada hora en punto
     public void refrescarColecciones() {

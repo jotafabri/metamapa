@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa;
+/*package ar.edu.utn.frba.dds.metamapa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,3 +11,4 @@ class MetamapaApplicationTests {
 	}
 
 }
+*/

@@ -14,7 +14,7 @@ public class AgregacionService implements IAgregacionService {
 
     private final ColeccionRepository coleccionRepo;
 
-    private AgregacionService(ColeccionRepository coleccionRepo) {
+    public AgregacionService(ColeccionRepository coleccionRepo) {
         this.coleccionRepo = coleccionRepo;
     }
     //private final HechoRepository hechoRepo;
