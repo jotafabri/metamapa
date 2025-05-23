@@ -18,20 +18,26 @@ public class Hecho {
   private Long id;
   private String titulo;
   private String descripcion;
-  private String categoria; //esto va a ser una clase
-  private Coordenadas coordenadas;
-  private Origen origen;
+  private Categoria categoria;
+  private Coordenada coordenada;
   private Contribuyente contribuyente;
   private Multimedia multimedia;
   private final LocalDateTime fechaCarga;
   private LocalDateTime fechaAcontecimiento;
-
   private List<String> etiquetas = new ArrayList<>();
 
+  private EstadoHecho estado = EstadoHecho.EN_REVISION;
 
-  Hecho() {
-    this.fechaCarga = LocalDateTime.now();
+
+  public Hecho() {
+    this(LocalDateTime.now());
   }
+
+//Sobrecarga de contructor para testeos
+  public Hecho(LocalDateTime fechaCarga) {
+    this.fechaCarga = fechaCarga;
+  }
+
 
   public LocalDateTime getFechaCarga() {
     return this.fechaCarga;
@@ -56,7 +62,6 @@ public class Hecho {
     this.setDescripcion(hecho.getDescripcion());
     this.setCategoria(hecho.getCategoria());
     this.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-    this.setOrigen(hecho.getOrigen());
     this.setMultimedia(hecho.getMultimedia());
     this.getEtiquetas().clear();
     this.getEtiquetas().addAll(hecho.getEtiquetas());
@@ -70,10 +75,18 @@ public class Hecho {
     return String.format(
             "Titulo: %s\nDescripcion: %s\nCategoria: %s\nCoordenadas: %s, %s\nFecha Acontecimiento: %s\nFecha Carga: %s\nVisible: %b\nContribuyente: %s\n",
             this.titulo, this.descripcion, this.categoria,
-            this.coordenadas.getLatitud(), this.coordenadas.getLongitud(),
+            this.coordenada.getLatitud(), this.coordenada.getLongitud(),
             this.fechaAcontecimiento, this.fechaCarga,
             this.visible, contribuyenteInfo
     );
 }
+
+  public void aceptar() {
+    this.estado = EstadoHecho.ACEPTADO;
+  }
+
+  public void rechazar() {
+    this.estado = EstadoHecho.RECHAZADO;
+  }
 
 }

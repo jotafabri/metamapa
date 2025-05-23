@@ -10,6 +10,7 @@ public class HechoBuilder {
 
     private static final boolean VISIBLE_DEFAULT;
     private static final int LIMITE_DIAS_EDICION_DEFAULT;
+    private LocalDateTime fechaCarga = LocalDateTime.now();
 
     static {
         ResourceBundle config = ResourceBundle.getBundle("application");
@@ -19,27 +20,25 @@ public class HechoBuilder {
 
     private String titulo;
     private String descripcion;
-    private String categoria;
-    private Coordenadas coordenadas;
+    private Categoria categoria;
+    private Coordenada coordenada;
     private LocalDateTime fechaAcontecimiento;
-    private Origen origen;
     private Multimedia multimedia;
     private Contribuyente contribuyente;
     private List<String> etiquetas = new ArrayList<>();
     private boolean visible = VISIBLE_DEFAULT;
     private int limiteDiasEdicion = LIMITE_DIAS_EDICION_DEFAULT;
 
-    public HechoBuilder(String titulo, String descripcion, String categoria, Coordenadas coordenadas, LocalDateTime fechaAcontecimiento, Origen origen) {
-        if (titulo == null || descripcion == null || categoria == null || coordenadas == null || fechaAcontecimiento == null || origen == null) {
-            throw new IllegalArgumentException("Los campos título, descripción, categoría, coordenadas, fechaAcontecimiento y origen son obligatorios.");
+    public HechoBuilder(String titulo, String descripcion, Categoria categoria, Coordenada coordenada, LocalDateTime fechaAcontecimiento) {
+        if (titulo == null || descripcion == null || categoria == null || coordenada == null || fechaAcontecimiento == null) {
+            throw new IllegalArgumentException("Los campos título, descripción, categoría, coordenadas, fechaAcontecimiento son obligatorios.");
         }
 
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;
-        this.coordenadas = coordenadas;
+        this.coordenada = coordenada;
         this.fechaAcontecimiento = fechaAcontecimiento;
-        this.origen = origen;
     }
 
     public HechoBuilder conMultimedia(Multimedia multimedia) {
@@ -48,9 +47,6 @@ public class HechoBuilder {
     }
 
     public HechoBuilder conContribuyente(Contribuyente contribuyente) {
-        if (this.origen != Origen.CONTRIBUYENTE) {
-            throw new IllegalStateException("Solo se pueden agregar contribuyentes a hechos con origen CONTRIBUYENTE.");
-        }
         this.contribuyente = contribuyente;
         return this;
     }
@@ -71,17 +67,17 @@ public class HechoBuilder {
     }
 
     public Hecho build() {
-        if (this.origen == Origen.CONTRIBUYENTE && this.contribuyente == null) {
-            throw new IllegalStateException("Los hechos de tipo CONTRIBUYENTE requieren un contribuyente.");
+        if (this.contribuyente == null) {
+            throw new IllegalStateException("Se requiere un contribuyente.");
         }
 
-        Hecho hecho = new Hecho();
+        Hecho hecho = new Hecho(this.fechaCarga); // usa el constructor nuevo
+
         hecho.setTitulo(titulo);
         hecho.setDescripcion(descripcion);
         hecho.setCategoria(categoria);
-        hecho.setCoordenadas(coordenadas);
+        hecho.setCoordenada(coordenada);
         hecho.setFechaAcontecimiento(fechaAcontecimiento);
-        hecho.setOrigen(origen);
         hecho.setMultimedia(multimedia);
         hecho.setContribuyente(contribuyente);
         hecho.setVisible(visible);
@@ -90,4 +86,12 @@ public class HechoBuilder {
 
         return hecho;
     }
+
+
+
+    public HechoBuilder conFechaCarga(LocalDateTime fechaCarga) {
+        this.fechaCarga = fechaCarga;
+        return this;
+    }
+
 }

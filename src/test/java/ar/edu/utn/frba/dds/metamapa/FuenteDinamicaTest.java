@@ -10,16 +10,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FuenteDinamicaTest {
-    private Coordenadas coordenadas;
-    private Origen origen;
+    private Coordenada coordenada;
     private HechoBuilder hechoBuilder;
     private Contribuyente contribuyente;
+    private Categoria categoria;
+    //private Origen origen;
 
     @BeforeEach
     void setup() {
-        coordenadas = new Coordenadas((float) -34.6037, (float) -58.3816); // Coordenadas de Buenos Aires
-        origen = Origen.CONTRIBUYENTE;
-        hechoBuilder = new HechoBuilder("Titulo de prueba", "Descripcion de prueba", "Categoria de prueba", coordenadas, LocalDateTime.now(), origen);
+        coordenada = new Coordenada((float) -34.6037, (float) -58.3816); // Coordenadas de Buenos Aires
+        categoria = new Categoria("Categoria de prueba");
+        hechoBuilder = new HechoBuilder("Titulo de prueba", "Descripcion de prueba", categoria, coordenada, LocalDateTime.now());
         contribuyente = new Contribuyente("Juan", "Perez", 30, false);
     }
 
@@ -29,9 +30,9 @@ public class FuenteDinamicaTest {
         assertNotNull(hecho);
         assertEquals("Titulo de prueba", hecho.getTitulo());
         assertEquals("Descripcion de prueba", hecho.getDescripcion());
-        assertEquals("Categoria de prueba", hecho.getCategoria());
-        assertEquals(coordenadas, hecho.getCoordenadas());
-        assertEquals(origen, hecho.getOrigen());
+        assertEquals("Categoria de prueba", hecho.getCategoria().getNombre());
+        assertEquals(coordenada, hecho.getCoordenada());
+        //assertEquals(origen, hecho.getOrigen());
     }
 
     @Test
@@ -48,20 +49,23 @@ public class FuenteDinamicaTest {
     @Test
     void testActualizarHecho() {
         Hecho hecho = hechoBuilder.conContribuyente(contribuyente).build();
-        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", "Nueva Categoria", coordenadas, LocalDateTime.now(), origen)
+        Categoria nuevaCategoria = new Categoria("Nueva Categoria");
+        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", nuevaCategoria, coordenada, LocalDateTime.now())
                 .conContribuyente(contribuyente)
                 .agregarEtiqueta("nuevo")
                 .build();
         hecho.actualizarHecho(nuevoHecho);
         assertEquals("Nueva Descripcion", hecho.getDescripcion());
-        assertEquals("Nueva Categoria", hecho.getCategoria());
+        assertEquals("Nueva Categoria", hecho.getCategoria().getNombre());
         assertTrue(hecho.getEtiquetas().contains("nuevo"));
     }
-//TODO: Falla
+
     @Test
     void testHechoNoEditable() {
-        Contribuyente contribuyente = new Contribuyente("Juan", "Perez", 30, false);
-        Hecho hecho = new HechoBuilder("Titulo", "Descripcion", "Categoria", coordenadas, LocalDateTime.now().minusDays(8), origen)
+        Categoria categoria = new Categoria("Categoria");
+        Coordenada coordenadas = new Coordenada((float) -34.60, (float) -58.38);
+        Hecho hecho = new HechoBuilder("Titulo", "Descripcion", categoria, coordenadas, LocalDateTime.now().minusDays(10))
+                .conFechaCarga(LocalDateTime.now().minusDays(10))
                 .conContribuyente(contribuyente)
                 .build();
         assertFalse(hecho.esEditable());
