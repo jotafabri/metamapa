@@ -5,7 +5,9 @@ import java.util.List;
 
 public interface IFuentesRepository {
 
-    public List<Fuente> findAll();
+    List<Fuente> findAll();
 
-    public void save(Fuente fuente);
+    void save(Fuente fuente);
+
+    public Fuente findById(Long id);
 }

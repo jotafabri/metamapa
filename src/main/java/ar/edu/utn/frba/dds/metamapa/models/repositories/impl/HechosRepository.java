@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public class HechosRepository implements IHechosRepository {
 
-    private List<Hecho> hechos;
+    private List<Hecho> hechos = new ArrayList();
 
     @Override
     public Hecho findById(Long id){

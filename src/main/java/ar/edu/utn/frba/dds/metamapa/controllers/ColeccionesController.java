@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @RequestMapping("/colecciones")
@@ -46,6 +48,12 @@ public class ColeccionesController {
         fecha_acontecimiento_desde,
         fecha_acontecimiento_hasta,
         ubicacion);
+  }
+
+//localhost:8080/colecciones/agregar-fuente?handleColeccion=abcd&idFuente=3
+  @PostMapping("/agregar-fuente")
+  public void agregarFuenteAColeccion(@RequestParam String handleColeccion, @RequestParam Long idFuente) {
+    this.agregacionService.agregarFuenteAColeccion(handleColeccion, idFuente);
   }
 
 }

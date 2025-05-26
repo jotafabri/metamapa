@@ -19,7 +19,6 @@ import java.util.List;
 public class Hecho {
 
   private int limiteDiasEdicion;
-  private boolean visible;
 
   private Long id;
 
@@ -46,6 +45,10 @@ public class Hecho {
   private Multimedia multimedia = null;
   private List<String> etiquetas = new ArrayList();
   private Boolean eliminado = false;
+  private Contribuyente contribuyente = null;
+  private EstadoHecho estado = EstadoHecho.ACEPTADO;
+
+  public Hecho() {}
 
   public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento, Origen origen) {
     this.titulo = titulo;
@@ -85,7 +88,6 @@ public class Hecho {
   public void eliminar(){
     this.eliminado = true;
   }
-
 
   public void aceptar() {
     this.estado = EstadoHecho.ACEPTADO;

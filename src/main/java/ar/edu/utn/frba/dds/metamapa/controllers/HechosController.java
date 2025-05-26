@@ -14,33 +14,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/hechos")
 public class HechosController {
-  @Autowired
-  private IHechosService hechosService;
+    @Autowired
+    private IHechosService hechosService;
 
-  @Autowired
-  private ISeederService seederService;
+    @Autowired
+    private ISeederService seederService;
 
-  @GetMapping
-  public List<HechoDTO> getHechosWithParams(
-      @RequestParam(required = false) String categoria,
-      @RequestParam(required = false) String fecha_reporte_desde,
-      @RequestParam(required = false) String fecha_reporte_hasta,
-      @RequestParam(required = false) String fecha_acontecimiento_desde,
-      @RequestParam(required = false) String fecha_acontecimiento_hasta,
-      @RequestParam(required = false) String ubicacion
-  ) {
-    return this.hechosService.getHechosWithParams(
-        categoria,
-        fecha_reporte_desde,
-        fecha_reporte_hasta,
-        fecha_acontecimiento_desde,
-        fecha_acontecimiento_hasta,
-        ubicacion);
-  }
+    @GetMapping
+    public List<HechoDTO> getHechosWithParams(
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String fecha_reporte_desde,
+            @RequestParam(required = false) String fecha_reporte_hasta,
+            @RequestParam(required = false) String fecha_acontecimiento_desde,
+            @RequestParam(required = false) String fecha_acontecimiento_hasta,
+            @RequestParam(required = false) String ubicacion
+    ) {
+        return this.hechosService.getHechosWithParams(
+                categoria,
+                fecha_reporte_desde,
+                fecha_reporte_hasta,
+                fecha_acontecimiento_desde,
+                fecha_acontecimiento_hasta,
+                ubicacion);
+    }
 
-  @GetMapping("/inicializar")
-  public boolean inicializarDatos() {
-    this.seederService.init();
-    return true;
-  }
+    @GetMapping("/inicializar")
+    public boolean inicializarDatos() {
+        this.seederService.init();
+        return true;
+    }
 }

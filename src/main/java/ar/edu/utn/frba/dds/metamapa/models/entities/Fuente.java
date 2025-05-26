@@ -1,11 +1,17 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class Fuente {
   protected List<Hecho> listaHechos = new ArrayList<>();
+  @Getter
+  @Setter
+  private Long id= null;
 
   public List<Hecho> getListaHechos() {
     return listaHechos;

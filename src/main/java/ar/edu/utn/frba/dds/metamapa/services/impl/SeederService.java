@@ -12,6 +12,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class SeederService implements ISeederService {
   @Autowired
   private IColeccionesRepository coleccionesRepository;
 
+  @Autowired
+  private IFuentesRepository fuentesRepository;
+
   @Value("${app.base-url}")
   private String baseUrl;
 
@@ -33,9 +37,12 @@ public class SeederService implements ISeederService {
   public void init() {
     FuenteDinamica fuenteDinamica = new FuenteDinamica();
     List<Hecho> hechosAgregar = new ArrayList();
-    hechosAgregar.add(new Hecho("Caída de aeronave impacta en Olavarría", "Grave caída de aeronave ocurrió en las inmediaciones de Olavarría, Buenos Aires. El incidente provocó pánico entre los residentes locales. Voluntarios de diversas organizaciones se han sumado a las tareas de auxilio.",
-        "Caída de aeronave",-36.868375, -60.343297,
-        LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), Origen.CARGA_MANUAL));
+    fuentesRepository.save(fuenteDinamica);
+    Hecho nuevoHecho = new Hecho("Caída de aeronave impacta en Olavarría", "Grave caída de aeronave ocurrió en las inmediaciones de Olavarría, Buenos Aires. El incidente provocó pánico entre los residentes locales. Voluntarios de diversas organizaciones se han sumado a las tareas de auxilio.",
+            "Caída de aeronave",-36.868375, -60.343297,
+            LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), Origen.CARGA_MANUAL);
+    this.hechosRepository.save(nuevoHecho);
+    hechosAgregar.add(nuevoHecho);
     for (Hecho hecho : hechosAgregar) {
       fuenteDinamica.agregarHecho(hecho);
     }
@@ -44,17 +51,17 @@ public class SeederService implements ISeederService {
 
     this.coleccionesRepository.save(coleccionPrueba);
     // Cargo fuentes estáticas
-    var lector = new LectorCSV();
     var rutas = List.of(
         baseUrl + "/csv/desastres_naturales_argentina.csv",
         baseUrl + "/csv/desastres_sanitarios_contaminacion_argentina.csv",
         baseUrl + "/csv/desastres_tecnologicos_argentina.csv"
     );
 
-    for (String ruta : rutas) {
+    /*for (String ruta : rutas) {
       var fuente = new FuenteEstatica();
-      fuente.importarHechos(lector, ruta);
+      fuente.importarHechos(ruta);
+      fuentesRepository.save(fuente);
       fuente.getListaHechos().forEach(h -> this.hechosRepository.save(h));
-    }
+    }*/
   }
 }

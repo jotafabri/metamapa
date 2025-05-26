@@ -27,7 +27,7 @@ public class Coleccion {
   }
 
   public void agregarFuente(Fuente fuente) {
-    this.fuentes.add(fuente);
+    if(!fuentes.contains(fuente)) this.fuentes.add(fuente);
   }
 
   public void agregarCriterio(CriterioPertenencia criterio) {

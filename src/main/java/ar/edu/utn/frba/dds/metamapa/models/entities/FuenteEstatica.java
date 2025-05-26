@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,8 +15,13 @@ import java.util.List;
 
 public class FuenteEstatica extends Fuente {
 
-  public void importarHechos(LectorCSV lector, String ruta) {
+  public void importarHechos(String ruta) {
     try {
+      listaHechos = LectorCSV.main(ruta);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    /*try {
       if (lector.inicializarLectura(ruta)) {
         List<String> linea;
         while ((linea = lector.conseguirSiguienteLinea()) != null) {
@@ -26,7 +32,7 @@ public class FuenteEstatica extends Fuente {
       }
     } catch (IOException e) {
       throw new RuntimeException("No se pudo hacer la lectura del CSV.");
-    }
+    }*/
   }
 
   private Hecho parsearHecho(List<String> campos) {

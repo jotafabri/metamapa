@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ColeccionesRepository implements IColeccionesRepository {
   //  private List<Coleccion> colecciones;
-  private final Map<String, Coleccion> colecciones = new HashMap<>();
+  private Map<String, Coleccion> colecciones = new HashMap<>();
 
   @Override
   public List<Coleccion> findAll() {

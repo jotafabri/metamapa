@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -74,7 +75,7 @@ public class CSVTest {
     try {
       var lectorNuevo = LectorCSV.main("static/csv/desastres_naturales_argentina.csv");
       Assertions.assertFalse(lectorNuevo.isEmpty());
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }

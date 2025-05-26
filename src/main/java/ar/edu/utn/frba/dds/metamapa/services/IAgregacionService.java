@@ -8,7 +8,9 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.SolicitudEliminacion;
 
 public interface IAgregacionService {
 
-//    void refrescarColecciones();
+    void agregarFuenteAColeccion(String handleColeccion, Long idFuente);
+
+    void refrescarColecciones();
 
     List<Coleccion> obtenerColecciones();
 
@@ -21,5 +23,6 @@ public interface IAgregacionService {
     void aprobarSolicitud(SolicitudEliminacion solicitud);
 
     void rechazarSolicitud(SolicitudEliminacion solicitud);
-    public void findAllSolicitudes();
+
+    List<SolicitudEliminacionDTO> findAllSolicitudes();
 }

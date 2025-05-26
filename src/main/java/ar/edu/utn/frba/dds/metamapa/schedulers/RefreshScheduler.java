@@ -17,8 +17,6 @@ public class RefreshScheduler {
     // Refresca las colecciones una vez por hora
     @Scheduled(cron = "0 0 * * * *") // Cada hora en punto
     public void refrescarColecciones() {
-        System.out.println("Refrescando colecciones...");
-        servicioDeAgregacion.refrescarColecciones();
-        System.out.println("Colecciones actualizadas.");
+        this.servicioDeAgregacion.refrescarColecciones();
     }
 }

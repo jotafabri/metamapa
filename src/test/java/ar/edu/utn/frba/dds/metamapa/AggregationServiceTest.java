@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
-import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,26 +14,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AggregationServiceTest {
 
-    private ColeccionRepository mockColeccionRepo;
+    private ColeccionesRepository mockColeccionRepo;
     private AgregacionService agregacionService;
 
     @BeforeEach
     void setUp() {
-        mockColeccionRepo = Mockito.mock(ColeccionRepository.class);
+        mockColeccionRepo = Mockito.mock(ColeccionesRepository.class);
         agregacionService = new AgregacionService(mockColeccionRepo);
     }
 
     @Test
     void testRefrescarColecciones() {
 
-        Hecho hecho = new Hecho("Título", "Descripción", "Incendio", new Coordenadas((float) -34.6, (float) -58.4), LocalDateTime.now(), Origen.DATASET);
+        Hecho hecho = new Hecho("Título", "Descripción", "Incendio", (double) -34.6, (double) -58.4, LocalDateTime.now(), Origen.DATASET);
 
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
         fuenteEstatica.getListaHechos().add(hecho);
 
         CriterioPertenencia criterioTrue = h -> true;
 
-        Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios", "handle", fuenteEstatica, List.of(criterioTrue));
+        Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios", List.of(criterioTrue));
 
         Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
@@ -97,14 +97,14 @@ public class AggregationServiceTest {
     @Test
     void testPisadoHechoExistenteEnFuenteEstatica() {
 
-        Hecho hechoOriginal = new Hecho("Título", "Descripción vieja", "Incendio", new Coordenadas((float) -40.1, (float) -60.1), LocalDateTime.now().minusDays(1), Origen.DATASET);
+        Hecho hechoOriginal = new Hecho("Título", "Descripción vieja", "Incendio", (double) -40.1, (double) -60.1, LocalDateTime.now().minusDays(1), Origen.DATASET);
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
         fuenteEstatica.getListaHechos().add(hechoOriginal);
 
-        Hecho hechoNuevo = new Hecho("Título", "Descripción NUEVA", "Incendio", new Coordenadas((float) -40.5, (float) -60.5), LocalDateTime.now(), Origen.DATASET);
+        Hecho hechoNuevo = new Hecho("Título", "Descripción NUEVA", "Incendio", (double) -40.5, (double) -60.5, LocalDateTime.now(), Origen.DATASET);
         fuenteEstatica.getListaHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
 
-        Coleccion coleccion = new Coleccion("Colección", "desc", "handle", fuenteEstatica, List.of(h -> true));
+        Coleccion coleccion = new Coleccion("Colección", "desc", List.of(h -> true));
         Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
         agregacionService.refrescarColecciones();
@@ -115,7 +115,7 @@ public class AggregationServiceTest {
 
         assertEquals(1, hechos.size(), "Debe haber un solo hecho con ese título");
         assertEquals("Descripción NUEVA", hechos.get(0).getDescripcion(), "Debe ser la versión actualizada del hecho");
-        assertEquals((float) -40.5, hechos.get(0).getCoordenadas().getLatitud(), 0.01);
+        assertEquals((double) -40.5, hechos.get(0).getLatitud(), 0.01);
     }
 
 }
