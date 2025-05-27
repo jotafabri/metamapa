@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 public class Hecho {
 
-  private int limiteDiasEdicion;
+  private long limiteDiasEdicion;
 
   private Long id;
 
