@@ -57,11 +57,11 @@ public class SeederService implements ISeederService {
         baseUrl + "/csv/desastres_tecnologicos_argentina.csv"
     );
 
-    /*for (String ruta : rutas) {
+    for (String ruta : rutas) {
       var fuente = new FuenteEstatica();
       fuente.importarHechos(ruta);
       fuentesRepository.save(fuente);
       fuente.getListaHechos().forEach(h -> this.hechosRepository.save(h));
-    }*/
+    }
   }
 }

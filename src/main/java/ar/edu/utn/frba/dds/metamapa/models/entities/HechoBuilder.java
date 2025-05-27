@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 public class HechoBuilder {
+
 
 
     private static final int LIMITE_DIAS_EDICION_DEFAULT;
@@ -18,6 +20,7 @@ public class HechoBuilder {
     private String titulo;
     private String descripcion;
     private String categoria;
+    //private Coordenada coordenada;
     private Double latitud;
     private Double longitud;
     private LocalDateTime fechaAcontecimiento;
@@ -25,9 +28,11 @@ public class HechoBuilder {
     private Contribuyente contribuyente;
     private List<String> etiquetas = new ArrayList<>();
     private int limiteDiasEdicion = LIMITE_DIAS_EDICION_DEFAULT;
+    private EstadoHecho estado = EstadoHecho.EN_REVISION;
 
-    public HechoBuilder(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento) {
-        if (titulo == null || descripcion == null || categoria == null || latitud == null || longitud == null || fechaAcontecimiento == null) {
+
+    public HechoBuilder(String titulo, String descripcion, String categoria, Double latitud , Double longitud, LocalDateTime fechaAcontecimiento) {
+        if (titulo == null || descripcion == null || categoria == null || latitud == null || longitud == null ||fechaAcontecimiento == null) {
             throw new IllegalArgumentException("Los campos título, descripción, categoría, coordenadas, fechaAcontecimiento son obligatorios.");
         }
 
@@ -54,8 +59,14 @@ public class HechoBuilder {
         return this;
     }
 
+
     public HechoBuilder conLimiteDiasEdicion(int limiteDias) {
         this.limiteDiasEdicion = limiteDias;
+        return this;
+    }
+
+    public HechoBuilder conEstado(EstadoHecho estado) {
+        this.estado = estado;
         return this;
     }
 
@@ -64,12 +75,19 @@ public class HechoBuilder {
             throw new IllegalStateException("Se requiere un contribuyente.");
         }
 
-        Hecho hecho = new Hecho(titulo, descripcion, categoria, latitud, longitud, fechaAcontecimiento, Origen.CONTRIBUYENTE); // usa el constructor nuevo
+        Hecho hecho = new Hecho(this.fechaCarga); // usa el constructor nuevo
 
+        hecho.setTitulo(titulo);
+        hecho.setDescripcion(descripcion);
+        hecho.setCategoria(categoria);
+        hecho.setLatitud(latitud);
+        hecho.setLongitud(longitud);
+        hecho.setFechaAcontecimiento(fechaAcontecimiento);
         hecho.setMultimedia(multimedia);
         hecho.setContribuyente(contribuyente);
         hecho.setLimiteDiasEdicion(limiteDiasEdicion);
         hecho.getEtiquetas().addAll(etiquetas);
+        hecho.setEstado(estado);
 
         return hecho;
     }

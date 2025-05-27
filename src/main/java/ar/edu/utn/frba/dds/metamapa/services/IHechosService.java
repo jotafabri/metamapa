@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa.services;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoOutputDTO;
 
 public interface IHechosService {
   List<HechoDTO> getHechosWithParams(
@@ -12,4 +13,6 @@ public interface IHechosService {
       String fecha_acontecimiento_desde,
       String fecha_acontecimiento_hasta,
       String ubicacion);
+
+  public List<HechoOutputDTO> buscarTodos();
 }

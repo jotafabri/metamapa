@@ -8,8 +8,12 @@ public class CriterioFechaCarga implements CriterioPertenencia {
     private LocalDateTime hasta;
 
     public CriterioFechaCarga(LocalDateTime desde, LocalDateTime hasta) {
-        this.desde = desde;
-        this.hasta = hasta;
+        if (desde != null) {
+            this.desde = desde;
+        }
+        if (hasta != null) {
+            this.hasta = hasta;
+        }
     }
 
     @Override

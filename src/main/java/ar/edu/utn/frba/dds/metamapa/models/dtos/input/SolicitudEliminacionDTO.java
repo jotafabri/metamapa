@@ -9,12 +9,4 @@ import lombok.Data;
 public class SolicitudEliminacionDTO {
   private Long idHecho;
   private String razon;
-
-  // Mapper
-  public static SolicitudEliminacionDTO fromSolicitud(SolicitudEliminacion solicitud) {
-    var dto = new SolicitudEliminacionDTO();
-    dto.setIdHecho(solicitud.getHecho().getId());
-    dto.setRazon(solicitud.getCausa());
-    return dto;
-  }
 }

@@ -10,17 +10,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FuenteDinamicaTest {
-    private Coordenada coordenada;
+    //private Coordenada coordenada;
     private HechoBuilder hechoBuilder;
     private Contribuyente contribuyente;
-    private Categoria categoria;
-    //private Origen origen;
+    //private Categoria categoria;
 
     @BeforeEach
     void setup() {
-        coordenada = new Coordenada((float) -34.6037, (float) -58.3816); // Coordenadas de Buenos Aires
-        categoria = new Categoria("Categoria de prueba");
-        hechoBuilder = new HechoBuilder("Titulo de prueba", "Descripcion de prueba", categoria, coordenada, LocalDateTime.now());
+        //coordenada = new Coordenada((float) -34.6037, (float) -58.3816); // Coordenadas de Buenos Aires
+        //categoria = new Categoria("Categoria de prueba");
+        hechoBuilder = new HechoBuilder("Titulo de prueba", "Descripcion de prueba", "Categoria de prueba", -12.3251, -12.2445, LocalDateTime.now());
         contribuyente = new Contribuyente("Juan", "Perez", 30, false);
     }
 
@@ -30,8 +29,9 @@ public class FuenteDinamicaTest {
         assertNotNull(hecho);
         assertEquals("Titulo de prueba", hecho.getTitulo());
         assertEquals("Descripcion de prueba", hecho.getDescripcion());
-        assertEquals("Categoria de prueba", hecho.getCategoria().getNombre());
-        assertEquals(coordenada, hecho.getCoordenada());
+        assertEquals("Categoria de prueba", hecho.getCategoria());
+        //assertEquals(coordenada, hecho.getCoordenada());
+
         //assertEquals(origen, hecho.getOrigen());
     }
 
@@ -49,27 +49,28 @@ public class FuenteDinamicaTest {
     @Test
     void testActualizarHecho() {
         Hecho hecho = hechoBuilder.conContribuyente(contribuyente).build();
-        Categoria nuevaCategoria = new Categoria("Nueva Categoria");
-        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", nuevaCategoria, coordenada, LocalDateTime.now())
+        //Categoria nuevaCategoria = new Categoria("Nueva Categoria");
+        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", "Categoria Nueva", -12.3251, -12.2445, LocalDateTime.now())
                 .conContribuyente(contribuyente)
                 .agregarEtiqueta("nuevo")
                 .build();
         hecho.actualizarHecho(nuevoHecho);
         assertEquals("Nueva Descripcion", hecho.getDescripcion());
-        assertEquals("Nueva Categoria", hecho.getCategoria().getNombre());
+        assertEquals("Nueva Categoria", hecho.getCategoria());
         assertTrue(hecho.getEtiquetas().contains("nuevo"));
     }
 
     @Test
     void testHechoNoEditable() {
-        Categoria categoria = new Categoria("Categoria");
-        Coordenada coordenadas = new Coordenada((float) -34.60, (float) -58.38);
-        Hecho hecho = new HechoBuilder("Titulo", "Descripcion", categoria, coordenadas, LocalDateTime.now().minusDays(10))
+       // Categoria categoria = new Categoria("Categoria");
+        //Coordenada coordenadas = new Coordenada((float) -34.60, (float) -58.38);
+        Hecho hecho = new HechoBuilder("Titulo", "Descripcion", "Categoria de prueba", -12.3251, -12.2445, LocalDateTime.now().minusDays(10))
                 .conFechaCarga(LocalDateTime.now().minusDays(10))
                 .conContribuyente(contribuyente)
                 .build();
         assertFalse(hecho.esEditable());
     }
+
 
     @Test
     void testHechoEditable() {

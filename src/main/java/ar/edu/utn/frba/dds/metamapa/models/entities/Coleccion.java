@@ -15,6 +15,8 @@ public class Coleccion {
   private String descripcion;
   private List<Fuente> fuentes = new ArrayList<Fuente>();
   private List<CriterioPertenencia> criterios = new ArrayList<CriterioPertenencia>();
+  private List<Hecho> listaHechos = new ArrayList<>();
+
 
   public Coleccion(String titulo, String descripcion, List<CriterioPertenencia> criterios) {
     this.titulo = titulo;
@@ -34,20 +36,16 @@ public class Coleccion {
     this.criterios.add(criterio);
   }
 
-  public void actualizarColeccion(Coleccion coleccion) {
-    //lógica que implique actualizar la colección
-    this.titulo = coleccion.getTitulo();
-    this.descripcion = coleccion.getDescripcion();
-  }
-
-  //puede ser por parámetro la lista o puede estar en un atributo, depende de lo que nos respondan por discord
-  public List<Hecho> darHechos() {
+  public void actualizarColeccion() {
     List<Hecho> hechosFiltrados = new ArrayList<>();
     for (Fuente fuente1 : fuentes) {
       List<Hecho> hechosFuente = fuente1.getListaHechos();
       hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList());
     }
-    return hechosFiltrados;
+  }
+
+  public List<Hecho> darHechos() {
+    return this.getListaHechos();
   }
 
   public List<Hecho> navegar(List<CriterioPertenencia> criterios) {

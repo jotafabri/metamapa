@@ -8,5 +8,7 @@ public interface ISolicitudesEliminacionRepository {
 
   List<SolicitudEliminacion> findAll();
 
+  SolicitudEliminacion findById(Long id);
+
   void save(SolicitudEliminacion solicitud);
 }

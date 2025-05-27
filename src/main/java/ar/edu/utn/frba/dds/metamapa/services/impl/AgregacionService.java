@@ -1,11 +1,13 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
@@ -29,11 +31,14 @@ public class AgregacionService implements IAgregacionService {
   @Autowired
   private IDetectorSpam detectorDeSpam;
 
-  public void agregarFuenteAColeccion(String handleColeccion, Long idFuente){
+  public AgregacionService(ColeccionesRepository mockColeccionRepo) {
+  }
+
+  public void agregarFuenteAColeccion(String handleColeccion, Long idFuente) {
     Coleccion coleccion = coleccionesRepository.findByHandle(handleColeccion);
     Fuente fuente = fuentesRepository.findById(idFuente);
-    if(coleccion == null || fuente == null){
-      throw new IllegalArgumentException("Colección o fuente no encontrada");
+    if (coleccion == null || fuente == null) {
+    throw new IllegalArgumentException("Coleccion o fuente no encontrada");
     }
     coleccion.agregarFuente(fuente);
   }
@@ -43,8 +48,8 @@ public class AgregacionService implements IAgregacionService {
     var hecho = this.hechosRepository.findById(solicitudDto.getIdHecho());
     if (hecho != null) {
       var solicitud = new SolicitudEliminacion(
-          hecho,
-          solicitudDto.getRazon());
+              hecho,
+              solicitudDto.getRazon());
       if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
         solicitud.rechazarSolicitud();
       }
@@ -57,10 +62,11 @@ public class AgregacionService implements IAgregacionService {
   // Esto lo tiene que hacer juan ignacio
   // @Scheduled(fixedRate = 3600000)
 
-  public void refrescarColecciones(){
-      for(Coleccion coleccion : this.obtenerColecciones()){
-          refrescarHechosColeccion(coleccion);
-      }
+  public void refrescarColecciones() {
+    for (Coleccion coleccion : this.obtenerColecciones()) {
+      refrescarHechosColeccion(coleccion);
+      coleccion.actualizarColeccion();
+    }
   }
 
   //TODO
@@ -84,15 +90,6 @@ public class AgregacionService implements IAgregacionService {
       }
 
       for (Hecho hecho : hechosFiltrados) {
-        /*if (fuente instanceof FuenteDinamica fuenteDinamica) {
-          boolean fueEliminado = fuenteDinamica.getSolicitudesEliminacion().stream()
-                  .anyMatch(s -> s.getEstado().equals(Estado.ACEPTADA)
-                          && s.getHecho().getTitulo().equalsIgnoreCase(hecho.getTitulo()));
-          if (fueEliminado) continue;
-
-          fuenteDinamica.agregarHecho(hecho);
-        }*/
-
         if (fuente instanceof FuenteEstatica fuenteEstatica) {
           boolean yaExiste = fuenteEstatica.getListaHechos().stream()
                   .anyMatch(h -> h.getTitulo().equalsIgnoreCase(hecho.getTitulo()));
@@ -105,14 +102,12 @@ public class AgregacionService implements IAgregacionService {
         }
       }
     }
-
-    System.out.println("Refrescada la colección: " + coleccion.getTitulo());
   }
 
 
   @Override
-  public void aprobarSolicitud(SolicitudEliminacion solicitud) {
-
+  public void aprobarSolicitudById(Long id) {
+    var solicitud = this.solicitudesRepository.findById(id);
     if (solicitud.getEstado() != Estado.PENDIENTE) {
       throw new IllegalStateException("Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
     }
@@ -124,9 +119,10 @@ public class AgregacionService implements IAgregacionService {
 
   }
 
-  @Override
-  public void rechazarSolicitud(SolicitudEliminacion solicitud) {
 
+  @Override
+  public void rechazarSolicitudById(Long id) {
+    var solicitud = this.solicitudesRepository.findById(id);
     if (solicitud.getEstado() != Estado.PENDIENTE) {
       throw new IllegalStateException("Solo se pueden rechazar solicitudes pendientes");
     }
@@ -139,10 +135,9 @@ public class AgregacionService implements IAgregacionService {
     solicitudesRepository.save(solicitud);
   }
 
-  public List<SolicitudEliminacionDTO> findAllSolicitudes(){
-    return this.solicitudesRepository.findAll().stream().map(SolicitudEliminacionDTO::fromSolicitud).toList();
+  public List<SolicitudEliminacionOutputDTO> findAllSolicitudes() {
+    return this.solicitudesRepository.findAll().stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
   }
-
 
 }
 

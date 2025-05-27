@@ -3,8 +3,10 @@ package ar.edu.utn.frba.dds.metamapa.controllers;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
+import ar.edu.utn.frba.dds.metamapa.services.ISeederServiceDinamica;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/hechos")
+
 public class HechosController {
     @Autowired
     private IHechosService hechosService;
 
     @Autowired
     private ISeederService seederService;
+
+    @Autowired
+    private ISeederServiceDinamica seederServiceDinamicas;
+
+
+    @GetMapping
+    public List<HechoOutputDTO> buscarTodosLosHechos() {
+        return this.hechosService.buscarTodos();
+
+    }
 
     @GetMapping
     public List<HechoDTO> getHechosWithParams(
@@ -41,6 +54,7 @@ public class HechosController {
     @GetMapping("/inicializar")
     public boolean inicializarDatos() {
         this.seederService.init();
+        this.seederServiceDinamicas.initDinamicas();
         return true;
     }
 }
