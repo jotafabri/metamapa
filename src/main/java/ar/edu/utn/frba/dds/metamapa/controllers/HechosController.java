@@ -26,8 +26,7 @@ public class HechosController {
     @Autowired
     private ISeederServiceDinamica seederServiceDinamicas;
 
-
-    @GetMapping
+    @GetMapping("/todos")
     public List<HechoOutputDTO> buscarTodosLosHechos() {
         return this.hechosService.buscarTodos();
 

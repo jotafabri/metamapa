@@ -50,7 +50,7 @@ public class FuenteDinamicaTest {
     void testActualizarHecho() {
         Hecho hecho = hechoBuilder.conContribuyente(contribuyente).build();
         //Categoria nuevaCategoria = new Categoria("Nueva Categoria");
-        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", "Categoria Nueva", -12.3251, -12.2445, LocalDateTime.now())
+        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", "Nueva Categoria", -12.3251, -12.2445, LocalDateTime.now())
                 .conContribuyente(contribuyente)
                 .agregarEtiqueta("nuevo")
                 .build();

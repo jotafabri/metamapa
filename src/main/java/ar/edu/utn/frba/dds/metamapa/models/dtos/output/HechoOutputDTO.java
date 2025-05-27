@@ -13,17 +13,12 @@ public class HechoOutputDTO {
     private String titulo;
     private String descripcion;
     private String categoria;
-    private String multimediaURL;
+    private String multimediaURL; //
     private Double latitudCoordenada;
     private Double longitudCoordenada;
     private LocalDateTime fechaAcontecimiento;
+    private LocalDateTime fechaCarga;
 
     public HechoOutputDTO() {
-    }
-
-    public HechoOutputDTO(Hecho hecho) {
-        this.titulo = hecho.getTitulo();
-        this.descripcion = hecho.getDescripcion();
-        this.multimediaURL = hecho.getMultimedia() != null ? hecho.getMultimedia().getUrlCompleta() : null;
     }
 }

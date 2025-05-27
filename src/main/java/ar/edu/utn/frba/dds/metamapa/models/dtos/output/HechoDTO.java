@@ -7,14 +7,14 @@ import lombok.Data;
 
 @Data
 public class HechoDTO {
-  private Long id;
-  private String titulo;
-  private String descripcion;
-  private String categoria;
-  private Double latitud;
-  private Double longitud;
-  private LocalDateTime fechaAcontecimiento;
-  private LocalDateTime fechaCarga;
+  private Long id; //
+  private String titulo; //
+  private String descripcion; //
+  private String categoria; //
+  private Double latitud; //
+  private Double longitud; //
+  private LocalDateTime fechaAcontecimiento; //
+  private LocalDateTime fechaCarga; //
 
   public static HechoDTO fromHecho(Hecho hecho) {
     var dto = new HechoDTO();
