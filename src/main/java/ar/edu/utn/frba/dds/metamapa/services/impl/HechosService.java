@@ -40,30 +40,30 @@ public class HechosService implements IHechosService {
   }
 
 
-  //TODO:agregue estos dos metodos de fuente dinamica
-    @Override
-    public List<HechoOutputDTO> buscarTodos() {
-        List<Hecho> hechos = hechosRepository.findAll();
+//dinamicos
+  @Override
+  public List<HechoOutputDTO> buscarTodos(String categoria,
+                                                   String fecha_reporte_desde,
+                                                   String fecha_reporte_hasta,
+                                                   String fecha_acontecimiento_desde,
+                                                   String fecha_acontecimiento_hasta,
+                                                   String ubicacion) {
+      var criterios = new ListaDeCriterios().getListFromParams(
+              categoria,
+              fecha_reporte_desde,
+              fecha_reporte_hasta,
+              fecha_acontecimiento_desde,
+              fecha_acontecimiento_hasta,
+              ubicacion
+      );
 
-        return hechos.stream()
-                .filter(hecho -> hecho.getEstado() == EstadoHecho.ACEPTADO) // Expongo solo los aseptados
-                .map(this::hechosOutputDTO)
-                .toList();
-    }
+      return hechosRepository.findAll().stream()
+              .filter(h -> h.getEstado() == EstadoHecho.ACEPTADO) // Solo los aseptados se van a exponer
+              .filter(h -> criterios.stream().allMatch(c -> c.cumple(h)))
+              .map(HechoOutputDTO::fromHechoDinamico)
+              .toList();
+  }
 
 
 
-    private HechoOutputDTO hechosOutputDTO(Hecho hecho){
-        HechoOutputDTO dto = new HechoOutputDTO();
-        dto.setId(hecho.getId());
-        dto.setTitulo(hecho.getTitulo());
-        dto.setDescripcion(hecho.getDescripcion());
-        dto.setCategoria(hecho.getCategoria());
-        dto.setLongitudCoordenada(hecho.getLongitud());
-        dto.setLatitudCoordenada(hecho.getLatitud());
-        dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-        dto.setFechaCarga(hecho.getFechaCarga());
-        dto.setMultimediaURL(hecho.getMultimedia() != null ? hecho.getMultimedia().getUrlCompleta() : null);
-        return dto;
-    }
 }

@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -19,5 +20,19 @@ public class HechoOutputDTO {
     private LocalDateTime fechaCarga;
 
     public HechoOutputDTO() {
+    }
+
+    public static HechoOutputDTO fromHechoDinamico(Hecho hecho){
+        HechoOutputDTO dto = new HechoOutputDTO();
+        dto.setId(hecho.getId());
+        dto.setTitulo(hecho.getTitulo());
+        dto.setDescripcion(hecho.getDescripcion());
+        dto.setCategoria(hecho.getCategoria());
+        dto.setLongitudCoordenada(hecho.getLongitud());
+        dto.setLatitudCoordenada(hecho.getLatitud());
+        dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+        dto.setFechaCarga(hecho.getFechaCarga());
+        dto.setMultimediaURL(hecho.getMultimedia() != null ? hecho.getMultimedia().getUrlCompleta() : null);
+        return dto;
     }
 }

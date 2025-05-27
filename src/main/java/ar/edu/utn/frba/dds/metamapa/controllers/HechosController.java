@@ -26,11 +26,25 @@ public class HechosController {
     @Autowired
     private ISeederServiceDinamica seederServiceDinamicas;
 
-    @GetMapping("/todos")
-    public List<HechoOutputDTO> buscarTodosLosHechos() {
-        return this.hechosService.buscarTodos();
-
+    //dinamicos
+    @GetMapping("/dinamicos")
+    public List<HechoOutputDTO> getHechosAceptadosFiltrados(
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String fecha_reporte_desde,
+            @RequestParam(required = false) String fecha_reporte_hasta,
+            @RequestParam(required = false) String fecha_acontecimiento_desde,
+            @RequestParam(required = false) String fecha_acontecimiento_hasta,
+            @RequestParam(required = false) String ubicacion
+    ) {
+        return hechosService.buscarTodos(
+                categoria,
+                fecha_reporte_desde,
+                fecha_reporte_hasta,
+                fecha_acontecimiento_desde,
+                fecha_acontecimiento_hasta,
+                ubicacion);
     }
+
 
     @GetMapping
     public List<HechoDTO> getHechosWithParams(

@@ -14,5 +14,11 @@ public interface IHechosService {
       String fecha_acontecimiento_hasta,
       String ubicacion);
 
-  public List<HechoOutputDTO> buscarTodos();
+  public List<HechoOutputDTO> buscarTodos(
+          String categoria,
+          String fecha_reporte_desde,
+          String fecha_reporte_hasta,
+          String fecha_acontecimiento_desde,
+          String fecha_acontecimiento_hasta,
+          String ubicacion);
 }
