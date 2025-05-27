@@ -58,13 +58,10 @@ public class AgregacionService implements IAgregacionService {
     //TODO si existe ya la solicitud que hacemos? update(?
   }
 
-  //private final HechoRepository hechoRepo;
-  // Esto lo tiene que hacer juan ignacio
-  // @Scheduled(fixedRate = 3600000)
-
   public void refrescarColecciones() {
     for (Coleccion coleccion : this.obtenerColecciones()) {
       refrescarHechosColeccion(coleccion);
+      //TODO elegir una de las dos funciones
       coleccion.actualizarColeccion();
     }
   }
