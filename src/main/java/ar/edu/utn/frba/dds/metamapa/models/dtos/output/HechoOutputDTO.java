@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import lombok.Data;
 
 import java.time.LocalDateTime;
