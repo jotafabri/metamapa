@@ -10,4 +10,5 @@ import java.util.stream.Stream;
 
 @Getter
 public class FuenteDinamica extends Fuente {
+    //TODO aplicar filtro de getlistahechos para que sólo muestre los aprobados
 }

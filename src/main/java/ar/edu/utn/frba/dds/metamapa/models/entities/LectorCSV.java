@@ -11,9 +11,14 @@ import java.util.List;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.SneakyThrows;
 
 public class LectorCSV {
-  public static List<Hecho> main(String rutaCSV) throws IOException {
+  //TODO revisar static
+  //revisar necesidad de ser clase y no interfaz
+  //revisar nombre del método
+  @SneakyThrows //eso lo que hace internamente es el try catch que pusimos en fuente estática
+  public static List<Hecho> main(String rutaCSV){
     Reader reader;
     if(rutaCSV.startsWith("http://")) {
       URL url = new URL(rutaCSV);

@@ -16,38 +16,6 @@ import java.util.List;
 public class FuenteEstatica extends Fuente {
 
   public void importarHechos(String ruta) {
-    try {
-      listaHechos = LectorCSV.main(ruta);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    /*try {
-      if (lector.inicializarLectura(ruta)) {
-        List<String> linea;
-        while ((linea = lector.conseguirSiguienteLinea()) != null) {
-          Hecho hecho = parsearHecho(linea);
-          this.agregarHecho(hecho);
-
-        }
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("No se pudo hacer la lectura del CSV.");
-    }*/
-  }
-
-  private Hecho parsearHecho(List<String> campos) {
-    if (campos.size() < 6) {
-      return null;
-    }
-
-    String titulo = campos.get(0).replaceAll("^\"|\"$", ""); // quitar comillas
-    String descripcion = campos.get(1).replaceAll("^\"|\"$", "");
-    String categoria = campos.get(2); //Todavía no está resuelto esto de las categorías
-    Double lat = Double.parseDouble(campos.get(3));
-    Double lon = Double.parseDouble(campos.get(4));
-    LocalDate fecha = LocalDate.parse(campos.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-    LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
-
-    return new Hecho(titulo, descripcion, categoria, lat, lon, fechaAcontecimiento, Origen.DATASET);
+   listaHechos = LectorCSV.main(ruta);
   }
 }

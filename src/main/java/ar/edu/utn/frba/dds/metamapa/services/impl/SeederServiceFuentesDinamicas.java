@@ -48,11 +48,8 @@ public class SeederServiceFuentesDinamicas implements ISeederServiceDinamica {
                         .conEstado(EstadoHecho.RECHAZADO)
                         .conMultimedia(new Multimedia(baseUrl, "/images/hechos/artworks-000351288021-i1m1am-t500x500.jpg"))
                         .build()
-
-
-
         );
         hechos.forEach(hechosRepository::save);
-
+        //TODO ponerlo en una fuente dinámica
     }
 }

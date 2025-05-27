@@ -7,12 +7,11 @@ import java.util.ResourceBundle;
 
 public class HechoBuilder {
 
-
-
     private static final int LIMITE_DIAS_EDICION_DEFAULT;
     private LocalDateTime fechaCarga = LocalDateTime.now();
 
     static {
+        //TODO se podría pasar la config de application properties a una clase que tiene los valores de las properties
         ResourceBundle config = ResourceBundle.getBundle("application");
         LIMITE_DIAS_EDICION_DEFAULT = Integer.parseInt(config.getString("limite.dias.edicion"));
     }
@@ -20,7 +19,6 @@ public class HechoBuilder {
     private String titulo;
     private String descripcion;
     private String categoria;
-    //private Coordenada coordenada;
     private Double latitud;
     private Double longitud;
     private LocalDateTime fechaAcontecimiento;
@@ -30,8 +28,10 @@ public class HechoBuilder {
     private int limiteDiasEdicion = LIMITE_DIAS_EDICION_DEFAULT;
     private EstadoHecho estado = EstadoHecho.EN_REVISION;
 
+    //TODO elegir si nos quedamos con el Builder o con el Constructor para instanciar hechos en general
 
     public HechoBuilder(String titulo, String descripcion, String categoria, Double latitud , Double longitud, LocalDateTime fechaAcontecimiento) {
+        //TODO el builder no debe recibir parámetros, sino que debe agregar valores de a poco
         if (titulo == null || descripcion == null || categoria == null || latitud == null || longitud == null ||fechaAcontecimiento == null) {
             throw new IllegalArgumentException("Los campos título, descripción, categoría, coordenadas, fechaAcontecimiento son obligatorios.");
         }
@@ -92,11 +92,8 @@ public class HechoBuilder {
         return hecho;
     }
 
-
-
     public HechoBuilder conFechaCarga(LocalDateTime fechaCarga) {
         this.fechaCarga = fechaCarga;
         return this;
     }
-
 }

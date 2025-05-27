@@ -13,6 +13,8 @@ public abstract class Fuente {
   @Setter
   private Long id= null;
 
+  //TODO cambiar a getHechos debería ser suficiente
+  //TODO podríamos pasar lista hechos para las subclases para evitar que proxy la tenga innecesariamente
   public List<Hecho> getListaHechos() {
     return listaHechos;
   }
@@ -21,6 +23,7 @@ public abstract class Fuente {
     return getListaHechos().stream().filter(h -> titulo.equals(h.getTitulo())).findFirst().orElse(null);
   }
 
+  //TODO esto en proxy no tiene sentido
   public void agregarHecho(Hecho hecho) {
     Optional<Hecho> hecho2 = getListaHechos().stream().filter(h -> h.getTitulo().equalsIgnoreCase(hecho.getTitulo())).findFirst();
     hecho2.ifPresentOrElse(h ->

@@ -26,6 +26,7 @@ public class FuenteProxy extends Fuente {
                 .bodyToFlux(HechoDTO.class)
                 .map(response -> {
                     Hecho hecho = new Hecho();
+                    //TODO aplicar constructor
                     hecho.setId(response.getId());
                     hecho.setTitulo(response.getTitulo());
                     hecho.setDescripcion(response.getDescripcion());

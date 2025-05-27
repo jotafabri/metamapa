@@ -44,6 +44,7 @@ public class Coleccion {
     }
   }
 
+  //TODO hay que poner todo en una
   public List<Hecho> darHechos() {
     return this.getListaHechos();
   }

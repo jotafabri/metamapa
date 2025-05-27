@@ -40,24 +40,28 @@ public class Hecho {
   @CsvCustomBindByName(column = "Fecha del hecho", converter = LocalDateTimeConverter.class)
   private LocalDateTime fechaAcontecimiento;
 
-  private LocalDateTime fechaCarga = LocalDateTime.now();
+  private LocalDateTime fechaCarga;
   private Origen origen;
-  private Multimedia multimedia = null;
-  private List<String> etiquetas = new ArrayList();
-  private Boolean eliminado = false;
-  private Contribuyente contribuyente = null;
+  private Multimedia multimedia;
+  private List<String> etiquetas;
+  private Boolean eliminado;
+  private Contribuyente contribuyente;
   private EstadoHecho estado;
 
-  public Hecho() {}
+  public Hecho() {
+    this.fechaCarga = LocalDateTime.now();
+    this.etiquetas = new ArrayList();
+    this.eliminado = false;
+  }
 
   public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento, Origen origen) {
+    this();
     this.titulo = titulo;
     this.descripcion = descripcion;
     this.categoria = categoria;
     this.latitud = latitud;
     this.longitud = longitud;
     this.fechaAcontecimiento = fechaAcontecimiento;
-    //this.fechaCarga = LocalDateTime.now();
     this.origen = origen;
   }
 

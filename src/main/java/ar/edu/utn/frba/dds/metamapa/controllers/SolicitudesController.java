@@ -28,16 +28,10 @@ public class SolicitudesController {
   public void aceptarSolicitud(@PathVariable Long id){
     this.agregacionService.aprobarSolicitudById(id);
   }
+
   @PatchMapping("{id}/rechazar")
   public void rechazarSolicitud(@PathVariable Long id){
     this.agregacionService.rechazarSolicitudById(id);
   }
-
-
-  /*@PatchMapping("/solicitudes/{id}")  //falta verificar que sea Admin o no se que
-  public String tomarDecision(@PathVariable long id, @RequestBody SolicitudEliminacionDTO solicitud)) {
-    agregacionService.procesarDecision(id, decision);  //que Service deberia procesar la decision?
-    return "Decisión procesada para solicitud " + id;
-  }*/
 }
 
