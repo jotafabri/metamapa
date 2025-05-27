@@ -10,10 +10,10 @@ import lombok.Getter;
 
 @Getter
 public class ListaDeCriterios {
-  private List<CriterioPertenencia> listaCriterios;
+  private List<CriterioPertenencia> criterios;
 
   public ListaDeCriterios() {
-    this.listaCriterios = new ArrayList<CriterioPertenencia>();
+    this.criterios = new ArrayList<CriterioPertenencia>();
   }
 
   public List<CriterioPertenencia> getListFromParams(String categoria,
@@ -24,28 +24,28 @@ public class ListaDeCriterios {
                                                      String ubicacion) {
     // Agrego criterio de categoria
     if (categoria != null && !categoria.isEmpty()) {
-      this.listaCriterios.add(new CriterioCategoria(categoria));
+      this.criterios.add(new CriterioCategoria(categoria));
     }
 
     // Agrego criterio de fecha de acontecimiento
     var fAcontDesde = this.parseFecha(fecha_acontecimiento_desde);
     var fAcontHasta = this.parseFecha(fecha_acontecimiento_hasta);
     if (fAcontDesde != null || fAcontHasta != null) {
-      this.listaCriterios.add(new CriterioFechaAcontecimiento(fAcontDesde, fAcontHasta));
+      this.criterios.add(new CriterioFechaAcontecimiento(fAcontDesde, fAcontHasta));
     }
 
     // Agrego criterio de fecha de carga
     var fCargaDesde = this.parseFecha(fecha_reporte_desde);
     var fCargaHasta = this.parseFecha(fecha_reporte_hasta);
     if (fCargaDesde != null || fCargaHasta != null) {
-      this.listaCriterios.add(new CriterioFechaCarga(fCargaDesde, fCargaHasta));
+      this.criterios.add(new CriterioFechaCarga(fCargaDesde, fCargaHasta));
     }
 
     if (ubicacion != null) {
-      this.listaCriterios.add(CriterioUbicacion.fromString(ubicacion));
+      this.criterios.add(CriterioUbicacion.fromString(ubicacion));
     }
 
-    return this.listaCriterios;
+    return this.criterios;
   }
 
   private LocalDateTime parseFecha(String fecha) {

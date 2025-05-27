@@ -9,7 +9,6 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
@@ -61,7 +60,7 @@ public class SeederService implements ISeederService {
       var fuente = new FuenteEstatica();
       fuente.importarHechos(ruta);
       fuentesRepository.save(fuente);
-      fuente.getListaHechos().forEach(h -> this.hechosRepository.save(h));
+      fuente.getHechos().forEach(h -> this.hechosRepository.save(h));
     }
   }
 }

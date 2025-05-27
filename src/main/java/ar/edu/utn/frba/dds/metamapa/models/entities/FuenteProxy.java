@@ -10,32 +10,32 @@ import java.util.List;
 import java.util.Map;
 
 public class FuenteProxy extends Fuente {
-    private final WebClient webClient;
+  private final WebClient webClient;
 
-    public FuenteProxy(String baseUrl) {
-        this.webClient = WebClient.builder().baseUrl(baseUrl).build();
-    }
+  public FuenteProxy(String baseUrl) {
+    this.webClient = WebClient.builder().baseUrl(baseUrl).build();
+  }
 
-    @Override
-    public List<Hecho> getListaHechos() {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/hechos")
-                        .build())
-                .retrieve()
-                .bodyToFlux(HechoDTO.class)
-                .map(response -> {
-                    Hecho hecho = new Hecho();
-                    //TODO aplicar constructor
-                    hecho.setId(response.getId());
-                    hecho.setTitulo(response.getTitulo());
-                    hecho.setDescripcion(response.getDescripcion());
-                    hecho.setCategoria(response.getCategoria());
-                    hecho.setLatitud(response.getLatitud());
-                    hecho.setLongitud(response.getLongitud());
-                    hecho.setFechaAcontecimiento(response.getFechaAcontecimiento());
-                    hecho.setFechaCarga(response.getFechaCarga());
-                    return hecho;
-                }).collectList().block();
-    }
+  @Override
+  public List<Hecho> getHechos() {
+    return webClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/hechos")
+            .build())
+        .retrieve()
+        .bodyToFlux(HechoDTO.class)
+        .map(response -> {
+          Hecho hecho = new Hecho(
+              response.getTitulo(),
+              response.getDescripcion(),
+              response.getCategoria(),
+              response.getLatitud(),
+              response.getLongitud(),
+              response.getFechaAcontecimiento(),
+              Origen.PROXY);
+          hecho.setId(response.getId());
+          hecho.setFechaCarga(response.getFechaCarga());
+          return hecho;
+        }).collectList().block();
+  }
 }

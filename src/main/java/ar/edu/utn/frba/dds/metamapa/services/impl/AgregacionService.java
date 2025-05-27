@@ -10,7 +10,6 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionR
 import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
-import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class AgregacionService implements IAgregacionService {
     Coleccion coleccion = coleccionesRepository.findByHandle(handleColeccion);
     Fuente fuente = fuentesRepository.findById(idFuente);
     if (coleccion == null || fuente == null) {
-    throw new IllegalArgumentException("Coleccion o fuente no encontrada");
+      throw new IllegalArgumentException("Coleccion o fuente no encontrada");
     }
     coleccion.agregarFuente(fuente);
   }
@@ -48,8 +47,8 @@ public class AgregacionService implements IAgregacionService {
     var hecho = this.hechosRepository.findById(solicitudDto.getIdHecho());
     if (hecho != null) {
       var solicitud = new SolicitudEliminacion(
-              hecho,
-              solicitudDto.getRazon());
+          hecho,
+          solicitudDto.getRazon());
       if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
         solicitud.rechazarSolicitud();
       }
@@ -60,45 +59,13 @@ public class AgregacionService implements IAgregacionService {
 
   public void refrescarColecciones() {
     for (Coleccion coleccion : this.obtenerColecciones()) {
-      refrescarHechosColeccion(coleccion);
-      //TODO elegir una de las dos funciones
       coleccion.actualizarColeccion();
     }
   }
 
-  //TODO
   @Override
   public List<Coleccion> obtenerColecciones() {
     return coleccionesRepository.findAll();
-  }
-
-  private void refrescarHechosColeccion(Coleccion coleccion) {
-    for (Fuente fuente : coleccion.getFuentes()) {
-
-      List<Hecho> hechosActualizados = fuente.getListaHechos();
-
-      List<Hecho> hechosFiltrados = new ArrayList<>();
-      for (Hecho hecho : hechosActualizados) {
-        boolean cumpleTodos = coleccion.getCriterios().stream()
-                .allMatch(criterio -> criterio.cumple(hecho));
-        if (cumpleTodos || coleccion.getCriterios().isEmpty()) {
-          hechosFiltrados.add(hecho);
-        }
-      }
-
-      for (Hecho hecho : hechosFiltrados) {
-        if (fuente instanceof FuenteEstatica fuenteEstatica) {
-          boolean yaExiste = fuenteEstatica.getListaHechos().stream()
-                  .anyMatch(h -> h.getTitulo().equalsIgnoreCase(hecho.getTitulo()));
-          if (!yaExiste) {
-            fuenteEstatica.getListaHechos().add(hecho);
-          } else {
-            fuenteEstatica.getListaHechos().removeIf(h -> h.getTitulo().equalsIgnoreCase(hecho.getTitulo()));
-            fuenteEstatica.getListaHechos().add(hecho);
-          }
-        }
-      }
-    }
   }
 
 

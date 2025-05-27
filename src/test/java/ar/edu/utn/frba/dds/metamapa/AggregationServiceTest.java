@@ -29,7 +29,7 @@ public class AggregationServiceTest {
         Hecho hecho = new Hecho("Título", "Descripción", "Incendio", (double) -34.6, (double) -58.4, LocalDateTime.now(), Origen.DATASET);
 
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
-        fuenteEstatica.getListaHechos().add(hecho);
+        fuenteEstatica.getHechos().add(hecho);
 
         CriterioPertenencia criterioTrue = h -> true;
 
@@ -39,8 +39,8 @@ public class AggregationServiceTest {
 
         agregacionService.refrescarColecciones();
 
-        assertEquals(1, fuenteEstatica.getListaHechos().size());
-        assertEquals("Título", fuenteEstatica.getListaHechos().get(0).getTitulo());
+        assertEquals(1, fuenteEstatica.getHechos().size());
+        assertEquals("Título", fuenteEstatica.getHechos().get(0).getTitulo());
     }
 /*
     @Test
@@ -99,17 +99,17 @@ public class AggregationServiceTest {
 
         Hecho hechoOriginal = new Hecho("Título", "Descripción vieja", "Incendio", (double) -40.1, (double) -60.1, LocalDateTime.now().minusDays(1), Origen.DATASET);
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
-        fuenteEstatica.getListaHechos().add(hechoOriginal);
+        fuenteEstatica.getHechos().add(hechoOriginal);
 
         Hecho hechoNuevo = new Hecho("Título", "Descripción NUEVA", "Incendio", (double) -40.5, (double) -60.5, LocalDateTime.now(), Origen.DATASET);
-        fuenteEstatica.getListaHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
+        fuenteEstatica.getHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
 
         Coleccion coleccion = new Coleccion("Colección", "desc", List.of(h -> true));
         Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
         agregacionService.refrescarColecciones();
 
-        List<Hecho> hechos = fuenteEstatica.getListaHechos().stream()
+        List<Hecho> hechos = fuenteEstatica.getHechos().stream()
                 .filter(h -> h.getTitulo().equalsIgnoreCase("Título"))
                 .toList();
 

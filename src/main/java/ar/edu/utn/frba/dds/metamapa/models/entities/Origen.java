@@ -1,7 +1,8 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 public enum Origen {
-    CARGA_MANUAL,
-    DATASET,
-    CONTRIBUYENTE
+  CARGA_MANUAL,
+  DATASET,
+  PROXY,
+  CONTRIBUYENTE,
 }

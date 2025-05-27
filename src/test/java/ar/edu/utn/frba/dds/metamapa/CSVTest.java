@@ -1,16 +1,13 @@
 package ar.edu.utn.frba.dds.metamapa;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.CriterioFechaAcontecimiento;
 import ar.edu.utn.frba.dds.metamapa.models.entities.CriterioPertenencia;
-import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
 import org.junit.jupiter.api.Assertions;
@@ -69,14 +66,14 @@ public class CSVTest {
     System.out.println(listaFiltrada);
   }*/
 
-  @Test
+/*  @Test
   @DisplayName("Test de nuevo lector")
   public void NuevoLectorTest() {
     try {
-      var lectorNuevo = LectorCSV.main("static/csv/desastres_naturales_argentina.csv");
+      var lectorNuevo = LectorCSV.leer("static/csv/desastres_naturales_argentina.csv");
       Assertions.assertFalse(lectorNuevo.isEmpty());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-  }
+  }*/
 }

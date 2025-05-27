@@ -15,7 +15,7 @@ public class Coleccion {
   private String descripcion;
   private List<Fuente> fuentes = new ArrayList<Fuente>();
   private List<CriterioPertenencia> criterios = new ArrayList<CriterioPertenencia>();
-  private List<Hecho> listaHechos = new ArrayList<>();
+  private List<Hecho> hechos = new ArrayList<>();
 
 
   public Coleccion(String titulo, String descripcion, List<CriterioPertenencia> criterios) {
@@ -29,7 +29,7 @@ public class Coleccion {
   }
 
   public void agregarFuente(Fuente fuente) {
-    if(!fuentes.contains(fuente)) this.fuentes.add(fuente);
+    if (!fuentes.contains(fuente)) this.fuentes.add(fuente);
   }
 
   public void agregarCriterio(CriterioPertenencia criterio) {
@@ -38,20 +38,13 @@ public class Coleccion {
 
   public void actualizarColeccion() {
     List<Hecho> hechosFiltrados = new ArrayList<>();
-    for (Fuente fuente1 : fuentes) {
-      List<Hecho> hechosFuente = fuente1.getListaHechos();
+    for (Fuente fuente : fuentes) {
+      List<Hecho> hechosFuente = fuente.getHechos();
       hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList());
     }
   }
 
-  //TODO hay que poner todo en una
-  public List<Hecho> darHechos() {
-    return this.getListaHechos();
-  }
-
   public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
-    var listaHechos = this.darHechos();
-    var listaFiltrada = listaHechos.stream().filter(h -> !h.getEliminado() && criterios.stream().allMatch(c -> c.cumple(h))).toList();
-    return listaFiltrada;
+    return this.hechos.stream().filter(h -> !h.getEliminado() && this.criterios.stream().allMatch(c -> c.cumple(h))).toList();
   }
 }

@@ -12,28 +12,28 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class FuentesRepository implements IFuentesRepository {
-    private List<Fuente> fuentes = new ArrayList();
+  private List<Fuente> fuentes = new ArrayList();
 
-    @Override
-    public List<Fuente> findAll() {
-        return fuentes;
-    }
+  @Override
+  public List<Fuente> findAll() {
+    return fuentes;
+  }
 
-    @Override
-    public void save(Fuente fuente) {
-        if (!fuentes.contains(fuente)) {
-            fuentes.add(fuente);
-            if (fuente.getId() == null) fuente.setId((long) (this.fuentes.size() + 1));
-            ;
-        }
+  @Override
+  public void save(Fuente fuente) {
+    if (!fuentes.contains(fuente)) {
+      fuentes.add(fuente);
+      if (fuente.getId() == null) fuente.setId((long) (this.fuentes.size() + 1));
+      ;
     }
+  }
 
-    @Override
-    public Fuente findById(Long id) {
-        return this.fuentes
-                .stream()
-                .filter(s -> s.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
+  @Override
+  public Fuente findById(Long id) {
+    return this.fuentes
+        .stream()
+        .filter(s -> s.getId().equals(id))
+        .findFirst()
+        .orElse(null);
+  }
 }
