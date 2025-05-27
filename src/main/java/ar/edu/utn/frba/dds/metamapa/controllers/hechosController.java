@@ -13,9 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/hechos")
-//TODO: o "/api/hechos"
 @CrossOrigin(origins = "http://localhost:3000") //TODO:Para probar:
-public class hechosController {
+public class    hechosController {
 
     @Autowired
     private ISeederService seederService;

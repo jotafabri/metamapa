@@ -71,6 +71,7 @@ public class FuenteDinamicaTest {
         assertFalse(hecho.esEditable());
     }
 
+
     @Test
     void testHechoEditable() {
         Hecho hecho = hechoBuilder.conContribuyente(contribuyente).conLimiteDiasEdicion(10).build();

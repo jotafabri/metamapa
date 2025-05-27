@@ -34,10 +34,16 @@ public class HechosService implements IHechosService {
         dto.setTitulo(hecho.getTitulo());
         dto.setDescripcion(hecho.getDescripcion());
         dto.setCategoria(hecho.getCategoria().getNombre());
-        dto.setMultimediaURL(hecho.getMultimedia().getUrl());
         dto.setLongitudCoordenada(hecho.getCoordenada().getLongitud());
         dto.setLatitudCoordenada(hecho.getCoordenada().getLatitud());
         dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+
+        if (hecho.getMultimedia() != null) {
+            dto.setMultimediaURL(hecho.getMultimedia().getUrlCompleta());
+
+        } else {
+            dto.setMultimediaURL(null);
+        }
         return dto;
     }
 }

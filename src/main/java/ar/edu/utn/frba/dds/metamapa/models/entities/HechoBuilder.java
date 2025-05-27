@@ -28,6 +28,8 @@ public class HechoBuilder {
     private List<String> etiquetas = new ArrayList<>();
     private boolean visible = VISIBLE_DEFAULT;
     private int limiteDiasEdicion = LIMITE_DIAS_EDICION_DEFAULT;
+    private EstadoHecho estado = EstadoHecho.EN_REVISION;
+
 
     public HechoBuilder(String titulo, String descripcion, Categoria categoria, Coordenada coordenada, LocalDateTime fechaAcontecimiento) {
         if (titulo == null || descripcion == null || categoria == null || coordenada == null || fechaAcontecimiento == null) {
@@ -66,6 +68,11 @@ public class HechoBuilder {
         return this;
     }
 
+    public HechoBuilder conEstado(EstadoHecho estado) {
+        this.estado = estado;
+        return this;
+    }
+
     public Hecho build() {
         if (this.contribuyente == null) {
             throw new IllegalStateException("Se requiere un contribuyente.");
@@ -83,6 +90,7 @@ public class HechoBuilder {
         hecho.setVisible(visible);
         hecho.setLimiteDiasEdicion(limiteDiasEdicion);
         hecho.getEtiquetas().addAll(etiquetas);
+        hecho.setEstado(estado);
 
         return hecho;
     }
