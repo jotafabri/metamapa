@@ -7,6 +7,7 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 
 public interface IColeccionService {
   List<ColeccionDTO> getAllColecciones();
+
   List<HechoDTO> getHechosByHandle(String handle,
                                       String categoria,
                                       String fecha_reporte_desde,
@@ -14,5 +15,14 @@ public interface IColeccionService {
                                       String fecha_acontecimiento_desde,
                                       String fecha_acontecimiento_hasta,
                                       String ubicacion);
+
+  List<HechoDTO> getHechosCurados(String handle, Boolean curado);
+
   void crearDesdeDTO(ColeccionDTO coleccionDTO);
+
+  ColeccionDTO mostrarColeccion(String handle);
+
+  void actualizarColeccion(String handle, ColeccionDTO nuevaColeccionDTO);
+
+  void eliminarColeccion(String handle);
 }

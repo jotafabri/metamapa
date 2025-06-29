@@ -1,20 +1,20 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
-public class CriterioUbicacion implements CriterioPertenencia {
+public class FiltroUbicacion implements Filtro {
 
   private Float latitud;
   private Float longitud;
 
-  public CriterioUbicacion(Float latitud, Float longitud) {
+  public FiltroUbicacion(Float latitud, Float longitud) {
     this.latitud = latitud;
     this.longitud = longitud;
   }
 
-  public static CriterioUbicacion fromString(String string) {
+  public static FiltroUbicacion fromString(String string) {
     String[] partes = string.split(",");
     float lat = Float.parseFloat(partes[0].trim());
     float lon = Float.parseFloat(partes[1].trim());
-    return new CriterioUbicacion(lat,lon);
+    return new FiltroUbicacion(lat,lon);
   }
 
   @Override

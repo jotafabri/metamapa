@@ -14,25 +14,27 @@ public class Coleccion {
   private String titulo;
   private String descripcion;
   private List<Fuente> fuentes = new ArrayList<Fuente>();
-  private List<CriterioPertenencia> criterios = new ArrayList<CriterioPertenencia>();
+  private List<Filtro> criterios = new ArrayList<>();
   private List<Hecho> hechos = new ArrayList<>();
+  private List<Hecho> hechosConsensuados = new ArrayList<>();
+  private Filtro algoritmoDeConsenso;
 
-
-  public Coleccion(String titulo, String descripcion, List<CriterioPertenencia> criterios) {
+  public Coleccion(String titulo, String descripcion) {
     this.titulo = titulo;
     this.descripcion = descripcion;
-    if (null == criterios) {
-      this.criterios = new ArrayList();
-    } else {
-      this.criterios = criterios;
-    }
   }
 
   public void agregarFuente(Fuente fuente) {
-    if (!fuentes.contains(fuente)) this.fuentes.add(fuente);
+    if (!this.fuentes.contains(fuente)) {
+      this.fuentes.add(fuente);
+    }
   }
 
-  public void agregarCriterio(CriterioPertenencia criterio) {
+  public void eliminarFuente(Fuente fuente) {
+    this.fuentes.remove(fuente);
+  }
+
+  public void agregarCriterio(Filtro criterio) {
     this.criterios.add(criterio);
   }
 
@@ -42,9 +44,14 @@ public class Coleccion {
       List<Hecho> hechosFuente = fuente.getHechos();
       hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList());
     }
+    this.hechos = hechosFiltrados;
   }
 
-  public List<Hecho> navegar(List<CriterioPertenencia> criterios) {
+  public List<Hecho> navegar(List<Filtro> criterios) {
     return this.hechos.stream().filter(h -> !h.getEliminado() && this.criterios.stream().allMatch(c -> c.cumple(h))).toList();
+  }
+
+  public List<Hecho> navegarCurado(Boolean curado) {
+    return curado ? this.hechosConsensuados : this.hechos;
   }
 }

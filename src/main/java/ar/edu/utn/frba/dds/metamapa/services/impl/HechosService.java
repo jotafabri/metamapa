@@ -3,8 +3,7 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.EstadoHecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.ListaDeCriterios;
+import ar.edu.utn.frba.dds.metamapa.models.entities.ListaDeFiltros;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class HechosService implements IHechosService {
                                             String fecha_acontecimiento_desde,
                                             String fecha_acontecimiento_hasta,
                                             String ubicacion) {
-    var filtro = new ListaDeCriterios().getListFromParams(categoria,
+    var filtro = new ListaDeFiltros().getListFromParams(categoria,
         fecha_reporte_desde,
         fecha_reporte_hasta,
         fecha_acontecimiento_desde,
@@ -48,7 +47,7 @@ public class HechosService implements IHechosService {
                                                    String fecha_acontecimiento_desde,
                                                    String fecha_acontecimiento_hasta,
                                                    String ubicacion) {
-      var criterios = new ListaDeCriterios().getListFromParams(
+      var criterios = new ListaDeFiltros().getListFromParams(
               categoria,
               fecha_reporte_desde,
               fecha_reporte_hasta,

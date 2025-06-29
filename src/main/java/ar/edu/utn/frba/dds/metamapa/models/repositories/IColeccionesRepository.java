@@ -10,5 +10,7 @@ public interface IColeccionesRepository {
 
   void save(Coleccion coleccion);
 
+  void delete(String handle);
+
   Coleccion findByHandle(String handle);
 }

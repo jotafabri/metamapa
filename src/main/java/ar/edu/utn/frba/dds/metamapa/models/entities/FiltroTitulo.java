@@ -1,9 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
-public class CriterioTitulo implements CriterioPertenencia {
+public class FiltroTitulo implements Filtro {
     private final String tituloBuscado;
 
-    public CriterioTitulo(String titulo) {
+    public FiltroTitulo(String titulo) {
         this.tituloBuscado = titulo;
     }
     // Acá podría haber un comparador de String que sea más flexible

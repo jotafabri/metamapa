@@ -32,6 +32,11 @@ public class ColeccionesRepository implements IColeccionesRepository {
   }
 
   @Override
+  public void delete(String handle) {
+    this.colecciones.remove(handle);
+  }
+
+  @Override
   public Coleccion findByHandle(String handle) {
     return this.colecciones.get(handle);
   }

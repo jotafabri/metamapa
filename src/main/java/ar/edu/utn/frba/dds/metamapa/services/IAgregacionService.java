@@ -11,6 +11,8 @@ public interface IAgregacionService {
 
     void agregarFuenteAColeccion(String handleColeccion, Long idFuente);
 
+    void eliminarFuenteDeColeccion(String handleColeccion, Long idFuente);
+
     void refrescarColecciones();
 
     List<Coleccion> obtenerColecciones();

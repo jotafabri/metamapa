@@ -33,13 +33,21 @@ public class AgregacionService implements IAgregacionService {
   public AgregacionService(ColeccionesRepository mockColeccionRepo) {
   }
 
+  @Override
   public void agregarFuenteAColeccion(String handleColeccion, Long idFuente) {
-    Coleccion coleccion = coleccionesRepository.findByHandle(handleColeccion);
-    Fuente fuente = fuentesRepository.findById(idFuente);
+    Coleccion coleccion = this.coleccionesRepository.findByHandle(handleColeccion);
+    Fuente fuente = this.fuentesRepository.findById(idFuente);
     if (coleccion == null || fuente == null) {
       throw new IllegalArgumentException("Coleccion o fuente no encontrada");
     }
     coleccion.agregarFuente(fuente);
+  }
+
+  @Override
+  public void eliminarFuenteDeColeccion(String handleColeccion, Long idFuente) {
+    Coleccion coleccion = this.coleccionesRepository.findByHandle(handleColeccion);
+    Fuente fuente = this.fuentesRepository.findById(idFuente);
+    coleccion.eliminarFuente(fuente);
   }
 
   @Override

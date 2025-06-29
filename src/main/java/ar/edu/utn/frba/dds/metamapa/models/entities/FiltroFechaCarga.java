@@ -2,12 +2,12 @@ package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import java.time.LocalDateTime;
 
-public class CriterioFechaCarga implements CriterioPertenencia {
+public class FiltroFechaCarga implements Filtro {
 
     private LocalDateTime desde;
     private LocalDateTime hasta;
 
-    public CriterioFechaCarga(LocalDateTime desde, LocalDateTime hasta) {
+    public FiltroFechaCarga(LocalDateTime desde, LocalDateTime hasta) {
         if (desde != null) {
             this.desde = desde;
         }

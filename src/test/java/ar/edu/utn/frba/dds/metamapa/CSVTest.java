@@ -1,19 +1,15 @@
 package ar.edu.utn.frba.dds.metamapa;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.CriterioFechaAcontecimiento;
-import ar.edu.utn.frba.dds.metamapa.models.entities.CriterioPertenencia;
+import ar.edu.utn.frba.dds.metamapa.models.entities.FiltroFechaAcontecimiento;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 
 import java.util.List;
@@ -24,13 +20,13 @@ public class CSVTest {
   private String ruta = "src/test/desastres_naturales_argentina.csv";
   private List<Hecho> listaHechos;
   private List<Hecho> listaFiltrada;
-  private List<CriterioPertenencia> listaCriterios;
+  private List<Filtro> listaCriterios;
 
   @BeforeEach
   public void init() {
     this.lector = new LectorCSV();
     this.listaCriterios = new ArrayList<>();
-    CriterioPertenencia critFecha = new CriterioFechaAcontecimiento(
+    Filtro critFecha = new FiltroFechaAcontecimiento(
         LocalDate.parse("01/01/2013", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(),
         LocalDateTime.now());
     this.listaCriterios.add(critFecha);
