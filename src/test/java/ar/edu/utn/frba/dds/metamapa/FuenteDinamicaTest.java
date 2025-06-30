@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
-import ar.edu.utn.frba.dds.metamapa.models.entities.utils.HechoBuilder;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FuenteDinamicaTest {
     //private Coordenada coordenada;
-    private HechoBuilder hechoBuilder;
+    private Hecho hechoBuilder;
     private Contribuyente contribuyente;
     //private Categoria categoria;
 
@@ -20,7 +20,7 @@ public class FuenteDinamicaTest {
     void setup() {
         //coordenada = new Coordenada((float) -34.6037, (float) -58.3816); // Coordenadas de Buenos Aires
         //categoria = new Categoria("Categoria de prueba");
-        hechoBuilder = new HechoBuilder("Titulo de prueba", "Descripcion de prueba", "Categoria de prueba", -12.3251, -12.2445, LocalDateTime.of(2023, 12, 5, 14, 30));
+        hechoBuilder = new Hecho("Titulo de prueba", "Descripcion de prueba", "Categoria de prueba", -12.3251, -12.2445, LocalDateTime.of(2023, 12, 5, 14, 30));
         contribuyente = new Contribuyente("Juan", "Perez", 30, false);
     }
 
@@ -51,7 +51,7 @@ public class FuenteDinamicaTest {
     void testActualizarHecho() {
         Hecho hecho = hechoBuilder.conContribuyente(contribuyente).build();
         //Categoria nuevaCategoria = new Categoria("Nueva Categoria");
-        Hecho nuevoHecho = new HechoBuilder("Nuevo Titulo", "Nueva Descripcion", "Nueva Categoria", -12.3251, -12.2445, LocalDateTime.of(2023, 12, 5, 14, 30))
+        Hecho nuevoHecho = new Hecho("Nuevo Titulo", "Nueva Descripcion", "Nueva Categoria", -12.3251, -12.2445, LocalDateTime.of(2023, 12, 5, 14, 30))
                 .conContribuyente(contribuyente)
                 .agregarEtiqueta("nuevo")
                 .build();
@@ -65,7 +65,7 @@ public class FuenteDinamicaTest {
     void testHechoNoEditable() {
        // Categoria categoria = new Categoria("Categoria");
         //Coordenada coordenadas = new Coordenada((float) -34.60, (float) -58.38);
-        Hecho hecho = new HechoBuilder("Titulo", "Descripcion", "Categoria de prueba", -12.3251, -12.2445, LocalDateTime.of(2023, 12, 5, 14, 30))
+        Hecho hecho = new Hecho("Titulo", "Descripcion", "Categoria de prueba", -12.3251, -12.2445, LocalDateTime.of(2023, 12, 5, 14, 30))
                 .conFechaCarga(LocalDateTime.now().minusDays(10))
                 .conContribuyente(contribuyente)
                 .build();
@@ -78,7 +78,7 @@ public class FuenteDinamicaTest {
         Hecho hecho = hechoBuilder
                 .conContribuyente(contribuyente)
                 .conFechaCarga(LocalDateTime.now().minusDays(9))
-                .conLimiteDiasEdicion(10).build();
+                .conLimiteDiasEdicion(10L).build();
         assertTrue(hecho.esEditable());
     }
 
