@@ -39,13 +39,13 @@ public class SeederService implements ISeederService {
     fuentesRepository.save(fuenteDinamica);
     Hecho nuevoHecho = new Hecho("Caída de aeronave impacta en Olavarría", "Grave caída de aeronave ocurrió en las inmediaciones de Olavarría, Buenos Aires. El incidente provocó pánico entre los residentes locales. Voluntarios de diversas organizaciones se han sumado a las tareas de auxilio.",
             "Caída de aeronave",-36.868375, -60.343297,
-            LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(), Origen.CARGA_MANUAL);
+            LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
     this.hechosRepository.save(nuevoHecho);
     hechosAgregar.add(nuevoHecho);
     for (Hecho hecho : hechosAgregar) {
       fuenteDinamica.agregarHecho(hecho);
     }
-    Coleccion coleccionPrueba = new Coleccion("Colección prueba", "Esto es una prueba", null);
+    Coleccion coleccionPrueba = new Coleccion("Colección prueba", "Esto es una prueba");
     coleccionPrueba.agregarFuente(fuenteDinamica);
 
     this.coleccionesRepository.save(coleccionPrueba);

@@ -95,6 +95,11 @@ public class Hecho {
     return this;
   }
 
+  public Hecho conFechaCarga(LocalDateTime fechaCarga) {
+    this.fechaCarga = fechaCarga;
+    return this;
+  }
+
   //Sobrecarga de contructor para testeos
   public Hecho (LocalDateTime fechaCarga) {
     this.fechaCarga = fechaCarga;

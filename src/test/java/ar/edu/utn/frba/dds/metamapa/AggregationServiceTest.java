@@ -29,14 +29,15 @@ public class AggregationServiceTest {
     @Test
     void testRefrescarColecciones() {
 
-        Hecho hecho = new Hecho("Título", "Descripción", "Incendio", (double) -34.6, (double) -58.4, LocalDateTime.now(), Origen.DATASET);
+        Hecho hecho = new Hecho("Título", "Descripción", "Incendio", (double) -34.6, (double) -58.4, LocalDateTime.now());
 
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
         fuenteEstatica.getHechos().add(hecho);
 
         Filtro criterioTrue = h -> true;
 
-        Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios", List.of(criterioTrue));
+        Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios");
+        coleccion.setCriterios(List.of(criterioTrue));
 
         Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
@@ -100,14 +101,15 @@ public class AggregationServiceTest {
     @Test
     void testPisadoHechoExistenteEnFuenteEstatica() {
 
-        Hecho hechoOriginal = new Hecho("Título", "Descripción vieja", "Incendio", (double) -40.1, (double) -60.1, LocalDateTime.now().minusDays(1), Origen.DATASET);
+        Hecho hechoOriginal = new Hecho("Título", "Descripción vieja", "Incendio", (double) -40.1, (double) -60.1, LocalDateTime.now().minusDays(1));
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
         fuenteEstatica.getHechos().add(hechoOriginal);
 
-        Hecho hechoNuevo = new Hecho("Título", "Descripción NUEVA", "Incendio", (double) -40.5, (double) -60.5, LocalDateTime.now(), Origen.DATASET);
+        Hecho hechoNuevo = new Hecho("Título", "Descripción NUEVA", "Incendio", (double) -40.5, (double) -60.5, LocalDateTime.now());
         fuenteEstatica.getHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
 
-        Coleccion coleccion = new Coleccion("Colección", "desc", List.of(h -> true));
+        Coleccion coleccion = new Coleccion("Colección", "desc");
+        coleccion.setCriterios(List.of(h -> true));
         Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
         agregacionService.refrescarColecciones();

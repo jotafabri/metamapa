@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoOutputDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.ListaDeFiltros;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
@@ -57,7 +58,7 @@ public class HechosService implements IHechosService {
       );
 
       return hechosRepository.findAll().stream()
-              .filter(h -> h.getEstado() == EstadoHecho.ACEPTADO) // Solo los aseptados se van a exponer
+              .filter(h -> h.getEstado() == Estado.ACEPTADA) // Solo los aseptados se van a exponer
               .filter(h -> criterios.stream().allMatch(c -> c.cumple(h)))
               .map(HechoOutputDTO::fromHechoDinamico)
               .toList();

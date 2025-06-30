@@ -29,8 +29,7 @@ public class FuenteProxy extends Fuente {
               response.getCategoria(),
               response.getLatitud(),
               response.getLongitud(),
-              response.getFechaAcontecimiento(),
-              Origen.PROXY);
+              response.getFechaAcontecimiento());
           hecho.setId(response.getId());
           hecho.setFechaCarga(response.getFechaCarga());
           return hecho;
