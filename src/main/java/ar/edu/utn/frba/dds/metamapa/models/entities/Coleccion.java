@@ -3,6 +3,9 @@ package ar.edu.utn.frba.dds.metamapa.models.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,11 +16,11 @@ public class Coleccion {
   private String handle;
   private String titulo;
   private String descripcion;
-  private List<Fuente> fuentes = new ArrayList<Fuente>();
+  private List<Fuente> fuentes = new ArrayList<>();
   private List<Filtro> criterios = new ArrayList<>();
   private List<Hecho> hechos = new ArrayList<>();
   private List<Hecho> hechosConsensuados = new ArrayList<>();
-  private Filtro algoritmoDeConsenso;
+  private EstrategiaConsenso algoritmoDeConsenso;
 
   public Coleccion(String titulo, String descripcion) {
     this.titulo = titulo;
@@ -53,5 +56,11 @@ public class Coleccion {
 
   public List<Hecho> navegarCurado(Boolean curado) {
     return curado ? this.hechosConsensuados : this.hechos;
+  }
+
+  public void actualizarCurados() {
+    this.hechosConsensuados = this.hechos.stream()
+        .filter(h -> this.algoritmoDeConsenso == null || this.algoritmoDeConsenso.cumple(h, this.fuentes))
+        .toList();
   }
 }

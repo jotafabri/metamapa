@@ -1,4 +1,6 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.filtros;
+
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 
 public class FiltroUbicacion implements Filtro {
 

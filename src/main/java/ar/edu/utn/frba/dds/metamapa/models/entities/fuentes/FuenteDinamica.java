@@ -1,13 +1,10 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import lombok.Getter;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 
 @Getter

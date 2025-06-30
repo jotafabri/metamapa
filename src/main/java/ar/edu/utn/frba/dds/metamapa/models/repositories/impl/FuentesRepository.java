@@ -1,12 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Fuente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import org.springframework.stereotype.Repository;
 

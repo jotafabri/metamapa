@@ -5,9 +5,9 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
-import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,8 +57,9 @@ public class ColeccionesController {
   }
 
   @PutMapping("/{handle}/algoritmo")
-  public void modificarAlgoritmo(@PathVariable String handle) {
-    // TODO Se podría recibir por un string el nuevo algoritmo
+  public void modificarAlgoritmo(@PathVariable String handle, @RequestParam String nombre) {
+    TipoAlgoritmo tipo = TipoAlgoritmo.valueOf(nombre.toUpperCase());
+    this.coleccionService.cambiarAlgoritmo(handle, tipo);
   }
 
   //localhost:8080/colecciones/abcd/agregar-fuente?idFuente=3

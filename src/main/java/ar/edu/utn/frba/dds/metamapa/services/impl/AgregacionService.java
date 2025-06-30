@@ -3,6 +3,8 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
@@ -13,7 +15,6 @@ import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -1,9 +1,10 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.utils;
 
 import java.io.*;
 import java.net.URL;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.SneakyThrows;

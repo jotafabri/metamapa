@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
 
 public interface IColeccionService {
   List<ColeccionDTO> getAllColecciones();
@@ -25,4 +26,6 @@ public interface IColeccionService {
   void actualizarColeccion(String handle, ColeccionDTO nuevaColeccionDTO);
 
   void eliminarColeccion(String handle);
+
+  void cambiarAlgoritmo(String handle, TipoAlgoritmo tipo);
 }

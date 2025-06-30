@@ -1,9 +1,14 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.utils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import ar.edu.utn.frba.dds.metamapa.models.entities.Contribuyente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Multimedia;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
 
 public class HechoBuilder {
 

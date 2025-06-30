@@ -1,13 +1,11 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FuenteProxy extends Fuente {
   private final WebClient webClient;

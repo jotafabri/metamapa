@@ -1,5 +1,5 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Fuente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 
 import java.util.List;
 

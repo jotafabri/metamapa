@@ -1,6 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +34,7 @@ public class AggregationServiceTest {
         FuenteEstatica fuenteEstatica = new FuenteEstatica();
         fuenteEstatica.getHechos().add(hecho);
 
-        CriterioPertenencia criterioTrue = h -> true;
+        Filtro criterioTrue = h -> true;
 
         Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios", List.of(criterioTrue));
 

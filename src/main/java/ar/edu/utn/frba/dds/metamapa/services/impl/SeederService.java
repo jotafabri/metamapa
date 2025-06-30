@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteDinamica;
-import ar.edu.utn.frba.dds.metamapa.models.entities.FuenteEstatica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Origen;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;

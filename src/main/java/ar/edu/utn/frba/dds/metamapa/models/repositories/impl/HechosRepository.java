@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories.impl;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.EstadoHecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import org.springframework.stereotype.Repository;

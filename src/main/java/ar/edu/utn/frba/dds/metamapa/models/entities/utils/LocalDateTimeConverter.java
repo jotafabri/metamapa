@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.utils;
 
 import com.opencsv.bean.AbstractBeanField;
 

@@ -1,6 +1,8 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.filtros;
 
 import java.time.LocalDateTime;
+
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 
 public class FiltroFechaAcontecimiento implements Filtro {
 

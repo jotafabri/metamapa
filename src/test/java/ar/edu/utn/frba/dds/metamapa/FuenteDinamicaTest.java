@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
+import ar.edu.utn.frba.dds.metamapa.models.entities.utils.HechoBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -5,7 +5,11 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.ListaDeFiltros;
+import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoAbsoluto;
+import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoPorMayoriaSimple;
+import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoPorMultiplesMenciones;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.ListaDeFiltros;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +86,18 @@ public class ColeccionService implements IColeccionService {
   @Override
   public void eliminarColeccion(String handle) {
     this.coleccionesRepository.delete(handle);
+  }
+
+  @Override
+  public void cambiarAlgoritmo(String handle, TipoAlgoritmo tipo) {
+    var coleccion = this.coleccionesRepository.findByHandle(handle);
+    if (tipo == TipoAlgoritmo.MAYORIA_ABSOLUTA) {
+      coleccion.setAlgoritmoDeConsenso(new ConsensoAbsoluto());
+    } else if (tipo == TipoAlgoritmo.MAYORIA_SIMPLE) {
+      coleccion.setAlgoritmoDeConsenso(new ConsensoPorMayoriaSimple());
+    } else if (tipo == TipoAlgoritmo.MULTIPLES_MENCIONES) {
+      coleccion.setAlgoritmoDeConsenso(new ConsensoPorMultiplesMenciones());
+    }
+    this.coleccionesRepository.save(coleccion);
   }
 }

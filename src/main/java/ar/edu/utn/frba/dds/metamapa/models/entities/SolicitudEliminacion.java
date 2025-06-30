@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import lombok.Getter;
 import lombok.Setter;
 

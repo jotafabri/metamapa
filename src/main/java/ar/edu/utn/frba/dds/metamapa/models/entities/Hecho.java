@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
+import ar.edu.utn.frba.dds.metamapa.models.entities.utils.LocalDateTimeConverter;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter

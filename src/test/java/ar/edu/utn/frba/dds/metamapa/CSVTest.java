@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.FiltroFechaAcontecimiento;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Filtro;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroFechaAcontecimiento;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.LectorCSV;
+import ar.edu.utn.frba.dds.metamapa.models.entities.utils.LectorCSV;
 import org.junit.jupiter.api.BeforeEach;
 
 

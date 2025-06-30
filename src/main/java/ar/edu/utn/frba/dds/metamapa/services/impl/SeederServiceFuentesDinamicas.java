@@ -1,10 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.utils.HechoBuilder;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.FuentesRepository;
-import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
-import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederServiceDinamica;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
