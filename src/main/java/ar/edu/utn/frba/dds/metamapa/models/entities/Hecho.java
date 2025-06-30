@@ -4,22 +4,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.entities.utils.LocalDateTimeConverter;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
 public class Hecho {
-
-  private long limiteDiasEdicion;
-
   private Long id;
 
   @CsvBindByName(column = "Título")
@@ -43,35 +41,85 @@ public class Hecho {
   private LocalDateTime fechaCarga;
   private Origen origen;
   private Multimedia multimedia;
+  private Contribuyente contribuyente;
+
   private List<String> etiquetas;
   private Boolean eliminado;
-  private Contribuyente contribuyente;
-  private EstadoHecho estado;
+  private Estado estado;
+
+  @Value("${limite.dias.edicion}")
+  private Long limiteDiasEdicion;
 
   public Hecho() {
     this.fechaCarga = LocalDateTime.now();
     this.etiquetas = new ArrayList();
     this.eliminado = false;
+    this.estado = Estado.PENDIENTE;
   }
 
-  public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento, Origen origen) {
+  public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento) {
     this();
+    if (titulo == null || descripcion == null || categoria == null || latitud == null || longitud == null || fechaAcontecimiento == null) {
+      throw new IllegalArgumentException("Los campos título, descripción, categoría, coordenadas, fechaAcontecimiento son obligatorios.");
+    }
     this.titulo = titulo;
     this.descripcion = descripcion;
     this.categoria = categoria;
     this.latitud = latitud;
     this.longitud = longitud;
     this.fechaAcontecimiento = fechaAcontecimiento;
-    this.origen = origen;
+  }
+
+  public Hecho conMultimedia(Multimedia multimedia) {
+    this.multimedia = multimedia;
+    return this;
+  }
+
+  public Hecho conContribuyente(Contribuyente contribuyente) {
+    this.contribuyente = contribuyente;
+    return this;
+  }
+
+  public Hecho agregarEtiqueta(String etiqueta) {
+    this.etiquetas.add(etiqueta);
+    return this;
+  }
+
+  public Hecho conLimiteDiasEdicion(Long limiteDias) {
+    this.limiteDiasEdicion = limiteDias;
+    return this;
+  }
+
+  public Hecho conEstado(Estado estado) {
+    this.estado = estado;
+    return this;
   }
 
   //Sobrecarga de contructor para testeos
-  public Hecho(LocalDateTime fechaCarga) {
+  public Hecho (LocalDateTime fechaCarga) {
     this.fechaCarga = fechaCarga;
   }
+  
+  public Hecho build() {
+    if (this.contribuyente == null) {
+      throw new IllegalStateException("Se requiere un contribuyente.");
+    }
 
-  public void agregarEtiqueta(String etiqueta) {
-    this.etiquetas.add(etiqueta);
+    Hecho hecho = new Hecho(this.fechaCarga); // usa el constructor nuevo
+
+    hecho.setTitulo(titulo);
+    hecho.setDescripcion(descripcion);
+    hecho.setCategoria(categoria);
+    hecho.setLatitud(latitud);
+    hecho.setLongitud(longitud);
+    hecho.setFechaAcontecimiento(fechaAcontecimiento);
+    hecho.setMultimedia(multimedia);
+    hecho.setContribuyente(contribuyente);
+    hecho.setLimiteDiasEdicion(limiteDiasEdicion);
+    hecho.getEtiquetas().addAll(etiquetas);
+    hecho.setEstado(estado);
+
+    return hecho;
   }
 
   public boolean esEditable() {
@@ -99,11 +147,11 @@ public class Hecho {
   }
 
   public void aceptar() {
-    this.estado = EstadoHecho.ACEPTADO;
+    this.estado = Estado.ACEPTADA;
   }
 
   public void rechazar() {
-    this.estado = EstadoHecho.RECHAZADO;
+    this.estado = Estado.RECHAZADA;
   }
 
 }
