@@ -15,7 +15,9 @@ public interface IColeccionService {
                                       String fecha_reporte_hasta,
                                       String fecha_acontecimiento_desde,
                                       String fecha_acontecimiento_hasta,
-                                      String ubicacion);
+                                      String ubicacion,
+                                      Boolean soloConMultimedia,
+                                      Boolean soloConContribuyente);
 
   List<HechoDTO> getHechosCurados(String handle, Boolean curado);
 

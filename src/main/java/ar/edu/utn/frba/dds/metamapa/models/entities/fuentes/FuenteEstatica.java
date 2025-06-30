@@ -11,7 +11,11 @@ public class FuenteEstatica extends Fuente {
   protected List<Hecho> hechos = new ArrayList<>();
 
   public void importarHechos(String ruta) {
-   this.hechos = new LectorCSV().leer(ruta);
+
+    this.hechos = new LectorCSV().leer(ruta);
+    for (Hecho hecho : this.hechos) {
+      hecho.aceptar();
+    }
   }
 
   public List<Hecho> getHechos() {

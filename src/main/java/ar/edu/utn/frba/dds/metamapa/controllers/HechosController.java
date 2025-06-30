@@ -26,6 +26,7 @@ public class HechosController {
     @Autowired
     private ISeederServiceDinamica seederServiceDinamicas;
 
+    /*
     //dinamicos
     @GetMapping("/dinamicos")
     public List<HechoOutputDTO> getHechosAceptadosFiltrados(
@@ -44,7 +45,7 @@ public class HechosController {
                 fecha_acontecimiento_hasta,
                 ubicacion);
     }
-
+*/
 
     @GetMapping
     public List<HechoDTO> getHechosWithParams(
@@ -53,7 +54,9 @@ public class HechosController {
             @RequestParam(required = false) String fecha_reporte_hasta,
             @RequestParam(required = false) String fecha_acontecimiento_desde,
             @RequestParam(required = false) String fecha_acontecimiento_hasta,
-            @RequestParam(required = false) String ubicacion
+            @RequestParam(required = false) String ubicacion,
+            @RequestParam(required = false) Boolean soloConMultimedia,
+            @RequestParam(required = false) Boolean soloConContribuyente
     ) {
         return this.hechosService.getHechosWithParams(
                 categoria,
@@ -61,13 +64,15 @@ public class HechosController {
                 fecha_reporte_hasta,
                 fecha_acontecimiento_desde,
                 fecha_acontecimiento_hasta,
-                ubicacion);
+                ubicacion,
+                soloConMultimedia,
+                soloConContribuyente);
     }
 
     @GetMapping("/inicializar")
     public boolean inicializarDatos() {
         this.seederService.init();
-        this.seederServiceDinamicas.initDinamicas();
+        //this.seederServiceDinamicas.initDinamicas();
         return true;
     }
 }

@@ -36,13 +36,17 @@ public class ColeccionService implements IColeccionService {
                                           String fecha_reporte_hasta,
                                           String fecha_acontecimiento_desde,
                                           String fecha_acontecimiento_hasta,
-                                          String ubicacion) {
+                                          String ubicacion,
+                                          Boolean soloConMultimedia,
+                                          Boolean soloConContribuyente) {
     var filtro = new ListaDeFiltros().getListFromParams(categoria,
         fecha_reporte_desde,
         fecha_reporte_hasta,
         fecha_acontecimiento_desde,
         fecha_acontecimiento_hasta,
-        ubicacion);
+        ubicacion,
+            soloConMultimedia,
+            soloConContribuyente);
 
     return coleccionesRepository.findByHandle(handle)
         .navegar(filtro)

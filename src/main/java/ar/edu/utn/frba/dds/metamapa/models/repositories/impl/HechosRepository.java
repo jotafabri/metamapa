@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories.impl;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
@@ -38,7 +39,7 @@ public class HechosRepository implements IHechosRepository {
       if (existente == null) {
         throw new IllegalArgumentException("El hecho con ID " + hecho.getId() + " no existe.");
       } //Aqui estoy queriendo modificar un hecho con id inexistente.
-      if (existente.getEstado() != EstadoHecho.EN_REVISION) {
+      if (existente.getEstado() != Estado.PENDIENTE) {
         throw new IllegalStateException("Solo se pueden actualizar hechos en revisión.");
       } //Los hechos aseptados y rechazados no se pueden actualizar.
       update(hecho);

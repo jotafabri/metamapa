@@ -84,7 +84,9 @@ public class ColeccionesController {
       @RequestParam(required = false) String fecha_reporte_hasta,
       @RequestParam(required = false) String fecha_acontecimiento_desde,
       @RequestParam(required = false) String fecha_acontecimiento_hasta,
-      @RequestParam(required = false) String ubicacion
+      @RequestParam(required = false) String ubicacion,
+      @RequestParam(required = false) Boolean soloConMultimedia,
+      @RequestParam(required = false) Boolean soloConContribuyente
   ) {
     return coleccionService.getHechosByHandle(
         handle,
@@ -93,7 +95,9 @@ public class ColeccionesController {
         fecha_reporte_hasta,
         fecha_acontecimiento_desde,
         fecha_acontecimiento_hasta,
-        ubicacion);
+        ubicacion,
+        soloConMultimedia,
+        soloConContribuyente);
   }
 
   // localhost:8080/colecciones/AccidentesDeTransito/hechos?curados=true

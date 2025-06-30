@@ -21,7 +21,9 @@ public class ListaDeFiltros {
                                         String fecha_reporte_hasta,
                                         String fecha_acontecimiento_desde,
                                         String fecha_acontecimiento_hasta,
-                                        String ubicacion) {
+                                        String ubicacion,
+                                        Boolean soloConMultimedia,
+                                        Boolean soloConContribuyente){
     // Agrego criterio de categoria
     if (categoria != null && !categoria.isEmpty()) {
       this.criterios.add(new FiltroCategoria(categoria));
@@ -43,6 +45,14 @@ public class ListaDeFiltros {
 
     if (ubicacion != null) {
       this.criterios.add(FiltroUbicacion.fromString(ubicacion));
+    }
+
+    if (soloConMultimedia != null && soloConMultimedia) {
+      this.criterios.add(new FiltroMultimedia(true));
+    }
+
+    if (soloConContribuyente != null && soloConContribuyente) {
+      this.criterios.add(new FiltroContribuyente(true));
     }
 
     return this.criterios;

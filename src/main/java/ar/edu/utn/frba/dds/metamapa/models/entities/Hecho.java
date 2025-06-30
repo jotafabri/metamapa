@@ -42,19 +42,17 @@ public class Hecho {
   private Origen origen;
   private Multimedia multimedia;
   private Contribuyente contribuyente;
-
   private List<String> etiquetas;
   private Boolean eliminado;
-  private Estado estado;
 
-  @Value("${limite.dias.edicion}")
+
+  private Estado estado;
   private Long limiteDiasEdicion;
 
   public Hecho() {
     this.fechaCarga = LocalDateTime.now();
     this.etiquetas = new ArrayList();
     this.eliminado = false;
-    this.estado = Estado.PENDIENTE;
   }
 
   public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento) {
@@ -68,6 +66,20 @@ public class Hecho {
     this.latitud = latitud;
     this.longitud = longitud;
     this.fechaAcontecimiento = fechaAcontecimiento;
+  }
+  //Constructor con origen
+  public Hecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento, Origen origen) {
+    this();
+    if (titulo == null || descripcion == null || categoria == null || latitud == null || longitud == null || fechaAcontecimiento == null) {
+      throw new IllegalArgumentException("Los campos título, descripción, categoría, coordenadas, fechaAcontecimiento son obligatorios.");
+    }
+    this.titulo = titulo;
+    this.descripcion = descripcion;
+    this.categoria = categoria;
+    this.latitud = latitud;
+    this.longitud = longitud;
+    this.fechaAcontecimiento = fechaAcontecimiento;
+    this.origen = origen;
   }
 
   public Hecho conMultimedia(Multimedia multimedia) {

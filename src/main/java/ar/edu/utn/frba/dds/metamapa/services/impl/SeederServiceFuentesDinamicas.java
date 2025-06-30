@@ -3,7 +3,7 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 import ar.edu.utn.frba.dds.metamapa.models.entities.*;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
-import ar.edu.utn.frba.dds.metamapa.models.entities.utils.HechoBuilder;
+//import ar.edu.utn.frba.dds.metamapa.models.entities.utils.HechoBuilder;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.FuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederServiceDinamica;
@@ -22,7 +22,7 @@ public class SeederServiceFuentesDinamicas implements ISeederServiceDinamica {
   private IHechosRepository hechosRepository;
 
 
-  private HechoBuilder hechoBuilder;
+  //private HechoBuilder hechoBuilder;
 
   @Value("${app.base-url}")
   private String baseUrl;
@@ -34,6 +34,7 @@ public class SeederServiceFuentesDinamicas implements ISeederServiceDinamica {
 
     //Coordenada coordenada = new Coordenada((float) -34.6037, (float) -58.3816); // Coordenadas de Buenos Aires
     //Categoria categoria = new Categoria("Categoria de prueba");
+  /*
     Contribuyente contribuyente = new Contribuyente("Juan", "Perez", 30, false);
 
     var hechos = List.of(
@@ -58,4 +59,9 @@ public class SeederServiceFuentesDinamicas implements ISeederServiceDinamica {
     fuente.agregarHechos(hechos);
     fuentesRepository.save(fuente);
   }
+}
+
+*/
+  }
+
 }
