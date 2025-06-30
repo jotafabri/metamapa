@@ -62,11 +62,11 @@ public class ColeccionesController {
     this.coleccionService.cambiarAlgoritmo(handle, tipo);
   }
 
-  //localhost:8080/colecciones/abcd/agregar-fuente?idFuente=3
+  //localhost:8080/colecciones/abcd/fuentes?idFuente=3
   @PostMapping("/{handle}/fuentes")
   public void agregarFuenteAColeccion(
       @PathVariable String handle,
-      @RequestBody Long idFuente) {
+      @RequestParam Long idFuente) {
     this.agregacionService.agregarFuenteAColeccion(handle, idFuente);
   }
 
