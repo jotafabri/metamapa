@@ -51,7 +51,14 @@ public class Coleccion {
   }
 
   public List<Hecho> navegar(List<Filtro> criterios) {
-    return this.hechos.stream().filter(h -> !h.getEliminado() && this.criterios.stream().allMatch(c -> c.cumple(h))).toList();
+    if (criterios == null || criterios.isEmpty()) {
+      return this.hechos.stream()
+              .filter(h -> !h.getEliminado())
+              .toList();
+    }
+    return this.hechos.stream()
+            .filter(h -> !h.getEliminado() && criterios.stream().allMatch(c -> c.cumple(h)))
+            .toList();
   }
 
   public List<Hecho> navegarCurado(Boolean curado) {

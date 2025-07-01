@@ -19,6 +19,16 @@ public interface IColeccionService {
                                       Boolean soloConMultimedia,
                                       Boolean soloConContribuyente);
 
+  List<HechoDTO> getHechosByHandleAdmin(String handle,
+                                        String categoria,
+                                        String fecha_reporte_desde,
+                                        String fecha_reporte_hasta,
+                                        String fecha_acontecimiento_desde,
+                                        String fecha_acontecimiento_hasta,
+                                        String ubicacion,
+                                        Boolean soloConMultimedia,
+                                        Boolean soloConContribuyente);
+
   List<HechoDTO> getHechosCurados(String handle, Boolean curado);
 
   void crearDesdeDTO(ColeccionDTO coleccionDTO);

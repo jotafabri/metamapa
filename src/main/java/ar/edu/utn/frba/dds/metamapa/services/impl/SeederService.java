@@ -42,7 +42,11 @@ public class SeederService implements ISeederService {
   @Override
   public void init() {
     FuenteDinamica fuenteDinamica = new FuenteDinamica();
+    fuenteDinamica.setId(1L);
+    FuenteDinamica fuenteDinamica2 = new FuenteDinamica();
+    fuenteDinamica.setId(2L);
       fuentesRepository.save(fuenteDinamica);
+      fuentesRepository.save(fuenteDinamica2);
 
 
     Hecho hecho1 = hechosService.crearHecho(
@@ -97,9 +101,13 @@ public class SeederService implements ISeederService {
       fuenteDinamica.agregarHecho(hecho);
     }
 
+    fuenteDinamica2.agregarHecho(hecho1);
 
-    Coleccion coleccionPrueba = new Coleccion("Colección prueba", "Esto es una prueba");
+    Coleccion coleccionPrueba = new Coleccion("Coleccion prueba", "Esto es una prueba");
     coleccionPrueba.agregarFuente(fuenteDinamica);
+    coleccionPrueba.agregarFuente(fuenteDinamica2);
+    coleccionPrueba.actualizarColeccion();
+    coleccionPrueba.actualizarCurados();
 
     this.coleccionesRepository.save(coleccionPrueba);
     // Cargo fuentes estáticas
