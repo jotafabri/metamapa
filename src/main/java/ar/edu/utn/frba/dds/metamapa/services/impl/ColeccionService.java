@@ -100,6 +100,7 @@ public class ColeccionService implements IColeccionService {
     return this.coleccionesRepository.findByHandle(handle)
         .navegarCurado(curado)
         .stream()
+            .filter(h -> h.getEstado() == Estado.ACEPTADA)
         .map(HechoDTO::fromHecho)
         .toList();
   }
@@ -142,10 +143,13 @@ public class ColeccionService implements IColeccionService {
     var coleccion = this.coleccionesRepository.findByHandle(handle);
     if (tipo == TipoAlgoritmo.MAYORIA_ABSOLUTA) {
       coleccion.setAlgoritmoDeConsenso(new ConsensoAbsoluto());
+      coleccion.actualizarCurados();//para testear
     } else if (tipo == TipoAlgoritmo.MAYORIA_SIMPLE) {
       coleccion.setAlgoritmoDeConsenso(new ConsensoPorMayoriaSimple());
+      coleccion.actualizarCurados();//para testear
     } else if (tipo == TipoAlgoritmo.MULTIPLES_MENCIONES) {
       coleccion.setAlgoritmoDeConsenso(new ConsensoPorMultiplesMenciones());
+      coleccion.actualizarCurados();//para testear
     }
     this.coleccionesRepository.save(coleccion);
   }
