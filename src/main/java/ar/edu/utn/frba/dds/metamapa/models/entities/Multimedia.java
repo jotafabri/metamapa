@@ -3,7 +3,6 @@ package ar.edu.utn.frba.dds.metamapa.models.entities;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Multimedia {

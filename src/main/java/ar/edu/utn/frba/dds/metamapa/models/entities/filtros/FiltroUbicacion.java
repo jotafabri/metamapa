@@ -16,7 +16,7 @@ public class FiltroUbicacion implements Filtro {
     String[] partes = string.split(",");
     float lat = Float.parseFloat(partes[0].trim());
     float lon = Float.parseFloat(partes[1].trim());
-    return new FiltroUbicacion(lat,lon);
+    return new FiltroUbicacion(lat, lon);
   }
 
   @Override

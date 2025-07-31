@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa.models.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoTrue;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
@@ -20,7 +21,7 @@ public class Coleccion {
   private List<Filtro> criterios = new ArrayList<>();
   private List<Hecho> hechos = new ArrayList<>();
   private List<Hecho> hechosConsensuados = new ArrayList<>();
-  private EstrategiaConsenso algoritmoDeConsenso;
+  private EstrategiaConsenso algoritmoDeConsenso = new ConsensoTrue();
 
   public Coleccion(String titulo, String descripcion) {
     this.titulo = titulo;
@@ -50,24 +51,22 @@ public class Coleccion {
     this.hechos = hechosFiltrados;
   }
 
-  public List<Hecho> navegar(List<Filtro> criterios) {
+  public List<Hecho> navegar(List<Filtro> criterios, Boolean curado) {
+    var lista = curado ? this.hechosConsensuados : this.hechos;
     if (criterios == null || criterios.isEmpty()) {
-      return this.hechos.stream()
-              .filter(h -> !h.getEliminado())
-              .toList();
+      return lista.stream()
+          .filter(h -> !h.getEliminado())
+          .toList();
     }
-    return this.hechos.stream()
-            .filter(h -> !h.getEliminado() && criterios.stream().allMatch(c -> c.cumple(h)))
-            .toList();
+    return lista.stream()
+        .filter(h -> !h.getEliminado() && criterios.stream().allMatch(c -> c.cumple(h)))
+        .toList();
   }
 
-  public List<Hecho> navegarCurado(Boolean curado) {
-    return curado ? this.hechosConsensuados : this.hechos;
-  }
-
+  // TODO hacer una estrategia de consenso que siempre devuelva true
   public void actualizarCurados() {
     this.hechosConsensuados = this.hechos.stream()
-        .filter(h -> this.algoritmoDeConsenso == null || this.algoritmoDeConsenso.cumple(h, this.fuentes))
+        .filter(h -> this.algoritmoDeConsenso.cumple(h, this.fuentes))
         .toList();
   }
 }

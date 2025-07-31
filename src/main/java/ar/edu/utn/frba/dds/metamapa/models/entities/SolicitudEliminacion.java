@@ -19,7 +19,7 @@ public class SolicitudEliminacion {
 
   public void aceptarSolicitud() {
     this.estado = Estado.ACEPTADA;
-    hecho.eliminar();
+    this.hecho.eliminar();
   }
 
   public void rechazarSolicitud() {

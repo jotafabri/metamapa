@@ -4,22 +4,18 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
-
-import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
@@ -56,13 +52,6 @@ public class ColeccionesController {
     this.coleccionService.eliminarColeccion(handle);
   }
 
-
-  @PutMapping("/{handle}/algoritmo")
-  public void modificarAlgoritmo(@PathVariable String handle, @RequestParam String nombre) {
-    TipoAlgoritmo tipo = TipoAlgoritmo.valueOf(nombre.toUpperCase());
-    this.coleccionService.cambiarAlgoritmo(handle, tipo);
-  }
-
   //localhost:8080/
   @PostMapping("/{handle}/fuentes")
   public void agregarFuenteAColeccion(
@@ -73,7 +62,7 @@ public class ColeccionesController {
 
   @DeleteMapping("/{handle}/fuentes/{idFuente}")
   public void eliminarFuenteDeColeccion(@PathVariable String handle, @PathVariable Long idFuente) {
-    this.agregacionService.eliminarFuenteDeColeccion(handle,idFuente);
+    this.agregacionService.eliminarFuenteDeColeccion(handle, idFuente);
   }
 
   // localhost:8080/colecciones/AccidentesDeTransito/hechos?=...
@@ -87,7 +76,8 @@ public class ColeccionesController {
       @RequestParam(required = false) String fecha_acontecimiento_hasta,
       @RequestParam(required = false) String ubicacion,
       @RequestParam(required = false) Boolean soloConMultimedia,
-      @RequestParam(required = false) Boolean soloConContribuyente
+      @RequestParam(required = false) Boolean soloConContribuyente,
+      @RequestParam(required = false) Boolean curado
   ) {
     return coleccionService.getHechosByHandle(
         handle,
@@ -98,43 +88,33 @@ public class ColeccionesController {
         fecha_acontecimiento_hasta,
         ubicacion,
         soloConMultimedia,
-        soloConContribuyente);
+        soloConContribuyente,
+        curado);
   }
 
   // localhost:8080/colecciones/admin/{handle}/hechos
   @GetMapping("/admin/{handle}/hechos")
   public List<HechoDTO> getHechosByHandleAdmin(
-          @PathVariable String handle,
-          @RequestParam(required = false) String categoria,
-          @RequestParam(required = false) String fecha_reporte_desde,
-          @RequestParam(required = false) String fecha_reporte_hasta,
-          @RequestParam(required = false) String fecha_acontecimiento_desde,
-          @RequestParam(required = false) String fecha_acontecimiento_hasta,
-          @RequestParam(required = false) String ubicacion,
-          @RequestParam(required = false) Boolean soloConMultimedia,
-          @RequestParam(required = false) Boolean soloConContribuyente
+      @PathVariable String handle,
+      @RequestParam(required = false) String categoria,
+      @RequestParam(required = false) String fecha_reporte_desde,
+      @RequestParam(required = false) String fecha_reporte_hasta,
+      @RequestParam(required = false) String fecha_acontecimiento_desde,
+      @RequestParam(required = false) String fecha_acontecimiento_hasta,
+      @RequestParam(required = false) String ubicacion,
+      @RequestParam(required = false) Boolean soloConMultimedia,
+      @RequestParam(required = false) Boolean soloConContribuyente
   ) {
     return coleccionService.getHechosByHandleAdmin(
-            handle,
-            categoria,
-            fecha_reporte_desde,
-            fecha_reporte_hasta,
-            fecha_acontecimiento_desde,
-            fecha_acontecimiento_hasta,
-            ubicacion,
-            soloConMultimedia,
-            soloConContribuyente
+        handle,
+        categoria,
+        fecha_reporte_desde,
+        fecha_reporte_hasta,
+        fecha_acontecimiento_desde,
+        fecha_acontecimiento_hasta,
+        ubicacion,
+        soloConMultimedia,
+        soloConContribuyente
     );
-  }
-
-
-
-  // localhost:8080/colecciones/AccidentesDeTransito/hechos?curados=true
-  @GetMapping(value = "/{handle}/hechos", params = "curados")
-  public List<HechoDTO> getHechosCurados(
-      @PathVariable String handle,
-      @RequestParam Boolean curados
-  ) {
-    return this.coleccionService.getHechosCurados(handle, curados);
   }
 }

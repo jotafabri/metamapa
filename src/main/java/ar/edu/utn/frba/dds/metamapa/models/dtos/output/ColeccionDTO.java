@@ -8,6 +8,7 @@ public class ColeccionDTO {
   private String handle;
   private String titulo;
   private String descripcion;
+  private String algoritmo;
 
   // Mapper
   public static ColeccionDTO fromColeccion(Coleccion coleccion) {

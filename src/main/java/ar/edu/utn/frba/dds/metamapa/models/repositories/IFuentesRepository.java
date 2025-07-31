@@ -1,13 +1,14 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories;
-import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
+
 public interface IFuentesRepository {
 
-    List<Fuente> findAll();
+  List<Fuente> findAll();
 
-    void save(Fuente fuente);
+  void save(Fuente fuente);
 
-    public Fuente findById(Long id);
+  public Fuente findById(Long id);
 }

@@ -15,8 +15,12 @@ public class FuenteDinamica extends Fuente {
     return (hechos.stream().filter(h -> h.getEliminado().equals(false)).toList());
   }
 
+  public Hecho getHechoFromId(Long id) {
+    return hechos.stream().filter(h -> h.getId().equals(id)).findFirst().orElse(null);
+  }
+
   public Hecho buscarHechoPorTitulo(String titulo) {
-    return getHechos().stream().filter(h -> titulo.equals(h.getTitulo())).findFirst().orElse(null);
+    return getHechos().stream().filter(h -> h.getTitulo().equals(titulo)).findFirst().orElse(null);
   }
 
   public void etiquetarPorTitulo(String titulo, String etiqueta) {

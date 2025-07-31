@@ -1,7 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.*;
-import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
@@ -10,42 +14,44 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class AggregationServiceTest {
 
-    private ColeccionesRepository mockColeccionRepo;
-    private AgregacionService agregacionService;
+  private ColeccionesRepository mockColeccionRepo;
+  private AgregacionService agregacionService;
 
-    @BeforeEach
-    void setUp() {
-        mockColeccionRepo = Mockito.mock(ColeccionesRepository.class);
-        agregacionService = new AgregacionService(mockColeccionRepo);
-    }
+  @BeforeEach
+  void setUp() {
+    mockColeccionRepo = Mockito.mock(ColeccionesRepository.class);
+    agregacionService = new AgregacionService(mockColeccionRepo);
+  }
 
-    @Test
-    void testRefrescarColecciones() {
+  @Test
+  void testRefrescarColecciones() {
 
-        Hecho hecho = new Hecho("Título", "Descripción", "Incendio", (double) -34.6, (double) -58.4, LocalDateTime.now());
+    Hecho hecho = Hecho.builder()
+        .titulo("Titulo")
+        .descripcion("Descripción")
+        .categoria("Incendio")
+        .latitud(-34.6)
+        .longitud(-58.4)
+        .fechaAcontecimiento(LocalDateTime.now())
+        .build();
 
-        FuenteEstatica fuenteEstatica = new FuenteEstatica();
-        fuenteEstatica.getHechos().add(hecho);
+    FuenteEstatica fuenteEstatica = new FuenteEstatica();
+    fuenteEstatica.getHechos().add(hecho);
 
-        Filtro criterioTrue = h -> true;
+    Filtro criterioTrue = h -> true;
 
-        Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios");
-        coleccion.setCriterios(List.of(criterioTrue));
+    Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios");
+    coleccion.setCriterios(List.of(criterioTrue));
 
-        Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
+    Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
-        agregacionService.refrescarColecciones();
+    agregacionService.refrescarColecciones();
 
-        assertEquals(1, fuenteEstatica.getHechos().size());
-        assertEquals("Título", fuenteEstatica.getHechos().get(0).getTitulo());
-    }
+    assertEquals(1, fuenteEstatica.getHechos().size());
+    assertEquals("Título", fuenteEstatica.getHechos().get(0).getTitulo());
+  }
 /*
     @Test
     void testNoReagregaHechoEliminadoEnFuenteDinamica() {
@@ -97,30 +103,44 @@ public class AggregationServiceTest {
 */
 
 
+  @Test
+  void testPisadoHechoExistenteEnFuenteEstatica() {
 
-    @Test
-    void testPisadoHechoExistenteEnFuenteEstatica() {
+    Hecho hechoOriginal = Hecho.builder()
+        .titulo("Título")
+        .descripcion("Descripción vieja")
+        .categoria("Incendio")
+        .latitud(-40.1)
+        .longitud(-60.1)
+        .fechaAcontecimiento(LocalDateTime.now().minusDays(1))
+        .build();
 
-        Hecho hechoOriginal = new Hecho("Título", "Descripción vieja", "Incendio", (double) -40.1, (double) -60.1, LocalDateTime.now().minusDays(1));
-        FuenteEstatica fuenteEstatica = new FuenteEstatica();
-        fuenteEstatica.getHechos().add(hechoOriginal);
+    FuenteEstatica fuenteEstatica = new FuenteEstatica();
+    fuenteEstatica.getHechos().add(hechoOriginal);
 
-        Hecho hechoNuevo = new Hecho("Título", "Descripción NUEVA", "Incendio", (double) -40.5, (double) -60.5, LocalDateTime.now());
-        fuenteEstatica.getHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
+    Hecho hechoNuevo = Hecho.builder()
+        .titulo("Título")
+        .descripcion("Descripción NUEVA")
+        .categoria("Incendio")
+        .latitud(-40.5)
+        .longitud(-60.5)
+        .fechaAcontecimiento(LocalDateTime.now())
+        .build();
+    fuenteEstatica.getHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
 
-        Coleccion coleccion = new Coleccion("Colección", "desc");
-        coleccion.setCriterios(List.of(h -> true));
-        Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
+    Coleccion coleccion = new Coleccion("Colección", "desc");
+    coleccion.setCriterios(List.of(h -> true));
+    Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
-        agregacionService.refrescarColecciones();
+    agregacionService.refrescarColecciones();
 
-        List<Hecho> hechos = fuenteEstatica.getHechos().stream()
-                .filter(h -> h.getTitulo().equalsIgnoreCase("Título"))
-                .toList();
+    List<Hecho> hechos = fuenteEstatica.getHechos().stream()
+        .filter(h -> h.getTitulo().equalsIgnoreCase("Título"))
+        .toList();
 
-        assertEquals(1, hechos.size(), "Debe haber un solo hecho con ese título");
-        assertEquals("Descripción NUEVA", hechos.get(0).getDescripcion(), "Debe ser la versión actualizada del hecho");
-        assertEquals((double) -40.5, hechos.get(0).getLatitud(), 0.01);
-    }
+    assertEquals(1, hechos.size(), "Debe haber un solo hecho con ese título");
+    assertEquals("Descripción NUEVA", hechos.get(0).getDescripcion(), "Debe ser la versión actualizada del hecho");
+    assertEquals((double) -40.5, hechos.get(0).getLatitud(), 0.01);
+  }
 
 }

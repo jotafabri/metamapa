@@ -1,8 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
-import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionDTO;
+import java.util.List;
+
+import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.*;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.SolicitudEliminacion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
@@ -14,8 +17,6 @@ import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AgregacionService implements IAgregacionService {
@@ -52,7 +53,7 @@ public class AgregacionService implements IAgregacionService {
   }
 
   @Override
-  public void crearSolicitud(SolicitudEliminacionDTO solicitudDto) {
+  public void crearSolicitud(SolicitudEliminacionInputDTO solicitudDto) {
     var hecho = this.hechosRepository.findById(solicitudDto.getIdHecho());
     if (hecho != null) {
       var solicitud = new SolicitudEliminacion(

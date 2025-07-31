@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DetectorSpam implements IDetectorSpam {
 
-    @Override
-    public boolean esSpam(String texto) {
-        return texto.length() > 200;
-    }
+  @Override
+  public boolean esSpam(String texto) {
+    return texto.length() > 200;
+  }
 }

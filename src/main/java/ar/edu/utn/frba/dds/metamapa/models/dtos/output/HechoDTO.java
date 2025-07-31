@@ -42,4 +42,17 @@ public class HechoDTO {
 
     return dto;
   }
+
+  public Hecho toHecho() {
+    return Hecho.builder()
+        .id(this.id)
+        .titulo(this.titulo)
+        .descripcion(this.descripcion)
+        .categoria(this.categoria)
+        .latitud(this.latitud)
+        .longitud(this.longitud)
+        .fechaAcontecimiento(this.fechaAcontecimiento)
+        .fechaCarga(this.fechaCarga)
+        .build();
+  }
 }

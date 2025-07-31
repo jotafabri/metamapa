@@ -1,13 +1,12 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories.impl;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
-import ar.edu.utn.frba.dds.metamapa.models.entities.enums.EstadoHecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class HechosRepository implements IHechosRepository {

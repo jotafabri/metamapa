@@ -23,7 +23,7 @@ public class ListaDeFiltros {
                                         String fecha_acontecimiento_hasta,
                                         String ubicacion,
                                         Boolean soloConMultimedia,
-                                        Boolean soloConContribuyente){
+                                        Boolean soloConContribuyente) {
     // Agrego criterio de categoria
     if (categoria != null && !categoria.isEmpty()) {
       this.criterios.add(new FiltroCategoria(categoria));

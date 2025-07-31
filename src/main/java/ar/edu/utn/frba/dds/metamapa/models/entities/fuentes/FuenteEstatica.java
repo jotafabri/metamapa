@@ -21,4 +21,8 @@ public class FuenteEstatica extends Fuente {
   public List<Hecho> getHechos() {
     return (this.hechos.stream().filter(h -> h.getEliminado().equals(false)).toList());
   }
+
+  public Hecho getHechoFromId(Long id) {
+    return this.hechos.stream().filter(h -> h.getId().equals(id)).findFirst().orElse(null);
+  }
 }
