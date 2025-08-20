@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="botones.css">
+    <link rel="stylesheet" href="viewer.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMapa - Iniciar Sesión</title>
+
+</head>
+
+<body>
+    <header class="header">
+
+        <div class="container">
+            <nav class="navbar">
+                <a href="landing.html" class="logo-section">
+                    <div class="logo-icon">
+                        <div class="logo-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="logo-text">Explorador</span>
+                </a>
+                <div class="button-section">
+                    <a href="login.html" class="btn btn-secondary">Acceder</a>
+                    <a href="/contribuir" class="btn btn-primary">Contribuir</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-layout">
+
+        <div class="sidebar">
+            <div class="search-section">
+                <label class="search-label">Buscar Hechos</label>
+                <div style="position: relative;">
+                    <span class="search-icon"
+                        style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">🔍</span>
+                    <input type="text" class="search-input" placeholder="Buscar por título, descripción..."
+                        id="searchInput">
+                </div>
+            </div>
+
+            <div class="toggle-container">
+                <div class="toggle-label">
+                    <div class="toggle-dot"></div>
+                    <span>Búsqueda curada</span>
+                </div>
+                <div class="toggle-switch" id="curatedToggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
+
+            <div class="info-alert" id="curatedInfo" style="display: none;">
+                <strong>Búsqueda curada:</strong> Se muestran exclusivamente hechos respaldados por consenso de
+                múltiples fuentes.
+            </div>
+            <div class="toggle-container">
+                <div class="toggle-label">
+                    <div class="toggle-dot"></div>
+                    <span>Solo con multimedia</span>
+                </div>
+                <div class="toggle-switch" id="multimediaToggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
+
+            <div class="toggle-container">
+                <div class="toggle-label" onclick="toggleContributor()">
+                    <div class="toggle-dot"></div>
+                    <span>Solo con contribuyente</span>
+                </div>
+                <div class="toggle-switch" id="contributorToggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
