@@ -18,7 +18,7 @@
 }
 
 .search-label {
-    display: block;
+    display: flex;
     font-size: 0.875rem;
     font-weight: 500;
     color: #374151;
@@ -104,7 +104,7 @@
 }
 
 .form-label {
-    display: block;
+    display: flex;
     font-size: 0.875rem;
     font-weight: 500;
     color: #374151;
@@ -131,4 +131,31 @@
     font-weight: 500;
     color: #6b7280;
     margin-bottom: 0.25rem;
+}
+
+.icon-svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.filter-item {
+    margin-bottom: 16px;
+}
+
+.clear-btn {
+    width: 100%;
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    margin-top: 16px;
+    transition: background-color 0.2s;
 }
