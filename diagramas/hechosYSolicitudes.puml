@@ -1,0 +1,98 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity contribuyente {
+* id <PK>
+--
+nombre: varchar(255)
+apellido: varchar(255)
+fecha_nacimiento: date
+anonimo: boolean
+}
+
+entity hecho {
+* id: long <PK>
+* contribuyente_id <FK>
+--
+titulo: varchar(255)
+categoria: varchar(255)
+latitud: float
+longitud: float
+fecha_acontecimiento: date
+fecha_carga: date
+eliminado: boolean
+limite_dias_edicion: long
+' vienen de un enumerado
+estado: varchar(255)
+origen: varchar(255)
+}
+
+entity hecho_multimedia {
+* id <PK>
+* hecho_id <FK>
+--
+path: varchar(255)
+}
+
+entity hecho_etiqueta {
+* id <PK>
+* hecho_id <FK>
+--
+nombre: varchar(255)
+}
+
+entity solicitud_eliminacion {
+* id <PK>
+* hecho_id <FK>
+--
+causa: varchar(255)
+' viene de un enumerado
+estado: varchar(255)
+}
+
+entity coleccion {
+* handle: varchar(255) <PK>
+* estrategia_consenso_id: long <FK>
+--
+titulo: varchar(255)
+descripcion: varchar(255)
+}
+
+entity hecho_coleccion {
+* hecho_id: long <PK, FK>
+* coleccion_handle: varchar(255) <PK, FK>
+--
+}
+
+entity estrategia_consenso {
+* id <PK>
+--
+nombre: varchar(255)
+}
+
+entity fuente {
+* id <PK>
+}
+
+entity coleccion_criterio {
+* coleccion_handle <PK, FK>
+* criterio_handle <PK, FK>
+}
+
+entity criterio {
+* id <PK>
+--
+nombre: varchar(255)
+}
+
+contribuyente ||--o{ hecho
+hecho ||--o{ hecho_multimedia
+hecho ||--o{ hecho_etiqueta
+hecho ||--o{ solicitud_eliminacion
+hecho }o--|| hecho_coleccion
+coleccion }o--|| hecho_coleccion
+coleccion }o--|| estrategia_consenso
+coleccion }o--|| coleccion_criterio
+criterio }o--|| coleccion_criterio
+@enduml

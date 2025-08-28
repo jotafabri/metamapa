@@ -7,20 +7,52 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoTrue;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "coleccion")
 public class Coleccion {
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID) // ver como modelarlo para que sea un handle unico
   private String handle;
+
+  @Column(name = "titulo")
   private String titulo;
+
+  @Column(name = "descripcion")
   private String descripcion;
   private List<Fuente> fuentes = new ArrayList<>();
   private List<Filtro> criterios = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(
+      name = "hecho_coleccion",
+      joinColumns = @JoinColumn(name = "handle_coleccion",
+      referencedColumnName = "handle"),
+      inverseJoinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id")
+  )
   private List<Hecho> hechos = new ArrayList<>();
+
+  @Transient
   private List<Hecho> hechosConsensuados = new ArrayList<>();
+
+  @Column(name = "estrategia_consenso")
   private EstrategiaConsenso algoritmoDeConsenso = new ConsensoTrue();
 
   public Coleccion(String titulo, String descripcion) {

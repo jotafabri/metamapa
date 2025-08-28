@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
 import java.util.List;
+import java.util.Objects;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.ProxyInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
@@ -17,7 +18,7 @@ public class FuenteProxy extends Fuente {
 
   @Override
   public List<Hecho> getHechos() {
-    return webClient.get()
+    hechos = webClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/desastres")
             .build())
@@ -28,18 +29,21 @@ public class FuenteProxy extends Fuente {
             .toList()
         )
         .block();
+    return hechos;
   }
 
   @Override
   public Hecho getHechoFromId(Long id) {
-    return webClient.get()
-        .uri(uriBuilder -> uriBuilder
-            .path("/desastres/{id}")
-            .build(id)
-        )
-        .retrieve()
-        .bodyToMono(HechoDTO.class)
-        .map(HechoDTO::toHecho)
-        .block();
+    return hechos.stream().filter(h -> Objects.equals(h.getId(), id)).findFirst().orElse(
+        webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/desastres/{id}")
+                .build(id)
+            )
+            .retrieve()
+            .bodyToMono(HechoDTO.class)
+            .map(HechoDTO::toHecho)
+            .block()
+    );
   }
 }

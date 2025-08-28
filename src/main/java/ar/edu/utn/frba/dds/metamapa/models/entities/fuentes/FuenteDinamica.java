@@ -9,7 +9,6 @@ import lombok.Getter;
 
 @Getter
 public class FuenteDinamica extends Fuente {
-  protected List<Hecho> hechos = new ArrayList<>();
 
   public List<Hecho> getHechos() {
     return (hechos.stream().filter(h -> h.getEliminado().equals(false)).toList());
