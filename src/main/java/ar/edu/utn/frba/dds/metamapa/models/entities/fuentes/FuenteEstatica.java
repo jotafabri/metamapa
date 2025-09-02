@@ -4,7 +4,7 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.utils.LectorCSV;
 
 public class FuenteEstatica extends Fuente {

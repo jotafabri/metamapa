@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.ProxyInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class FuenteProxy extends Fuente {
