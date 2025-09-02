@@ -1,8 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class HechoDTO {
   private LocalDateTime fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
 
-  private String multimediaUrl;
+  private List<String> multimedia;
   private String contribuyenteNombre;
 
   public static HechoDTO fromHecho(Hecho hecho) {
@@ -31,10 +32,7 @@ public class HechoDTO {
     dto.setLongitud(hecho.getLongitud());
     dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
     dto.setFechaCarga(hecho.getFechaCarga());
-
-    if (hecho.getMultimedia() != null) {
-      dto.setMultimediaUrl(hecho.getMultimedia().getUrlCompleta());
-    }
+    dto.setMultimedia(hecho.getMultimedia());
 
     if (hecho.getContribuyente() != null) {
       dto.setContribuyenteNombre(hecho.getContribuyente().getNombre());
