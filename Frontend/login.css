@@ -12,7 +12,7 @@
         
 .login-section {
             padding: 3rem 0;
-            background-color: #f7fafd;
+            background-color: #1E2023;
         }
 
         .login-container {
@@ -63,7 +63,7 @@
 
 
         .login-card {
-            background-color: white;
+            background-color: #121212;
             border-radius: 1rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             overflow: hidden;
@@ -72,18 +72,18 @@
         .login-header {
             padding: 2rem 2rem 1rem;
             text-align: center;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: none;
         }
 
         .login-title {
             font-size: 1.875rem;
             font-weight: bold;
-            color: #111827;
+            color: white;
             margin-bottom: 0.5rem;
         }
 
         .login-subtitle {
-            color: #4b5563;
+            color: #95959F;
             font-size: 1rem;
             line-height: 1.5;
         }
@@ -113,7 +113,7 @@
         .field-label {
             font-size: 0.875rem;
             font-weight: 500;
-            color: #374151;
+            color: white;
         }
 
         .field-input {
@@ -159,7 +159,7 @@
 
         .field-help {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #95959F;
         }
 
 
@@ -189,7 +189,7 @@
 
         .forgot-password {
             font-size: 0.875rem;
-            color: #1a73e8;
+            color: #E88827;
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -215,7 +215,7 @@
         }
 
         .register-link a {
-            color: #1a73e8;
+            color: #E88827;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;

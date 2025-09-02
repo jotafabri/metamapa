@@ -29,7 +29,7 @@
 .hero-section {
     position: relative;
     padding: 5rem 3rem 8rem 3rem;
-    background: linear-gradient(135deg, #f7fafd 0%, #e3f0fd 100%);
+    background: linear-gradient(135deg, rgb(30,32,34) 0%, rgb(50,52,54) 100%);
     overflow: hidden;
 }
 
@@ -72,7 +72,7 @@
 .main-title {
     font-size: 2.25rem;
     font-weight: bold;
-    color: #111827;
+    color: #F8FFFF;
     line-height: 1.1;
     animation: fadeInUp 0.8s ease-out 0.2s both;
 }
@@ -90,7 +90,7 @@
 }
 
 .title-highlight {
-    color: #1a73e8;
+    color: #E88827;
     display: block;
     position: relative;
 }
@@ -102,8 +102,7 @@
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(90deg, #4285f4, #1a73e8);
-    border-radius: 2px;
+    background: linear-gradient(90deg, #FFE3B0, #E88827);
     animation: highlightGrow 1s ease-out 0.8s both;
 }
 
@@ -118,7 +117,7 @@
 
 .main-description {
     font-size: 1.25rem;
-    color: #4b5563;
+    color: #ADB8C8;
     line-height: 1.6;
     max-width: 42rem;
     animation: fadeInUp 0.8s ease-out 0.4s both;
@@ -149,7 +148,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #4b5563;
+    color: #ADB8C8;
     padding: 0.5rem;
     border-radius: 0.375rem;
     transition: all 0.3s ease;
@@ -371,8 +370,8 @@
 .seccion-cambio-social {
     position: relative;
     padding: 5rem 2rem;
-    background: linear-gradient(135deg, #f7fafd 0%, #e3f0fd 100%);
-    overflow: hidden;
+    background-color: #FB9A34
+    /*overflow: hidden;*/
 }
 
 .seccion-cambio-social::before {
@@ -403,7 +402,7 @@
 .titulo-principal {
     font-size: 2.25rem;
     font-weight: bold;
-    color: #111827;
+    color: #FFFFFF;
     line-height: 1.2;
 }
 
@@ -416,12 +415,26 @@
 
 .descripcion-principal {
     font-size: 1.25rem;
-    color: #4b5563;
+    color: #FFFFFF;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+.texto-organizaciones{
+    font-size: 1.00rem;
+    color: #FFFFFF;
     max-width: 700px;
     margin: 0 auto;
     line-height: 1.6;
 }
 
+.enlace-instalar{
+    font-size: 1.00rem;
+    color: #232324;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
 
 .contenedor-botones {
     display: flex;
@@ -522,4 +535,17 @@
         font-size: 0.7rem;
         padding: 0.2rem 0.4rem;
     }
+}
+
+
+.btn-secondary {
+    color: #f9fafb;
+}
+
+
+.btn-secondary:hover {
+    background-color: #374151; /* 🔴 fondo al pasar el mouse */
+    border-color: #6b7280;     /* 🔴 borde al pasar el mouse */
+    color: #FB9A34            /* 🔴 texto en color #FF5141 al pasar el mouse */
+    transform: translateY(-1px);
 }
