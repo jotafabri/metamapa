@@ -45,7 +45,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #1a73e8;
+            color: #E88827;
             text-decoration: none;
             font-size: 0.875rem;
             font-weight: 500;
@@ -53,7 +53,8 @@
         }
 
         .navigate-back-link:hover {
-            color: #1f3b79;
+            color: #ff9f40;
+            text-shadow: 0 0 12px rgba(255, 159, 64, 1);
         }
 
         .navigate-back-link svg {
@@ -117,6 +118,8 @@
         }
 
         .field-input {
+            background-color: #121212;
+            color: #E88827;
             height: 2.75rem;
             padding: 0 1rem;
             border: 1px solid #d1d5db;
@@ -127,8 +130,13 @@
 
         .field-input:focus {
             outline: none;
-            border-color: #1a73e8;
+            border-color: #E88827;
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .field-input::placeholder {
+        color: white; /* gris claro para el placeholder */
+        opacity: 0.7; 
         }
 
         .password-wrapper {
@@ -178,7 +186,7 @@
         .remember-me input {
             width: 1rem;
             height: 1rem;
-            accent-color: #1a73e8;
+            accent-color: #E88827;
         }
 
         .remember-me label {
@@ -195,7 +203,8 @@
         }
 
         .forgot-password:hover {
-            color: #1f3b79;
+            color: #ff9f40;
+            text-shadow: 0 0 12px rgba(255, 159, 64, 1);
         }
 
 
@@ -222,7 +231,8 @@
         }
 
         .register-link a:hover {
-            color: #1f3b79;
+            color: #ff9f40;
+            text-shadow: 0 0 12px rgba(255, 159, 64, 1);
         }
 
         @media (max-width: 640px) {
