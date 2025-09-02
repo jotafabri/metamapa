@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 
 import java.time.LocalDate;
 import java.util.List;

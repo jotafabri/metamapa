@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Coleccion {
   @JoinTable(
       name = "hecho_coleccion",
       joinColumns = @JoinColumn(name = "handle_coleccion",
-      referencedColumnName = "handle"),
+          referencedColumnName = "handle"),
       inverseJoinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id")
   )
   private List<Hecho> hechos = new ArrayList<>();
@@ -95,7 +95,6 @@ public class Coleccion {
         .toList();
   }
 
-  // TODO hacer una estrategia de consenso que siempre devuelva true
   public void actualizarCurados() {
     this.hechosConsensuados = this.hechos.stream()
         .filter(h -> this.algoritmoDeConsenso.cumple(h, this.fuentes))

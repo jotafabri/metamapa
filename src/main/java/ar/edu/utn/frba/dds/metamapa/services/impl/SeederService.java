@@ -5,11 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Multimedia;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
@@ -63,7 +62,7 @@ public class SeederService implements ISeederService {
         -60.343297,
         LocalDate.parse("27/02/2010", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay()
     );
-    hecho1.setMultimedia(new Multimedia(baseUrl, "/images/hechos/es-posible-un-tsunami-en-buenos-aires.jpg"));
+    hecho1.agregarMultimedia("/images/hechos/es-posible-un-tsunami-en-buenos-aires.jpg");
     hecho1.aceptar();
     //hecho1 ACEPTADO
     Hecho hecho2 = hechosService.crearHecho(
@@ -74,7 +73,7 @@ public class SeederService implements ISeederService {
         17.541648,
         LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay()
     );
-    hecho2.setMultimedia(new Multimedia(baseUrl, "/images/hechos/_126544339_fuego12.jpg"));
+    hecho2.agregarMultimedia("/images/hechos/_126544339_fuego12.jpg");
     hecho2.aceptar();
     //hecho2 ACEPTADO
 
@@ -96,7 +95,7 @@ public class SeederService implements ISeederService {
         17.541654,
         LocalDate.parse("29/11/2001", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay()
     );
-    hecho4.setMultimedia(new Multimedia(baseUrl, "/images/hechos/artworks-000351288021-i1m1am-t500x500.jpg"));
+    hecho4.agregarMultimedia("/images/hechos/artworks-000351288021-i1m1am-t500x500.jpg");
     hecho4.rechazar();
     //hecho4 RECHAZADO
 

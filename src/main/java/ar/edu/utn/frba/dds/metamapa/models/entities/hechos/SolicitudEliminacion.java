@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import jakarta.persistence.Column;

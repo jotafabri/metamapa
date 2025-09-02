@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities;
+package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -16,13 +16,11 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,7 +44,8 @@ public class Hecho {
   @CsvBindByName(column = "Título")
   private String titulo;
 
-  @Column(name = "descripcion")@CsvBindByName(column = "Descripción")
+  @Column(name = "descripcion")
+  @CsvBindByName(column = "Descripción")
   private String descripcion;
 
   @Column(name = "categoria")
@@ -111,6 +110,10 @@ public class Hecho {
   public Hecho agregarEtiqueta(String etiqueta) {
     this.etiquetas.add(etiqueta);
     return this;
+  }
+
+  public void agregarMultimedia(String path) {
+    this.multimedia.add(path);
   }
 
   public void actualizarHecho(Hecho hecho) {
