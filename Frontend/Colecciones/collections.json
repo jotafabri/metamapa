@@ -1,0 +1,42 @@
+[
+  {
+    "tag": "emergency",
+    "country": "Chile",
+    "title": "Incendios Forestales 2024",
+    "desc": "Colección de hechos relacionados con incendios forestales ocurridos en 2024...",
+    "hechos": 2,
+    "curados": 2
+  },
+  {
+    "tag": "environment",
+    "country": "Perú",
+    "title": "Contaminación Hídrica en América Latina",
+    "desc": "Análisis de casos de contaminación de ríos y lagos en diferentes países de la...",
+    "hechos": 2,
+    "curados": 2
+  },
+  {
+    "tag": "human-rights",
+    "country": "Perú",
+    "title": "Memoria Histórica: Desapariciones",
+    "desc": "Documentación y testimonios sobre casos de desapariciones forzadas en el...",
+    "hechos": 1,
+    "curados": 1
+  },
+  {
+    "tag": "archaeology",
+    "country": "Brasil",
+    "title": "Descubrimientos Arqueológicos Recientes",
+    "desc": "Compilación de los hallazgos arqueológicos más importantes de los...",
+    "hechos": 2,
+    "curados": 2
+  },
+  {
+    "tag": "social",
+    "country": "Argentina",
+    "title": "Crisis Social y Económica en Ciudades",
+    "desc": "Hechos que ilustran el impacto de las crisis económicas y sociales en la vida...",
+    "hechos": 4,
+    "curados": 1
+  }
+]
