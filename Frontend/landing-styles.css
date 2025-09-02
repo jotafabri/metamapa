@@ -197,7 +197,7 @@
     border-radius: 1rem;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    background-color: white;
+    background-color: #1e1f20;
     padding: 1rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -209,7 +209,11 @@
 
 .map-display {
     aspect-ratio: 16/9;
-    background: linear-gradient(120deg, #e3f0fd 0%, #f0f9ff 100%);
+   background: linear-gradient(
+        135deg,
+        #3b2f24 0%,    /* marrón más claro en la esquina superior izquierda */
+        #252201 100%   /* casi negro en la esquina inferior derecha */
+    );
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
@@ -235,7 +239,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.3);
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.7)
     animation: float 3s ease-in-out infinite;
 }
 
@@ -255,7 +259,7 @@
 }
 
 .map-title {
-    color: #374151;
+    color: #fff;
     font-weight: 500;
     font-size: 1rem;
 }
@@ -272,7 +276,7 @@
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem 0.5rem;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(30, 32, 34, 0.6);
     border-radius: 1rem;
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease;
@@ -291,24 +295,24 @@
 
 .data-dot.red {
     background-color: #ef4444;
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
 }
 
 .data-dot.blue {
     background-color: #3b82f6;
     animation-delay: 0.5s;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
 }
 
 .data-dot.purple {
     background-color: #a855f7;
     animation-delay: 1s;
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
 }
 
 .data-label {
     font-size: 0.75rem;
-    color: #4b5563;
+    color: #fff;
     font-weight: 500;
 }
 
@@ -322,7 +326,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     animation: markerPulse 2s infinite;
 }
 
@@ -548,4 +552,38 @@
     border-color: #6b7280;     /* 🔴 borde al pasar el mouse */
     color: #FB9A34            /* 🔴 texto en color #FF5141 al pasar el mouse */
     transform: translateY(-1px);
+}
+
+
+.hero-section::before,
+.hero-section::after {
+    content: none;
+}
+
+/* Agregar círculos al mockup-container */
+.mockup-container::before,
+.mockup-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.25;
+    z-index: 1; /* Debajo de los marcadores pero encima del fondo */
+}
+
+/* Círculo grande inferior izquierdo */
+.mockup-container::before {
+    width: 8rem;
+    height: 8rem;
+    background: #FB9A34;
+    bottom: 1rem;
+    left: 1rem;
+}
+
+/* Círculo grande superior derecho */
+.mockup-container::after {
+    width: 6rem;
+    height: 6rem;
+    background: #DC2626;
+    top: 1rem;
+    right: 1rem;
 }
