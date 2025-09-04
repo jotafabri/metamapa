@@ -3,10 +3,11 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.ListaDeFiltros;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,27 +44,11 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public List<HechoDTO> getHechosWithParams(String categoria,
-                                            String fecha_reporte_desde,
-                                            String fecha_reporte_hasta,
-                                            String fecha_acontecimiento_desde,
-                                            String fecha_acontecimiento_hasta,
-                                            String ubicacion,
-                                            Boolean soloConMultimedia,
-                                            Boolean soloConContribuyente) {
-    var filtro = new ListaDeFiltros().getListFromParams(categoria,
-        fecha_reporte_desde,
-        fecha_reporte_hasta,
-        fecha_acontecimiento_desde,
-        fecha_acontecimiento_hasta,
-        ubicacion,
-        soloConMultimedia,
-        soloConContribuyente);
-
+  public List<HechoDTO> getHechosWithParams(HechoFiltroDTO filtros) {
     return this.hechosRepository.findAll()
         .stream()
         .filter(h -> h.getEstado() == Estado.ACEPTADA) // Solo los aseptados se van a exponer
-        .filter(h -> filtro.stream().allMatch(c -> c.cumple(h)))
+        .filter(h -> filtros.getList().stream().allMatch(c -> c.cumple(h)))
         .map(HechoDTO::fromHecho)
         .toList();
   }
