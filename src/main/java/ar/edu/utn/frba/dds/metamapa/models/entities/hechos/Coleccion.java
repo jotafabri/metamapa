@@ -3,15 +3,15 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.converters.EstrategiaConsensoAttributeConverter;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoTrue;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -27,9 +27,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "coleccion")
-public class Coleccion {
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID) // ver como modelarlo para que sea un handle unico
+public class Coleccion extends Persistente {
+  @Column(name = "handle")
   private String handle;
 
   @Column(name = "titulo")
@@ -37,27 +36,37 @@ public class Coleccion {
 
   @Column(name = "descripcion")
   private String descripcion;
-  private List<Fuente> fuentes = new ArrayList<>();
-  private List<Filtro> criterios = new ArrayList<>();
 
   @ManyToMany
   @JoinTable(
-      name = "hecho_coleccion",
-      joinColumns = @JoinColumn(name = "handle_coleccion",
-          referencedColumnName = "handle"),
-      inverseJoinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id")
+      name = "coleccion_fuente",
+      joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "fuente_id", referencedColumnName = "id")
   )
+  private List<Fuente> fuentes = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(
+      name = "coleccion_criterio",
+      joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "criterio_id", referencedColumnName = "id")
+  )
+  private List<Filtro> criterios = new ArrayList<>();
+
+  @Transient
   private List<Hecho> hechos = new ArrayList<>();
 
   @Transient
   private List<Hecho> hechosConsensuados = new ArrayList<>();
 
+  @Convert(converter = EstrategiaConsensoAttributeConverter.class)
   @Column(name = "estrategia_consenso")
-  private EstrategiaConsenso algoritmoDeConsenso = new ConsensoTrue();
+  private EstrategiaConsenso algoritmoDeConsenso;
 
   public Coleccion(String titulo, String descripcion) {
     this.titulo = titulo;
     this.descripcion = descripcion;
+    this.algoritmoDeConsenso = new ConsensoTrue();
   }
 
   public void agregarFuente(Fuente fuente) {

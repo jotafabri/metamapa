@@ -3,12 +3,10 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 import java.time.LocalDate;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -20,11 +18,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Table(name = "contribuyente")
-public class Contribuyente {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
+public class Contribuyente extends Persistente {
   @Column(name = "nombre", nullable = false)
   private String nombre;
 
