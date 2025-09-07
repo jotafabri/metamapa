@@ -6,16 +6,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroFechaAcontecimiento;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroFechaAcontecimiento;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.utils.LectorCSV;
 import org.junit.jupiter.api.BeforeEach;
 
 public class CSVTest {
 
   private LectorCSV lector;
-  private String ruta = "src/test/desastres_naturales_argentina.csv";
+  private final String ruta = "src/test/desastres_naturales_argentina.csv";
   private List<Hecho> listaHechos;
   private List<Hecho> listaFiltrada;
   private List<Filtro> listaCriterios;

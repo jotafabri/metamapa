@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.models.entities.utils;
+package ar.edu.utn.frba.dds.metamapa.converters;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

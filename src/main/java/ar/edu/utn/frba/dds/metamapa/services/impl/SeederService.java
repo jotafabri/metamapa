@@ -143,8 +143,7 @@ public class SeederService implements ISeederService {
     List<FuenteEstatica> fuentesEstaticasCreadas = new ArrayList<>();
 
     for (String ruta : rutas) {
-      var fuente = new FuenteEstatica();
-      fuente.importarHechos(ruta);
+      var fuente = new FuenteEstatica(ruta);
       fuentesRepository.save(fuente);
       fuente.getHechos().forEach(h -> this.hechosRepository.save(h));
       fuentesEstaticasCreadas.add(fuente);

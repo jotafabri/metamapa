@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroCategoria;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroContribuyente;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroFechaAcontecimiento;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroFechaCarga;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroMultimedia;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroUbicacion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroCategoria;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroContribuyente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroFechaAcontecimiento;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroFechaCarga;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroMultimedia;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroUbicacion;
 
 public class HechoFiltroDTO {
   private String categoria;

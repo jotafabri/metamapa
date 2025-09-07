@@ -5,12 +5,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;

@@ -4,10 +4,10 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.SolicitudEliminacion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.SolicitudEliminacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
@@ -64,7 +64,6 @@ public class AgregacionService implements IAgregacionService {
       }
       this.solicitudesRepository.save(solicitud);
     }
-    //TODO si existe ya la solicitud que hacemos? update(?
   }
 
   public void refrescarColecciones() {
@@ -81,32 +80,33 @@ public class AgregacionService implements IAgregacionService {
 
   @Override
   public void aprobarSolicitudById(Long id) {
-    var solicitud = this.solicitudesRepository.findById(id);
-    if (solicitud.getEstado() != Estado.PENDIENTE) {
-      throw new IllegalStateException("Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
-    }
-    if (solicitud.getHecho() == null) {
-      throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
-    }
-    solicitud.aceptarSolicitud();
-    solicitudesRepository.save(solicitud);
-
+    this.solicitudesRepository.findById(id)
+        .ifPresent(solicitud -> {
+          if (solicitud.getEstado() != Estado.PENDIENTE) {
+            throw new IllegalStateException("Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
+          }
+          if (solicitud.getHecho() == null) {
+            throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
+          }
+          solicitud.aceptarSolicitud();
+          this.solicitudesRepository.save(solicitud);
+        });
   }
 
 
   @Override
   public void rechazarSolicitudById(Long id) {
-    var solicitud = this.solicitudesRepository.findById(id);
-    if (solicitud.getEstado() != Estado.PENDIENTE) {
-      throw new IllegalStateException("Solo se pueden rechazar solicitudes pendientes");
-    }
-
-    if (solicitud.getHecho() == null) {
-      throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
-    }
-
-    solicitud.rechazarSolicitud();
-    solicitudesRepository.save(solicitud);
+    this.solicitudesRepository.findById(id)
+        .ifPresent(solicitud -> {
+          if (solicitud.getEstado() != Estado.PENDIENTE) {
+            throw new IllegalStateException("Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
+          }
+          if (solicitud.getHecho() == null) {
+            throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
+          }
+          solicitud.rechazarSolicitud();
+          this.solicitudesRepository.save(solicitud);
+        });
   }
 
   public List<SolicitudEliminacionOutputDTO> findAllSolicitudes() {

@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,10 +39,8 @@ public class AggregationServiceTest {
     FuenteEstatica fuenteEstatica = new FuenteEstatica();
     fuenteEstatica.getHechos().add(hecho);
 
-    Filtro criterioTrue = h -> true;
-
     Coleccion coleccion = new Coleccion("Incendios", "Hechos de incendios");
-    coleccion.setCriterios(List.of(criterioTrue));
+    coleccion.setCriterios(List.of());
 
     Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
@@ -129,7 +126,7 @@ public class AggregationServiceTest {
     fuenteEstatica.getHechos().add(hechoNuevo); // simulamos que se "actualizó" como en un dataset real
 
     Coleccion coleccion = new Coleccion("Colección", "desc");
-    coleccion.setCriterios(List.of(h -> true));
+    coleccion.setCriterios(List.of());
     Mockito.when(mockColeccionRepo.findAll()).thenReturn(List.of(coleccion));
 
     agregacionService.refrescarColecciones();
@@ -140,7 +137,7 @@ public class AggregationServiceTest {
 
     assertEquals(1, hechos.size(), "Debe haber un solo hecho con ese título");
     assertEquals("Descripción NUEVA", hechos.get(0).getDescripcion(), "Debe ser la versión actualizada del hecho");
-    assertEquals((double) -40.5, hechos.get(0).getLatitud(), 0.01);
+    assertEquals(-40.5, hechos.get(0).getLatitud(), 0.01);
   }
 
 }

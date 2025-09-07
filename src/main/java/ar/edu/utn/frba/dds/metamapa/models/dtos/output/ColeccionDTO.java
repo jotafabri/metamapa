@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import lombok.Data;
 
 @Data

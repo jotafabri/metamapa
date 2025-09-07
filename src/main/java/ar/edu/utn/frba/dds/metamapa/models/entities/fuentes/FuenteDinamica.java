@@ -4,8 +4,6 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;

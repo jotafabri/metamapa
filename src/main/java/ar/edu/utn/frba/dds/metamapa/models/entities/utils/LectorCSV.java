@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.SneakyThrows;

@@ -4,7 +4,6 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroBoolean;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;

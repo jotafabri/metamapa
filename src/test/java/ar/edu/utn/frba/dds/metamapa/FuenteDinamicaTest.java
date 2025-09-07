@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Contribuyente;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
