@@ -34,7 +34,7 @@ public class ColeccionService implements IColeccionService {
                                           HechoFiltroDTO filtros,
                                           Boolean curado
   ) {
-    return coleccionesRepository.findByHandle(handle)
+    return this.coleccionesRepository.findColeccionByHandle(handle)
         .navegar(filtros.getList(), curado)
         .stream()
         .filter(h -> h.getEstado() == Estado.ACEPTADA)
@@ -46,7 +46,7 @@ public class ColeccionService implements IColeccionService {
   @Override
   public List<HechoDTO> getHechosByHandleAdmin(String handle,
                                                HechoFiltroDTO filtros) {
-    return coleccionesRepository.findByHandle(handle)
+    return coleccionesRepository.findColeccionByHandle(handle)
         .navegar(filtros.getList(), false)
         .stream()
         .map(HechoDTO::fromHecho)
@@ -56,20 +56,22 @@ public class ColeccionService implements IColeccionService {
   //ADMIN:Operacion (C)RUD
   @Override
   public void crearDesdeDTO(ColeccionDTO coleccionDTO) {
-    this.coleccionesRepository.save(new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion()));
+    Coleccion coleccion = new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion());
+    coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
+    this.coleccionesRepository.save(coleccion);
   }
 
   //ADMIN:Operacion C(R)UD
   @Override
   public ColeccionDTO mostrarColeccion(String handle) {
-    var coleccion = this.coleccionesRepository.findByHandle(handle);
+    var coleccion = this.coleccionesRepository.findColeccionByHandle(handle);
     return ColeccionDTO.fromColeccion(coleccion);
   }
 
   //ADMIN:Operacion CR(U)D
   @Override
   public void actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    var coleccion = this.coleccionesRepository.findByHandle(handle);
+    var coleccion = this.coleccionesRepository.findColeccionByHandle(handle);
     if (coleccionDTO.getTitulo() != null) {
       coleccion.setTitulo(coleccionDTO.getTitulo());
     }
@@ -88,7 +90,15 @@ public class ColeccionService implements IColeccionService {
   //ADMIN:Operacion CRU(D)
   @Override
   public void eliminarColeccion(String handle) {
+    this.coleccionesRepository.deleteColeccionByHandle(handle);
+  }
 
-    this.coleccionesRepository.delete(handle);
+  private String generarHandleUnico(String baseTitulo) {
+    String base = baseTitulo.toLowerCase().replaceAll("[^a-z0-9]", "");
+    String candidato = base;
+    for (int i = 1; this.coleccionesRepository.existsByHandle(candidato); i++) {
+      candidato = base + i;
+    }
+    return candidato;
   }
 }

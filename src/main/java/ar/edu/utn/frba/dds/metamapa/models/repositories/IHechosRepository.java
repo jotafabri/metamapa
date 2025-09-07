@@ -2,15 +2,11 @@ package ar.edu.utn.frba.dds.metamapa.models.repositories;
 
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IHechosRepository {
+public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
-  public Hecho findById(Long id);
-
-  public List<Hecho> findAll();
-
-  public void save(Hecho hecho);
-
-  public void delete(Hecho hecho);
+  // Lista solo los hechos que no fueron eliminados
+  List<Hecho> findAllByEliminadoFalse();
 }

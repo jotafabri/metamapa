@@ -12,7 +12,6 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
-import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,10 @@ public class AgregacionService implements IAgregacionService {
   @Autowired
   private IDetectorSpam detectorDeSpam;
 
-  public AgregacionService(ColeccionesRepository mockColeccionRepo) {
-  }
-
   @Override
   public void agregarFuenteAColeccion(String handleColeccion, Long idFuente) {
-    Coleccion coleccion = this.coleccionesRepository.findByHandle(handleColeccion);
-    Fuente fuente = this.fuentesRepository.findById(idFuente);
+    Coleccion coleccion = this.coleccionesRepository.findColeccionByHandle(handleColeccion);
+    Fuente fuente = this.fuentesRepository.findFuenteById(idFuente);
     if (coleccion == null || fuente == null) {
       throw new IllegalArgumentException("Coleccion o fuente no encontrada");
     }
@@ -47,23 +43,24 @@ public class AgregacionService implements IAgregacionService {
 
   @Override
   public void eliminarFuenteDeColeccion(String handleColeccion, Long idFuente) {
-    Coleccion coleccion = this.coleccionesRepository.findByHandle(handleColeccion);
-    Fuente fuente = this.fuentesRepository.findById(idFuente);
+    Coleccion coleccion = this.coleccionesRepository.findColeccionByHandle(handleColeccion);
+    Fuente fuente = this.fuentesRepository.findFuenteById(idFuente);
     coleccion.eliminarFuente(fuente);
   }
 
   @Override
   public void crearSolicitud(SolicitudEliminacionInputDTO solicitudDto) {
-    var hecho = this.hechosRepository.findById(solicitudDto.getIdHecho());
-    if (hecho != null) {
-      var solicitud = new SolicitudEliminacion(
-          hecho,
-          solicitudDto.getRazon());
-      if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
-        solicitud.rechazarSolicitud();
-      }
-      this.solicitudesRepository.save(solicitud);
-    }
+    this.hechosRepository.findById(solicitudDto.getIdHecho()).ifPresent(
+        hecho -> {
+          var solicitud = new SolicitudEliminacion(
+              hecho,
+              solicitudDto.getRazon());
+          if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
+            solicitud.rechazarSolicitud();
+          }
+          this.solicitudesRepository.save(solicitud);
+        }
+    );
   }
 
   public void refrescarColecciones() {

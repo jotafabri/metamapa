@@ -102,9 +102,8 @@ public class Hecho extends Persistente {
     return diasDesdeCarga <= limiteDiasEdicion;
   }
 
-  public Hecho agregarEtiqueta(String etiqueta) {
+  public void agregarEtiqueta(String etiqueta) {
     this.etiquetas.add(etiqueta);
-    return this;
   }
 
   public void agregarMultimedia(String path) {

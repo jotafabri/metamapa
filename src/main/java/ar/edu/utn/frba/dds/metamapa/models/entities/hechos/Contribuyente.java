@@ -44,6 +44,13 @@ public class Contribuyente extends Persistente {
     this.esAnonimo = esAnonimo;
   }
 
+  public static Contribuyente buildAnonimo() {
+    Contribuyente contribuyente = new Contribuyente();
+    contribuyente.setNombre("Anónimo");
+    contribuyente.setEsAnonimo(true);
+    return contribuyente;
+  }
+
   @Override
   public String toString() {
     return esAnonimo ? "Anónimo" : this.nombre + " " + this.apellido;

@@ -38,15 +38,10 @@ public class SeederService implements ISeederService {
   @Override
   public void init() {
     FuenteDinamica fuenteDinamica = new FuenteDinamica();
-    fuenteDinamica.setId(1L);
     FuenteDinamica fuenteDinamica2 = new FuenteDinamica();
-    fuenteDinamica2.setId(2L);
     FuenteDinamica fuenteDinamica3 = new FuenteDinamica();
-    fuenteDinamica3.setId(3L);
     FuenteDinamica fuenteDinamica4 = new FuenteDinamica();
-    fuenteDinamica4.setId(4L);
     FuenteDinamica fuenteDinamica5 = new FuenteDinamica();
-    fuenteDinamica5.setId(5L);
     fuentesRepository.save(fuenteDinamica);
     fuentesRepository.save(fuenteDinamica2);
     fuentesRepository.save(fuenteDinamica3);
@@ -113,7 +108,7 @@ public class SeederService implements ISeederService {
 
     var hechos = List.of(hecho1, hecho2, hecho3, hecho4);
 
-    hechos.forEach(hechosRepository::save);
+    hechosRepository.saveAll(hechos);
     List<Hecho> hechosAgregar = new ArrayList<>(hechos);
 
     //fuenteDinamica tiene todos los hechos dinamicos menos el aislado.
@@ -145,7 +140,7 @@ public class SeederService implements ISeederService {
     for (String ruta : rutas) {
       var fuente = new FuenteEstatica(ruta);
       fuentesRepository.save(fuente);
-      fuente.getHechos().forEach(h -> this.hechosRepository.save(h));
+      this.hechosRepository.saveAll(fuente.getHechos());
       fuentesEstaticasCreadas.add(fuente);
     }
 

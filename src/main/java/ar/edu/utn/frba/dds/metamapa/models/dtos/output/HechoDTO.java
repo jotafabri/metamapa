@@ -43,7 +43,6 @@ public class HechoDTO {
 
   public Hecho toHecho() {
     return Hecho.builder()
-        .id(this.id)
         .titulo(this.titulo)
         .descripcion(this.descripcion)
         .categoria(this.categoria)

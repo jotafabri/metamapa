@@ -7,22 +7,25 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.repositories.impl.ColeccionesRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
+import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.impl.AgregacionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+@SpringBootTest
 public class AggregationServiceTest {
 
-  private ColeccionesRepository mockColeccionRepo;
-  private AgregacionService agregacionService;
+  @MockitoBean
+  private IColeccionesRepository mockColeccionRepo;
 
-  @BeforeEach
-  void setUp() {
-    mockColeccionRepo = Mockito.mock(ColeccionesRepository.class);
-    agregacionService = new AgregacionService(mockColeccionRepo);
-  }
+  @Autowired
+  private IAgregacionService agregacionService;
 
   @Test
   void testRefrescarColecciones() {

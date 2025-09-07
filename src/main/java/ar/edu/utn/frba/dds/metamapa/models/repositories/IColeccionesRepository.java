@@ -2,15 +2,13 @@ package ar.edu.utn.frba.dds.metamapa.models.repositories;
 
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IColeccionesRepository {
+public interface IColeccionesRepository extends JpaRepository<Coleccion, Long> {
+  Coleccion findColeccionByHandle(String handle);
 
-  List<Coleccion> findAll();
+  boolean existsByHandle(String candidato);
 
-  void save(Coleccion coleccion);
-
-  void delete(String handle);
-
-  Coleccion findByHandle(String handle);
+  void deleteColeccionByHandle(String handle);
 }
