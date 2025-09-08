@@ -40,7 +40,7 @@ public class Hecho extends Persistente {
   @CsvBindByName(column = "Título")
   private String titulo;
 
-  @Column(name = "descripcion")
+  @Column(name = "descripcion", columnDefinition = "TEXT")
   @CsvBindByName(column = "Descripción")
   private String descripcion;
 
@@ -79,10 +79,11 @@ public class Hecho extends Persistente {
   private Origen origen;
 
   // lista de paths al filesystem
+  @Builder.Default
   @ElementCollection
   @CollectionTable(name = "hecho_multimedia", joinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id"))
   @Column(name = "multimedia")
-  private List<String> multimedia;
+  private List<String> multimedia =  new ArrayList<>();
 
   @ManyToOne
   @JoinColumn(name = "contribuyente_id")
