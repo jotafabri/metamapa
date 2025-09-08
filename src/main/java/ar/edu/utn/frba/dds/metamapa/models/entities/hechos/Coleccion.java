@@ -7,6 +7,7 @@ import ar.edu.utn.frba.dds.metamapa.converters.EstrategiaConsensoAttributeConver
 import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.ConsensoTrue;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import jakarta.persistence.Column;
@@ -87,7 +88,10 @@ public class Coleccion extends Persistente {
     List<Hecho> hechosFiltrados = new ArrayList<>();
     for (Fuente fuente : fuentes) {
       List<Hecho> hechosFuente = fuente.getHechos();
-      hechosFiltrados.addAll(hechosFuente.stream().filter(h -> this.criterios.stream().allMatch(c -> c.cumple(h))).toList());
+      hechosFiltrados.addAll(hechosFuente.stream().filter(
+              h -> h.getEstado().equals(Estado.ACEPTADA)
+                      && this.criterios.stream().allMatch(c -> c.cumple(h)))
+              .toList());
     }
     this.hechos = hechosFiltrados;
   }
@@ -95,12 +99,10 @@ public class Coleccion extends Persistente {
   public List<Hecho> navegar(List<Filtro> criterios, Boolean curado) {
     var lista = curado ? this.hechosConsensuados : this.hechos;
     if (criterios == null || criterios.isEmpty()) {
-      return lista.stream()
-          .filter(h -> !h.getEliminado())
-          .toList();
+      return lista;
     }
     return lista.stream()
-        .filter(h -> !h.getEliminado() && criterios.stream().allMatch(c -> c.cumple(h)))
+        .filter(h -> criterios.stream().allMatch(c -> c.cumple(h)))
         .toList();
   }
 

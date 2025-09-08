@@ -8,17 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.adapters.IGeorreferenciacionAdapter;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Estadistica;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IEstadisticasRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import ar.edu.utn.frba.dds.metamapa.services.IEstadisticasService;
-import ar.edu.utn.frba.dds.metamapa.services.IGeocodificacionService;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -41,27 +43,39 @@ public class EstadisticasService implements IEstadisticasService {
   private IColeccionesRepository coleccionesRepository;
 
   @Autowired
+  private IHechosRepository hechosRepository;
+
+  @Autowired
   private IDetectorSpam detectorSpam;
 
   @Autowired
-  private IGeocodificacionService geocodificacionService;
+  private IGeorreferenciacionAdapter georreferenciacionAdapter;
 
   @Override
   public void actualizarEstadisticas() {
-    agregacionService.refrescarColecciones();
-    estadisticasRepository.deleteAll();
-    generarEstadisticasConsolidadas();
+    this.agregacionService.refrescarColecciones();
+    this.estadisticasRepository.deleteAll();
+    this.actualizarDetalleHechos();// TODO generar detalle de ubicacion para todos los hechos con api externa
+    this.generarEstadisticasConsolidadas();
+  }
+
+  private void actualizarDetalleHechos() {
+      for (Hecho hecho : this.hechosRepository.findAllByEliminadoFalse()) {
+          String provincia = this.georreferenciacionAdapter.getNombreProvincia(hecho.getLatitud(), hecho.getLongitud());
+          Ubicacion ubicacion = Ubicacion.builder().provincia(provincia).build();
+          hecho.setUbicacion(ubicacion);
+      }
   }
 
   @Override
   public String obtenerProvinciaConMasHechosEnColeccion(String coleccionHandle) {
-    Coleccion coleccion = coleccionesRepository.findByHandle(coleccionHandle);
+    Coleccion coleccion = this.coleccionesRepository.findColeccionByHandle(coleccionHandle);
     
     Map<String, Long> hechosPorProvincia = coleccion.getHechos()
         .stream()
-        .filter(h -> h.getEstado() == Estado.ACEPTADA && !h.getEliminado())
+        .filter(h -> h.getEstado() == Estado.ACEPTADA)
         .collect(Collectors.groupingBy(
-            h -> geocodificacionService.obtenerProvincia(h.getLatitud(), h.getLongitud()),
+            h -> georreferenciacionAdapter.getNombreProvincia(h.getLatitud(), h.getLongitud()),
             Collectors.counting()
         ));
 
@@ -91,7 +105,7 @@ public class EstadisticasService implements IEstadisticasService {
         .stream()
         .filter(h -> categoria.equals(h.getCategoria()))
         .collect(Collectors.groupingBy(
-            h -> geocodificacionService.obtenerProvincia(h.getLatitud(), h.getLongitud()),
+            h -> georreferenciacionAdapter.getNombreProvincia(h.getLatitud(), h.getLongitud()),
             Collectors.counting()
         ));
 
@@ -172,14 +186,6 @@ public class EstadisticasService implements IEstadisticasService {
         .respuesta(solicitudesSpam.toString())
         .build();
     estadisticasRepository.save(estadSpam);
-  }
-
-  private Coleccion obtenerColeccionPorHandle(String coleccionHandle) {
-    return agregacionService.obtenerColecciones()
-        .stream()
-        .filter(c -> coleccionHandle.equals(c.getHandle()))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Colección no encontrada: " + coleccionHandle));
   }
 
   private List<Hecho> obtenerTodosLosHechosAceptados() {

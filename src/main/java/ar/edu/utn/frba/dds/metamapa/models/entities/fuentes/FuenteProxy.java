@@ -30,7 +30,7 @@ public class FuenteProxy extends Fuente {
   }
 
   public List<Hecho> getHechos() {
-    hechos = webClient.get()
+    this.hechos = webClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/desastres")
             .build())
@@ -40,12 +40,12 @@ public class FuenteProxy extends Fuente {
             .map(HechoDTO::toHecho)
             .toList()
         )
-        .block();
-    return hechos;
+        .block().stream().filter(h -> h.getEliminado().equals(false)).toList();
+      return this.hechos;
   }
 
   public Hecho getHechoFromId(Long id) {
-    return hechos.stream().filter(h -> Objects.equals(h.getId(), id)).findFirst().orElse(
+    return this.hechos.stream().filter(h -> Objects.equals(h.getId(), id)).findFirst().orElse(
         webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path("/desastres/{id}")
