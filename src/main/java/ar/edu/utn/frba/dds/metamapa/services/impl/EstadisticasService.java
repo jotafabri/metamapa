@@ -55,12 +55,12 @@ public class EstadisticasService implements IEstadisticasService {
   public void actualizarEstadisticas() {
     this.agregacionService.refrescarColecciones();
     this.estadisticasRepository.deleteAll();
-    this.actualizarDetalleHechos();// TODO generar detalle de ubicacion para todos los hechos con api externa
+    this.actualizarDetalleHechos();
     this.generarEstadisticasConsolidadas();
   }
 
   private void actualizarDetalleHechos() {
-      for (Hecho hecho : this.hechosRepository.findAllByEliminadoFalse()) {
+      for (Hecho hecho : this.hechosRepository.findAllSinProvincia()) {
           String provincia = this.georreferenciacionAdapter.getNombreProvincia(hecho.getLatitud(), hecho.getLongitud());
           Ubicacion ubicacion = Ubicacion.builder().provincia(provincia).build();
           hecho.setUbicacion(ubicacion);
