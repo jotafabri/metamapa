@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contribuir con MetaMapa</title>
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="contribuir.css">
+    <link rel="stylesheet" href="botones.css">
+</head>
+<body>
+    <header class="header">
+
+        <div class="container">
+            <nav class="navbar">
+                <a href="landing.html" class="logo-section">
+                    <div class="logo-icon">
+                        <div class="logo-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="logo-text">MetaMapa</span>
+                </a>
+    
+                <div class="button-section">
+                    <a href="/registro" class="btn btn-secondary">Registrarse</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <section class="contribucion-seccion">
+        <div class="contribucion-contenedor">
+            <div class="contribucion-wrapper">
+
+                <!-- Botón para volver -->
+                <div class="volver-atras">
+                    <a href="landing.html" class="volver-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                        <span>Volver al inicio</span>
+                    </a>
+                </div>
+
+                <div class="indicador-progreso">
+                    <div class="paso-progreso activo" data-paso="1">
+                        <div class="numero-paso">1</div>
+                        <span>Información Básica</span>
+                    </div>
+                    <div class="linea-progreso"></div>
+                    <div class="paso-progreso" data-paso="2">
+                        <div class="numero-paso">2</div>
+                        <span>Ubicación y Fecha</span>
+                    </div>
+                    <div class="linea-progreso"></div>
+                    <div class="paso-progreso" data-paso="3">
+                        <div class="numero-paso">3</div>
+                        <span>Multimedia y Fuentes</span>
+                    </div>
+                </div>
+
+
+                <div class="formulario-tarjeta">
+                    
+                    <div class="formulario-encabezado">
+                        <h1 class="formulario-titulo">Reportar Información Crítica</h1>
+                        <p class="formulario-subtitulo">
+                            Contribuye con información que puede ayudar a resolver problemas sociales críticos
+                        </p>
+                    </div>
+
+                    <div class="formulario-contenido">
+                        <form id="formulario-contribucion" class="formulario-principal">
+
+                     
+                            <div class="seccion-paso activa" data-paso="1">
+                                <div class="campos-formulario">
+                                    
+                                    <div class="grupo-campo">
+                                        <label for="titulo" class="etiqueta-campo">Título del Hecho *</label>
+                                        <input type="text" id="titulo" name="titulo" class="entrada-campo" 
+                                               maxlength="100" required placeholder="Ej: Incendio en zona industrial">
+                                        <p class="ayuda-campo">Máximo 100 caracteres</p>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="descripcion" class="etiqueta-campo">Descripción Detallada *</label>
+                                        <textarea id="descripcion" name="descripcion" class="entrada-campo area-texto" 
+                                                  minlength="100" maxlength="2000" required 
+                                                  placeholder="Describe detalladamente lo que ocurrió..."></textarea>
+                                        <p class="ayuda-campo">Mínimo 100 caracteres, máximo 2000</p>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="categoria" class="etiqueta-campo">Categoría *</label>
+                                        <select id="categoria" name="categoria" class="entrada-campo" required>
+                                            <option value="">Selecciona la categoría</option>
+                                            <option value="incendio">Incendio</option>
+                                            <option value="inundacion">Inundación</option>
+                                            <option value="accidente">Accidente</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="navegacion-pasos">
+                                    <button type="button" class="btn btn-primary siguiente-paso">Continuar</button>
+                                </div>
+                            </div>
+
+                            <div class="seccion-paso" data-paso="2">
+                                <div class="campos-formulario">
+                                    
+                                    <div class="grupo-campo">
+                                        <label for="fecha" class="etiqueta-campo">Fecha del Hecho *</label>
+                                        <input type="date" id="fecha" name="fecha" class="entrada-campo" required>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="precision" class="etiqueta-campo">Precisión de la Fecha</label>
+                                        <select id="precision" name="precision" class="entrada-campo">
+                                            <option value="">¿Qué tan precisa es la fecha?</option>
+                                            <option value="exacta">Exacta</option>
+                                            <option value="aproximada">Aproximada</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="ubicacion" class="etiqueta-campo">Ubicación *</label>
+                                        <input type="text" id="ubicacion" name="ubicacion" class="entrada-campo" 
+                                               placeholder="Ciudad o coordenadas" required>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="pais" class="etiqueta-campo">País *</label>
+                                        <select id="pais" name="pais" class="entrada-campo" required>
+                                            <option value="">Selecciona el país</option>
+                                            <option value="ar">Argentina</option>
+                                            <option value="pe">Perú</option>
+                                            <option value="cl">Chile</option>
+                                            <option value="mx">México</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="region" class="etiqueta-campo">Región/Provincia</label>
+                                        <input type="text" id="region" name="region" class="entrada-campo" 
+                                               placeholder="Opcional">
+                                    </div>
+                                </div>
+
+                                <div class="navegacion-pasos">
+                                    <button type="button" class="btn btn-secondary paso-anterior">Atrás</button>
+                                    <button type="button" class="btn btn-primary siguiente-paso">Continuar</button>
+                                </div>
+                            </div>
+
+                        
+                            <div class="seccion-paso" data-paso="3">
+                                <div class="campos-formulario">
+                                    
+                                    <div class="grupo-campo">
+                                        <label for="multimedia" class="etiqueta-campo">Multimedia (Opcional)</label>
+                                        <input type="file" id="multimedia" name="multimedia" class="entrada-archivo" multiple>
+                                        <p class="ayuda-campo">Puedes subir imágenes, videos o documentos</p>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="fuentes" class="etiqueta-campo">Fuentes y Referencias *</label>
+                                        <textarea id="fuentes" name="fuentes" class="entrada-campo area-texto" 
+                                                  required placeholder="Enlaces a noticias, documentos oficiales, testimonios, etc."></textarea>
+                                        <p class="ayuda-campo">Proporciona las fuentes que respalden tu información</p>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="notas" class="etiqueta-campo">Notas Adicionales</label>
+                                        <textarea id="notas" name="notas" class="entrada-campo area-texto" 
+                                                  placeholder="Cualquier información adicional relevante..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="navegacion-pasos">
+                                    <button type="button" class="btn btn-secondary paso-anterior">Atrás</button>
+                                    <button type="submit" class="btn btn-primary enviar-contribucion">Enviar Contribución</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="seccion-ayuda">
+                    <h3 class="titulo-ayuda">¿Necesitas Ayuda?</h3>
+                    <p class="descripcion-ayuda">Consulta nuestras guías de contribución o contacta al equipo de soporte</p>
+                    <div class="botones-ayuda">
+                        <button class="btn btn-tertiary">Guías de Contribución</button>
+                        <button class="btn btn-quaternary">Contactar Soporte</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</body>
+</html>
