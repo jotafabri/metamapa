@@ -132,9 +132,9 @@ public class SeederService implements ISeederService {
 
         // 6. CREAR Y GUARDAR FUENTES ESTÁTICAS
         var rutas = List.of(
-                "/csv/desastres_naturales_argentina.csv",
-                "/csv/desastres_sanitarios_contaminacion_argentina.csv",
-                "/csv/desastres_tecnologicos_argentina.csv"
+                baseUrl + "/csv/desastres_naturales_argentina.csv",
+                baseUrl + "/csv/desastres_sanitarios_contaminacion_argentina.csv",
+                baseUrl + "/csv/desastres_tecnologicos_argentina.csv"
         );
 
         List<FuenteEstatica> fuentesEstaticasCreadas = new ArrayList<>();

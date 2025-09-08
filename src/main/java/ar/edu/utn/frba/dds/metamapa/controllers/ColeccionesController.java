@@ -72,7 +72,7 @@ public class ColeccionesController {
   public List<HechoDTO> getHechosByHandle(
       @PathVariable String handle,
       @ModelAttribute HechoFiltroDTO filtros,
-      @RequestParam(required = false) Boolean curado
+      @RequestParam(required = false, defaultValue = "false") Boolean curado
   ) {
     return coleccionService.getHechosByHandle(
         handle,
@@ -92,4 +92,10 @@ public class ColeccionesController {
         filtros
     );
   }
+
+    @GetMapping("/refrescar")
+    public void refrescarColeccion() {
+        this.agregacionService.refrescarColecciones();
+    }
+
 }

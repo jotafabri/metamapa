@@ -73,7 +73,6 @@ public class EstadisticasService implements IEstadisticasService {
     
     Map<String, Long> hechosPorProvincia = coleccion.getHechos()
         .stream()
-        .filter(h -> h.getEstado() == Estado.ACEPTADA)
         .collect(Collectors.groupingBy(
             h -> georreferenciacionAdapter.getNombreProvincia(h.getLatitud(), h.getLongitud()),
             Collectors.counting()

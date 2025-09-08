@@ -90,7 +90,8 @@ public class Coleccion extends Persistente {
       List<Hecho> hechosFuente = fuente.getHechos();
       hechosFiltrados.addAll(hechosFuente.stream().filter(
               h -> h.getEstado().equals(Estado.ACEPTADA)
-                      && this.criterios.stream().allMatch(c -> c.cumple(h)))
+                      && (this.criterios.isEmpty() || this.criterios.stream().allMatch(c -> c.cumple(h)))
+              )
               .toList());
     }
     this.hechos = hechosFiltrados;
@@ -98,11 +99,8 @@ public class Coleccion extends Persistente {
 
   public List<Hecho> navegar(List<Filtro> criterios, Boolean curado) {
     var lista = curado ? this.hechosConsensuados : this.hechos;
-    if (criterios == null || criterios.isEmpty()) {
-      return lista;
-    }
     return lista.stream()
-        .filter(h -> criterios.stream().allMatch(c -> c.cumple(h)))
+        .filter(h -> criterios.isEmpty() || criterios.stream().allMatch(c -> c.cumple(h)))
         .toList();
   }
 

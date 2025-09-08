@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "fuente_dinamica")
 public class FuenteDinamica extends Fuente {
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @ManyToOne(fetch = FetchType.EAGER)
   private Contribuyente contribuyente;
 
   public List<Hecho> getHechos() {
