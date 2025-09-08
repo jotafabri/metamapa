@@ -14,6 +14,7 @@ import com.opencsv.bean.CsvCustomBindByName;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -93,6 +94,9 @@ public class Hecho extends Persistente {
 
   @Column(name = "limite_dias_edicion")
   private Long limiteDiasEdicion;
+
+  @Embedded
+  private Ubicacion ubicacion;
 
   public boolean esEditable() {
     if (this.contribuyente == null || this.contribuyente.isEsAnonimo()) {
