@@ -52,47 +52,119 @@ estado: varchar(255)
 }
 
 entity coleccion {
-* handle: varchar(255) <PK>
-* estrategia_consenso_id: long <FK>
---
-titulo: varchar(255)
-descripcion: varchar(255)
-}
-
-entity hecho_coleccion {
-* hecho_id: long <PK, FK>
-* coleccion_handle: varchar(255) <PK, FK>
---
-}
-
-entity estrategia_consenso {
 * id <PK>
 --
-nombre: varchar(255)
+handle: varchar(255)
+titulo: varchar(255)
+descripcion: varchar(255)
+' Por converter
+estrategia_consenso: varchar(255)
+}
+
+entity coleccion_criterio {
+* coleccion_id <PK, FK>
+* criterio_id <PK, FK>
+}
+
+entity criterio {
+* id <PK>
+}
+
+entity criterio_categoria {
+* id <PK>
+--
+nombre_categoria
+}
+
+entity criterio_titulo {
+* id <PK>
+--
+titulo
+}
+
+entity criterio_contribuyente {
+* id <PK>
+--
+debeTenerContribuyente: boolean
+}
+
+entity criterio_multimedia {
+* id <PK>
+--
+debeTenerMultimedia: boolean
+}
+
+entity criterio_fechaAcontecimiento {
+* id <PK>
+--
+desde: date
+hasta: date
+}
+
+entity criterio_fechaCarga {
+* id <PK>
+--
+desde: date
+hasta: date
+}
+
+entity criterio_ubicacion {
+* id <PK>
+--
+latitud: double
+longitud: double
 }
 
 entity fuente {
 * id <PK>
 }
 
-entity coleccion_criterio {
-* coleccion_handle <PK, FK>
-* criterio_handle <PK, FK>
-}
-
-entity criterio {
+entity fuente_estatica {
 * id <PK>
 --
-nombre: varchar(255)
+ruta: varchar(255)
+}
+
+entity fuente_dinamica {
+* id <PK>
+* contribuyente_id <FK>
+}
+
+entity fuente_proxy {
+* id <PK>
+--
+url: varchar(255)
+}
+
+entity fuente_hecho {
+* fuente_id <PK, FK>
+* hecho_id <PK, FK>
+}
+
+entity coleccion_fuente {
+* coleccion_id <PK, FK>
+* fuente_id <PK, FK>
 }
 
 contribuyente ||--o{ hecho
 hecho ||--o{ hecho_multimedia
 hecho ||--o{ hecho_etiqueta
 hecho ||--o{ solicitud_eliminacion
-hecho }o--|| hecho_coleccion
-coleccion }o--|| hecho_coleccion
-coleccion }o--|| estrategia_consenso
-coleccion }o--|| coleccion_criterio
-criterio }o--|| coleccion_criterio
+coleccion ||--o{ coleccion_criterio
+criterio ||--o{ coleccion_criterio
+criterio_categoria ||--|| criterio
+criterio_titulo ||--|| criterio
+criterio_contribuyente ||--|| criterio
+criterio_multimedia ||--|| criterio
+criterio_fechaAcontecimiento ||--|| criterio
+criterio_fechaCarga ||--|| criterio
+criterio_ubicacion ||--|| criterio
+fuente ||--o{ fuente_hecho
+hecho ||--o{ fuente_hecho
+fuente ||--|| fuente_estatica
+fuente ||--|| fuente_dinamica
+fuente ||--|| fuente_proxy
+contribuyente ||--o{ fuente_dinamica
+coleccion ||--o{ coleccion_fuente
+fuente ||--o{ coleccion_fuente
 @enduml
