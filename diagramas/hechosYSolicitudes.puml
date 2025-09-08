@@ -146,6 +146,11 @@ entity coleccion_fuente {
 * fuente_id <PK, FK>
 }
 
+entity coleccion_hecho {
+* coleccion_id <PK, FK>
+* hecho_id <PK,FK>
+}
+
 contribuyente ||--o{ hecho
 hecho ||--o{ hecho_multimedia
 hecho ||--o{ hecho_etiqueta
@@ -167,4 +172,6 @@ fuente ||--|| fuente_proxy
 contribuyente ||--o{ fuente_dinamica
 coleccion ||--o{ coleccion_fuente
 fuente ||--o{ coleccion_fuente
+coleccion ||--o{ coleccion_hecho
+hecho ||--o{ coleccion_hecho
 @enduml

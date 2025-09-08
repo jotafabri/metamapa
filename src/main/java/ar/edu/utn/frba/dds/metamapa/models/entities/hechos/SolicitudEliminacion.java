@@ -31,6 +31,9 @@ public class SolicitudEliminacion extends Persistente {
   @Column(name = "estado")
   private Estado estado = Estado.PENDIENTE;
 
+  @Column(name = "es_spam")
+  private Boolean esSpam = false;
+
   public SolicitudEliminacion(Hecho hecho, String causa) {
     this.hecho = hecho;
     this.causa = causa;
@@ -43,6 +46,10 @@ public class SolicitudEliminacion extends Persistente {
 
   public void rechazarSolicitud() {
     this.estado = Estado.RECHAZADA;
+  }
+
+  public void marcarSpam() {
+    this.esSpam = true;
   }
 
 }

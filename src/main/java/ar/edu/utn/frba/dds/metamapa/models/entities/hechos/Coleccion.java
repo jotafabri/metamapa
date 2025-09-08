@@ -54,7 +54,12 @@ public class Coleccion extends Persistente {
   )
   private List<Filtro> criterios = new ArrayList<>();
 
-  @Transient
+  @ManyToMany
+  @JoinTable(
+      name = "coleccion_hecho",
+      joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id")
+  )
   private List<Hecho> hechos = new ArrayList<>();
 
   @Transient
@@ -89,8 +94,7 @@ public class Coleccion extends Persistente {
     for (Fuente fuente : fuentes) {
       List<Hecho> hechosFuente = fuente.getHechos();
       hechosFiltrados.addAll(hechosFuente.stream().filter(
-              h -> h.getEstado().equals(Estado.ACEPTADA)
-                      && (this.criterios.isEmpty() || this.criterios.stream().allMatch(c -> c.cumple(h)))
+              h -> this.criterios.isEmpty() || this.criterios.stream().allMatch(c -> c.cumple(h))
               )
               .toList());
     }

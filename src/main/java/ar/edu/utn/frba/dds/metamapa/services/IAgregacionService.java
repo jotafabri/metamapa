@@ -14,8 +14,6 @@ public interface IAgregacionService {
 
   void refrescarColecciones();
 
-  List<Coleccion> obtenerColecciones();
-
   //void refrescarHechosColeccion(Coleccion coleccion);
 
   //Solicitudes de eliminacion

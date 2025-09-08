@@ -37,7 +37,7 @@ public class ColeccionService implements IColeccionService {
     return this.coleccionesRepository.findColeccionByHandle(handle)
         .navegar(filtros.getList(), curado)
         .stream()
-        .filter(h -> h.getEstado() == Estado.ACEPTADA)
+        .filter(h -> h.getEstado().equals(Estado.ACEPTADA))
         .map(HechoDTO::fromHecho)
         .toList();
   }

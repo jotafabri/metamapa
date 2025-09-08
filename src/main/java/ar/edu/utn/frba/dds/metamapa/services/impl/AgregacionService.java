@@ -39,6 +39,7 @@ public class AgregacionService implements IAgregacionService {
       throw new IllegalArgumentException("Coleccion o fuente no encontrada");
     }
     coleccion.agregarFuente(fuente);
+    this.coleccionesRepository.save(coleccion);
   }
 
   @Override
@@ -46,6 +47,7 @@ public class AgregacionService implements IAgregacionService {
     Coleccion coleccion = this.coleccionesRepository.findColeccionByHandle(handleColeccion);
     Fuente fuente = this.fuentesRepository.findFuenteById(idFuente);
     coleccion.eliminarFuente(fuente);
+    this.coleccionesRepository.save(coleccion);
   }
 
   @Override
@@ -57,6 +59,7 @@ public class AgregacionService implements IAgregacionService {
               solicitudDto.getRazon());
           if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
             solicitud.rechazarSolicitud();
+            solicitud.marcarSpam();
           }
           this.solicitudesRepository.save(solicitud);
         }
@@ -64,16 +67,10 @@ public class AgregacionService implements IAgregacionService {
   }
 
   public void refrescarColecciones() {
-    for (Coleccion coleccion : this.obtenerColecciones()) {
-      coleccion.actualizarColeccion();
-    }
+    List<Coleccion> colecciones = this.coleccionesRepository.findAll();
+    colecciones.forEach(Coleccion::actualizarColeccion);
+    this.coleccionesRepository.saveAll(colecciones);
   }
-
-  @Override
-  public List<Coleccion> obtenerColecciones() {
-    return coleccionesRepository.findAll();
-  }
-
 
   @Override
   public void aprobarSolicitudById(Long id) {
