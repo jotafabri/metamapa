@@ -2,14 +2,14 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.hechos;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Ubicacion {
   @Column(name = "localidad")
   private String localidad;
