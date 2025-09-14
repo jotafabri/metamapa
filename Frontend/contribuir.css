@@ -75,7 +75,7 @@ body {
 
 .paso-progreso {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 0.5rem;
   opacity: 0.5;
