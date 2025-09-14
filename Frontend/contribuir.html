@@ -57,12 +57,12 @@
                         <div class="numero-paso">1</div>
                         <span>Información Básica</span>
                     </div>
-                    <div class="linea-progreso"></div>
+                    <div class="linea-progreso-1"></div>
                     <div class="paso-progreso" data-paso="2">
                         <div class="numero-paso">2</div>
                         <span>Ubicación y Fecha</span>
                     </div>
-                    <div class="linea-progreso"></div>
+                    <div class="linea-progreso-2"></div>
                     <div class="paso-progreso" data-paso="3">
                         <div class="numero-paso">3</div>
                         <span>Multimedia y Fuentes</span>
@@ -242,7 +242,12 @@ function mostrarPaso(paso) {
 
     const wrapper = document.querySelector('.contribucion-wrapper');
     wrapper.classList.toggle('paso2-activo', paso === 2);
+
+    const indicadorCont = document.querySelector('.indicador-progreso');
+    indicadorCont.classList.toggle('paso2', paso === 2);
+    indicadorCont.classList.toggle('paso3', paso === 3);
 }
+
 
 
         botonesSiguiente.forEach(btn => {
