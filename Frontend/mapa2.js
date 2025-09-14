@@ -57,17 +57,37 @@ document.addEventListener('DOMContentLoaded', () => {
             maxZoom: 19
         }).addTo(mapa);
 
+const customIcon = L.icon({
+    iconUrl: `data:image/svg+xml;utf8,${encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 32">
+            <!-- Pin relleno respetando contorno y dejando el círculo transparente -->
+            <path d="M18 0 
+                     C28 0 36 14 18 32 
+                     C0 14 8 0 18 0 Z
+                     M18 6
+                     A5 5 0 1 1 17.999 6 Z"
+                  fill="#E88827" stroke="#E88827" stroke-width="3" fill-rule="evenodd"/>
+            <!-- Círculo interior transparente (agujero GPS) -->
+            <circle cx="18" cy="11" r="5" fill="none" stroke="#E88827" stroke-width="2"/>
+        </svg>
+    `)}`,
+    iconSize: [36, 44],
+    iconAnchor: [18, 42],
+    popupAnchor: [0, -28],
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    shadowSize: [36, 44]
+});
+
         // Evento click en mapa
         mapa.on('click', async function(e) {
             const { lat, lng } = e.latlng;
 
             // Colocar o mover marcador
-            if (marcador) {
-                marcador.setLatLng([lat, lng]);
-            } else {
-                marcador = L.marker([lat, lng]).addTo(mapa);
-            }
-
+if (marcador) {
+    marcador.setLatLng([lat, lng]);
+} else {
+    marcador = L.marker([lat, lng], { icon: customIcon }).addTo(mapa);
+}
             // Llenar campos latitud y longitud
             document.getElementById('latitud').value = lat.toFixed(6);
             document.getElementById('longitud').value = lng.toFixed(6);
