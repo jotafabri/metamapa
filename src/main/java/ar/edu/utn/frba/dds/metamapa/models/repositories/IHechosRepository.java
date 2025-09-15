@@ -15,13 +15,13 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   @Query("SELECT h FROM Hecho h WHERE h.ubicacion.provincia IS NULL AND h.eliminado = FALSE AND LOWER(h.estado) = 'aceptada' ")
   List<Hecho> findAllSinProvincia();
 
-  @Query(countQuery = "SELECT h.ubicacion.provincia FROM Hecho h " +
-      "JOIN coleccion_fuente ch ON h.id = ch.hecho_id " +
+  @Query(value = "SELECT h.provincia FROM hecho h " +
+      "JOIN coleccion_hecho ch ON h.id = ch.hecho_id " +
       "JOIN coleccion c ON ch.coleccion_id = c.id " +
       "WHERE c.handle = :coleccionHandle AND h.eliminado = false " +
-      "AND h.ubicacion.provincia IS NOT NULL " +
-      "GROUP BY h.ubicacion.provincia " +
-      "ORDER BY COUNT(h) DESC LIMIT 1", nativeQuery = true)
+      "AND h.provincia IS NOT NULL " +
+      "GROUP BY h.provincia " +
+      "ORDER BY COUNT(*) DESC LIMIT 1", nativeQuery = true)
   String findProvinciaConMasHechosPorColeccion(@Param("coleccionHandle") String coleccionHandle);
 
   @Query("SELECT h.categoria FROM Hecho h WHERE LOWER(h.estado) = 'aceptada' " +
@@ -31,7 +31,7 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
   @Query("SELECT EXTRACT(HOUR FROM h.fechaAcontecimiento) AS hora FROM Hecho h " +
       "WHERE h.categoria = :categoria AND h.eliminado = false AND LOWER(h.estado) = 'aceptada' " +
-      "GROUP BY EXTRACT(HOUR FROM h.fechaAcontecimiento)" +
+      "GROUP BY EXTRACT(HOUR FROM h.fechaAcontecimiento) " +
       "ORDER BY COUNT(*) DESC LIMIT 1")
   Integer findHoraMasComunDeCategoria(@Param("categoria") String categoria);
 
@@ -42,3 +42,6 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
       "ORDER BY COUNT(h) DESC LIMIT 1")
   String findProvinciaConMasHechosPorCategoria(@Param("categoria") String categoria);
 }
+
+
+

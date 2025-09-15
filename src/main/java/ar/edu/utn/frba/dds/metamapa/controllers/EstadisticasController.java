@@ -19,43 +19,51 @@ public class EstadisticasController {
   private IEstadisticasService estadisticasService;
 
   @GetMapping("/actualizar")
-  public ResponseEntity<String> actualizarEstadisticas() {
+  public ResponseEntity<Object> actualizarEstadisticas() {
     estadisticasService.actualizarEstadisticas();
-    return ResponseEntity.ok("Estadísticas actualizadas correctamente");
+    return ResponseEntity.ok(java.util.Map.of("mensaje", "Estadísticas actualizadas correctamente"));
   }
 
   @GetMapping("/provincia-mas-hechos-coleccion")
-  public ResponseEntity<String> obtenerProvinciaConMasHechosEnColeccion(
+  public ResponseEntity<Object> obtenerProvinciaConMasHechosEnColeccion(
       @RequestParam String coleccionHandle) {
     String provincia = estadisticasService.obtenerProvinciaConMasHechosEnColeccion(coleccionHandle);
-    return ResponseEntity.ok("En la colección '" + coleccionHandle + "', la provincia con más hechos es: " + provincia);
+    return ResponseEntity.ok(java.util.Map.of(
+        "coleccionHandle", coleccionHandle,
+        "provincia", provincia != null ? provincia : "Sin datos"
+    ));
   }
 
   @GetMapping("/categoria-mas-hechos")
-  public ResponseEntity<String> obtenerCategoriaConMasHechos() {
+  public ResponseEntity<Object> obtenerCategoriaConMasHechos() {
     String categoria = estadisticasService.obtenerCategoriaConMasHechos();
-    return ResponseEntity.ok("La categoría con más hechos reportados es: " + categoria);
+    return ResponseEntity.ok(java.util.Map.of("categoria", categoria != null ? categoria : "Sin datos"));
   }
 
   @GetMapping("/provincia-mas-hechos-categoria")
-  public ResponseEntity<String> obtenerProvinciaConMasHechosDeCategoria(
+  public ResponseEntity<Object> obtenerProvinciaConMasHechosDeCategoria(
       @RequestParam String categoria) {
     String provincia = estadisticasService.obtenerProvinciaConMasHechosDeCategoria(categoria);
-    return ResponseEntity.ok("Para la categoría '" + categoria + "', la provincia con más hechos es: " + provincia);
+    return ResponseEntity.ok(java.util.Map.of(
+        "categoria", categoria,
+        "provincia", provincia != null ? provincia : "Sin datos"
+    ));
   }
 
   @GetMapping("/hora-mas-hechos-categoria")
-  public ResponseEntity<String> obtenerHoraConMasHechosDeCategoria(
+  public ResponseEntity<Object> obtenerHoraConMasHechosDeCategoria(
       @RequestParam String categoria) {
     Integer hora = estadisticasService.obtenerHoraConMasHechosDeCategoria(categoria);
-    String respuesta = hora == -1 ? "Sin datos" : hora + ":00";
-    return ResponseEntity.ok("Para la categoría '" + categoria + "', la hora con más hechos es: " + respuesta);
+    return ResponseEntity.ok(java.util.Map.of(
+        "categoria", categoria,
+        "hora", hora
+    ));
   }
 
   @GetMapping("/solicitudes-spam")
-  public ResponseEntity<String> obtenerCantidadSolicitudesSpam() {
+  public ResponseEntity<Object> obtenerCantidadSolicitudesSpam() {
     Long cantidad = estadisticasService.obtenerCantidadSolicitudesSpam();
-    return ResponseEntity.ok("Cantidad de solicitudes de eliminación que son spam: " + cantidad);
+    return ResponseEntity.ok(java.util.Map.of("cantidad", cantidad));
   }
 
   @GetMapping("/exportar")

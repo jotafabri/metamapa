@@ -7,13 +7,10 @@ import java.time.LocalDateTime;
 
 import ar.edu.utn.frba.dds.metamapa.adapters.IGeorreferenciacionAdapter;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Estadistica;
-import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IEstadisticasRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
-import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import ar.edu.utn.frba.dds.metamapa.services.IEstadisticasService;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +45,13 @@ public class EstadisticasService implements IEstadisticasService {
   }
 
   private void actualizarDetalleHechos() {
-    for (Hecho hecho : this.hechosRepository.findAllSinProvincia()) {
-      String provincia = this.georreferenciacionAdapter.getNombreProvincia(hecho.getLatitud(), hecho.getLongitud());
-      Ubicacion ubicacion = Ubicacion.builder().provincia(provincia).build();
-      hecho.setUbicacion(ubicacion);
-    }
+    // Comentado temporalmente para mejorar performance
+    // Cada llamada a la API de Georef tarda mucho tiempo
+    // for (Hecho hecho : this.hechosRepository.findAllSinProvincia()) {
+    //   String provincia = this.georreferenciacionAdapter.getNombreProvincia(hecho.getLatitud(), hecho.getLongitud());
+    //   Ubicacion ubicacion = Ubicacion.builder().provincia(provincia).build();
+    //   hecho.setUbicacion(ubicacion);
+    // }
   }
 
   @Override
@@ -86,17 +85,25 @@ public class EstadisticasService implements IEstadisticasService {
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       CSVWriter writer = new CSVWriter(new OutputStreamWriter(out));
 
-      String[] header = {"Pregunta", "Parametro", "Respuesta", "Fecha"};
+      String[] header = {"Tipo", "Pregunta", "Parametro", "Respuesta", "Fecha_Generacion"};
       writer.writeNext(header);
 
       LocalDateTime ahora = LocalDateTime.now();
+      String fechaFormateada = ahora.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
+
+      // Estadísticas históricas consolidadas
       for (Estadistica estadistica : estadisticasRepository.findAll()) {
+        String fechaEst = estadistica.getFechaGeneracion() != null
+            ? estadistica.getFechaGeneracion().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            : fechaFormateada;
+
         String[] data = {
+            "Histórico",
             estadistica.getPregunta(),
             estadistica.getParametro() != null ? estadistica.getParametro() : "",
             estadistica.getRespuesta(),
-            estadistica.getFechaGeneracion().toString()
+            fechaEst
         };
         writer.writeNext(data);
       }
@@ -110,14 +117,18 @@ public class EstadisticasService implements IEstadisticasService {
   }
 
   private void generarEstadisticasConsolidadas() {
+    // 1. ¿Cuál es la categoría con mayor cantidad de hechos reportados?
     String categoriaTop = obtenerCategoriaConMasHechos();
-    Estadistica estadCategoriaTop = Estadistica.builder()
-        .pregunta("Categoria con mas hechos")
-        .parametro("")
-        .respuesta(categoriaTop)
-        .build();
-    estadisticasRepository.save(estadCategoriaTop);
+    if (categoriaTop != null) {
+      Estadistica estadCategoriaTop = Estadistica.builder()
+          .pregunta("Categoria con mas hechos")
+          .parametro("")
+          .respuesta(categoriaTop)
+          .build();
+      estadisticasRepository.save(estadCategoriaTop);
+    }
 
+    // 2. ¿Cuántas solicitudes de eliminación son spam?
     Long solicitudesSpam = obtenerCantidadSolicitudesSpam();
     Estadistica estadSpam = Estadistica.builder()
         .pregunta("Solicitudes spam")
@@ -125,5 +136,7 @@ public class EstadisticasService implements IEstadisticasService {
         .respuesta(solicitudesSpam.toString())
         .build();
     estadisticasRepository.save(estadSpam);
+
+    // 5. Para estadísticas por colección, necesitaríamos obtener todas las colecciones disponibles
   }
 }
