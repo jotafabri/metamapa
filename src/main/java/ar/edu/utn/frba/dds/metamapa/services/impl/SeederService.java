@@ -13,6 +13,7 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,9 +36,15 @@ public class SeederService implements ISeederService {
     @Value("${app.base-url}")
     private String baseUrl;
 
+    @PostConstruct
     @Override
     @Transactional // ← Agregar transaccional para manejar todo en una transacción
     public void init() {
+
+        // Limpiar base de datos
+        coleccionesRepository.deleteAll();
+        fuentesRepository.deleteAll();
+        hechosRepository.deleteAll();
 
         // 1. CREAR Y GUARDAR FUENTES DINÁMICAS PRIMERO
         FuenteDinamica fuenteDinamica = new FuenteDinamica();
@@ -46,12 +53,7 @@ public class SeederService implements ISeederService {
         FuenteDinamica fuenteDinamica4 = new FuenteDinamica();
         FuenteDinamica fuenteDinamica5 = new FuenteDinamica();
 
-        // Guardar fuentes dinámicas
-        fuenteDinamica = fuentesRepository.save(fuenteDinamica);
-        fuenteDinamica2 = fuentesRepository.save(fuenteDinamica2);
-        fuenteDinamica3 = fuentesRepository.save(fuenteDinamica3);
-        fuenteDinamica4 = fuentesRepository.save(fuenteDinamica4);
-        fuenteDinamica5 = fuentesRepository.save(fuenteDinamica5);
+        fuentesRepository.saveAll(List.of(fuenteDinamica, fuenteDinamica2, fuenteDinamica3, fuenteDinamica4, fuenteDinamica5));
 
         // 2. CREAR HECHOS
         Hecho hecho1 = hechosService.crearHecho(
@@ -102,39 +104,28 @@ public class SeederService implements ISeederService {
         hecho5.aceptar();
 
         // 3. GUARDAR TODOS LOS HECHOS PRIMERO
-        var todosLosHechos = List.of(hecho1, hecho2, hecho3, hecho4, hecho5);
-        hechosRepository.saveAll(todosLosHechos);
+        hechosRepository.saveAll(List.of(hecho1, hecho2, hecho3, hecho4, hecho5));
 
-        // 4. AHORA AGREGAR HECHOS A LAS FUENTES (ya guardadas)
-        List<Hecho> hechosAgregar = new ArrayList<>(List.of(hecho1, hecho2, hecho3, hecho4));
+        // 4. AHORA AGREGAR HECHOS A LAS FUENTES DINAMICAS
+        fuenteDinamica.agregarHecho(hecho1);
+        fuenteDinamica.agregarHecho(hecho2);
+        fuenteDinamica.agregarHecho(hecho3);
+        fuenteDinamica.agregarHecho(hecho4);
 
-        // fuenteDinamica tiene todos los hechos dinámicos menos el aislado
-        for (Hecho hecho : hechosAgregar) {
-            fuenteDinamica.agregarHecho(hecho);
-        }
-
-        // fuenteDinamica2 tiene solo el hecho1 y el hecho2
         fuenteDinamica2.agregarHecho(hecho1);
         fuenteDinamica2.agregarHecho(hecho2);
 
-        // fuenteDinamica3 tiene solo el hecho1
         fuenteDinamica3.agregarHecho(hecho1);
 
-        // fuenteDinamica4 tiene el hecho5 (hecho aislado)
         fuenteDinamica4.agregarHecho(hecho5);
 
         // 5. GUARDAR FUENTES DINÁMICAS ACTUALIZADAS
-        fuentesRepository.save(fuenteDinamica);
-        fuentesRepository.save(fuenteDinamica2);
-        fuentesRepository.save(fuenteDinamica3);
-        fuentesRepository.save(fuenteDinamica4);
-        // fuenteDinamica5 no tiene hechos, no necesita actualización
-
+        fuentesRepository.saveAll(List.of(fuenteDinamica, fuenteDinamica2, fuenteDinamica3, fuenteDinamica4));
         // 6. CREAR Y GUARDAR FUENTES ESTÁTICAS
         var rutas = List.of(
-                baseUrl + "/csv/desastres_naturales_argentina.csv",
-                baseUrl + "/csv/desastres_sanitarios_contaminacion_argentina.csv",
-                baseUrl + "/csv/desastres_tecnologicos_argentina.csv"
+                "static/csv/desastres_naturales_argentina.csv",
+                "static/csv/desastres_sanitarios_contaminacion_argentina.csv",
+                "static/csv/desastres_tecnologicos_argentina.csv"
         );
 
         List<FuenteEstatica> fuentesEstaticasCreadas = new ArrayList<>();
@@ -147,6 +138,7 @@ public class SeederService implements ISeederService {
             fuente = this.fuentesRepository.save(fuente);
             fuentesEstaticasCreadas.add(fuente);
         }
+
 
         // 7. CREAR COLECCIONES
         Coleccion coleccionPrueba = new Coleccion("Coleccion prueba", "Esto es una prueba");
