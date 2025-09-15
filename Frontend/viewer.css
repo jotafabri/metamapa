@@ -44,7 +44,6 @@
     background-color: #121212;
     color: #E88827;
 }
-}
 
 .search-icon {
     position: absolute;
@@ -97,7 +96,7 @@
 }
 
 .toggle-switch.active {
-    background: #2563eb;          
+    background: #E88827;         
 }
 
 .toggle-knob {
@@ -105,11 +104,17 @@
     height: 0.75rem;
     background: white;
     border-radius: 50%;
-    position: absolute;
-    top: 0.25rem;
-    left: 0.25rem;
+    position: absolute;          /* 👈 este sí */
+    top: 50%;                    /* baja al medio */
+    left: 0.25rem;                /* posición inicial */
+    transform: translateY(-50%); /* centra verticalmente */
     transition: transform 0.2s;
 }
+
+.toggle-switch.active .toggle-knob {
+    transform: translate(1rem, -50%);
+}
+
 
 .form-group {
     margin-bottom: 1rem;

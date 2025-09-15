@@ -109,3 +109,10 @@ function crerMarcadorSegundTipo(type) {
 
     return markerTypes[type] || alertMarkerIcon; // default
 }
+
+// Habilitar toggles
+document.querySelectorAll('.toggle-switch').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+    });
+});

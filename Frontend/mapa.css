@@ -136,6 +136,10 @@
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #E88827;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: bold;
 }
 
 .leaflet-popup-tip {
