@@ -8,8 +8,8 @@ public interface NormalizadorHecho {
 
     Hecho normalizar(Hecho hecho);
 
-    default String normalizarTitulo(String titulo) {
-        return titulo;
+    default String normalizarCampo(String campo) {
+        return campo;
     }
 
     default String normalizarCategoria(String categoria) {

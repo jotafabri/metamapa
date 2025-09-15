@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,6 +47,25 @@ public class SeederService implements ISeederService {
         fuentesRepository.deleteAll();
         hechosRepository.deleteAll();
 
+        //Inicializo Mappeadores
+        MapeadorTexto mapeadorUbicaciones;
+        MapeadorTexto mapeadorCategorias;
+        try {
+            mapeadorUbicaciones = new MapeadorTexto("static/json/diccionario_ubicaciones.json");
+            mapeadorCategorias = new MapeadorTexto("static/json/diccionario_categorias.json");
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo cargar el JSON de normalización", e);
+        }
+
+
+        // Instanciar normalizadores
+        NormalizadorLigero normalizadorLigero = new NormalizadorLigero();
+        NormalizadorFuerte normalizadorFuerte = new NormalizadorFuerte(
+                normalizadorLigero,
+                mapeadorCategorias,
+                mapeadorUbicaciones,
+                new ValidadorFechas()
+        );
         // 1. CREAR Y GUARDAR FUENTES DINÁMICAS PRIMERO
         FuenteDinamica fuenteDinamica = new FuenteDinamica();
         FuenteDinamica fuenteDinamica2 = new FuenteDinamica();
@@ -103,8 +123,12 @@ public class SeederService implements ISeederService {
         );
         hecho5.aceptar();
 
-        // 3. GUARDAR TODOS LOS HECHOS PRIMERO
-        hechosRepository.saveAll(List.of(hecho1, hecho2, hecho3, hecho4, hecho5));
+        List<Hecho> hechosDinamicos = List.of(hecho1, hecho2, hecho3, hecho4, hecho5);
+        // NORMALIZAR HECHOS DINÁMICOS (ligero)
+        hechosDinamicos.forEach(normalizadorLigero::normalizar);
+
+        // 3. GUARDAR TODOS LOS HECHOS DINAMICOS
+        hechosRepository.saveAll(hechosDinamicos);
 
         // 4. AHORA AGREGAR HECHOS A LAS FUENTES DINAMICAS
         fuenteDinamica.agregarHecho(hecho1);
@@ -132,12 +156,21 @@ public class SeederService implements ISeederService {
 
         for (String ruta : rutas) {
             var fuente = new FuenteEstatica(ruta);
-            // Guardar hechos de la fuente estática primero
+
+            // Normalizar cada hecho usando NormalizadorFuerte
+            for (Hecho hecho : fuente.getHechos()) {
+                hecho = normalizadorFuerte.normalizar(hecho);
+            }
+
+            // Guardar hechos normalizados
             this.hechosRepository.saveAll(fuente.getHechos());
-            // Luego guardar la fuente
+
+            // Guardar la fuente
             fuente = this.fuentesRepository.save(fuente);
             fuentesEstaticasCreadas.add(fuente);
         }
+
+
 
 
         // 7. CREAR COLECCIONES

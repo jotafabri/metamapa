@@ -10,15 +10,15 @@ public class NormalizadorLigero implements NormalizadorHecho {
 
     @Override
     public Hecho normalizar(Hecho hecho) {
-        hecho.setCategoria(normalizarCategoria(hecho.getCategoria()));
-        hecho.setTitulo(normalizarTitulo(hecho.getTitulo()));
+        hecho.setCategoria(normalizarCampo(hecho.getCategoria()));
+        hecho.setTitulo(normalizarCampo(hecho.getTitulo()));
         return hecho;
     }
 
     @Override
-    public String normalizarTitulo(String titulo) {
-        if (titulo == null || titulo.isBlank()) return titulo;
-        return limpiarYCapitalizar(titulo);
+    public String normalizarCampo(String campo) {
+        if (campo == null || campo.isBlank()) return campo;
+        return limpiarYCapitalizar(campo);
     }
 
     @Override
@@ -26,7 +26,6 @@ public class NormalizadorLigero implements NormalizadorHecho {
         if (categoria == null || categoria.isBlank()) return categoria;
         return limpiarYCapitalizar(categoria);
     }
-
 
         private String limpiarYCapitalizar(String texto) {
             if (texto == null || texto.isBlank()) return texto;
