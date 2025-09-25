@@ -44,6 +44,7 @@ public class EstadisticasService implements IEstadisticasService {
     this.generarEstadisticasConsolidadas();
   }
 
+  // TODO ver si llamamos esto cada una hora (con un limite de N si hay rate limit)
   private void actualizarDetalleHechos() {
     // Comentado temporalmente para mejorar performance
     // Cada llamada a la API de Georef tarda mucho tiempo

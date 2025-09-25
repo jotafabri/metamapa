@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)// TODO cambiar a table per class o single table
 @Table(name = "fuente")
 public abstract class Fuente extends Persistente {
 
@@ -28,6 +28,7 @@ public abstract class Fuente extends Persistente {
       joinColumns = @JoinColumn(name = "fuente_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id")
   )
+  // TODO no es many to many
   protected List<Hecho> hechos = new ArrayList<>();
 
   public abstract List<Hecho> getHechos();

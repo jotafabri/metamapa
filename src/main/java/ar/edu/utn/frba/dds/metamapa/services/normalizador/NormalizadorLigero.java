@@ -1,7 +1,6 @@
-package ar.edu.utn.frba.dds.metamapa.services.impl;
+package ar.edu.utn.frba.dds.metamapa.services.normalizador;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import ar.edu.utn.frba.dds.metamapa.services.NormalizadorHecho;
 import org.apache.commons.lang3.StringUtils;
 
 public class NormalizadorLigero implements NormalizadorHecho {

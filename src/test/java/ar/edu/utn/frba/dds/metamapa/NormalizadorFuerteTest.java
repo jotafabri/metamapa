@@ -2,10 +2,10 @@ package ar.edu.utn.frba.dds.metamapa;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
-import ar.edu.utn.frba.dds.metamapa.services.impl.MapeadorTexto;
-import ar.edu.utn.frba.dds.metamapa.services.impl.NormalizadorFuerte;
-import ar.edu.utn.frba.dds.metamapa.services.impl.NormalizadorLigero;
-import ar.edu.utn.frba.dds.metamapa.services.impl.ValidadorFechas;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.MapeadorTexto;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorFuerte;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorLigero;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.ValidadorFechas;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
