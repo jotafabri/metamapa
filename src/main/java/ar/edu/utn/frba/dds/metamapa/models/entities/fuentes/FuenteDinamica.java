@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "fuente_dinamica")
 public class FuenteDinamica extends Fuente {
   @ManyToOne(fetch = FetchType.EAGER)
-  private Contribuyente contribuyente;
+  private Contribuyente contribuyente; // TODO no debería ser por usuario. Es mejor que sea una sola para todos los usuarios
 
   public List<Hecho> getHechos() {
     return (hechos.stream().filter(h -> h.getEliminado().equals(false)).toList());

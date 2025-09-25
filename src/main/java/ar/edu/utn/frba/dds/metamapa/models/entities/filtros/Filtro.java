@@ -8,7 +8,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED) // TODO cambiarlo a single_table
 @Table(name = "criterio")
 public abstract class Filtro extends Persistente {
   public abstract Boolean cumple(Hecho hecho);

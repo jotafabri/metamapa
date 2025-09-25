@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import ar.edu.utn.frba.dds.metamapa.services.impl.NormalizadorLigero;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorLigero;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

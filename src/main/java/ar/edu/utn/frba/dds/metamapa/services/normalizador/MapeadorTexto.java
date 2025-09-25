@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.services.impl;
+package ar.edu.utn.frba.dds.metamapa.services.normalizador;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

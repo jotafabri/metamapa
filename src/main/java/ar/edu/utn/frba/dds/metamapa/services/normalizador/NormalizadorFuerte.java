@@ -1,8 +1,7 @@
-package ar.edu.utn.frba.dds.metamapa.services.impl;
+package ar.edu.utn.frba.dds.metamapa.services.normalizador;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
-import ar.edu.utn.frba.dds.metamapa.services.NormalizadorHecho;
 
 import java.time.LocalDateTime;
 

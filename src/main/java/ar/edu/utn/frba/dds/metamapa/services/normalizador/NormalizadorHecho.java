@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.metamapa.services;
+package ar.edu.utn.frba.dds.metamapa.services.normalizador;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 
