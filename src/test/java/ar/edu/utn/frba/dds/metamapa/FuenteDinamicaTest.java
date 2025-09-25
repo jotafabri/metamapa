@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Contribuyente;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ public class FuenteDinamicaTest {
         .longitud(-12.2445)
         .fechaAcontecimiento(LocalDateTime.of(2023, 12, 5, 14, 30));
 
-    contribuyente = new Contribuyente("Juan", "Perez", 30, false);
+    contribuyente = new Contribuyente("Juan", "Perez", LocalDate.of(2001,2,3), false);
   }
 
   @Test
@@ -115,7 +116,7 @@ public class FuenteDinamicaTest {
 
   @Test
   void testContribuyenteAnonimoNoEditable() {
-    Contribuyente anonimo = new Contribuyente("Anonimo", "", 0, true);
+    Contribuyente anonimo = Contribuyente.buildAnonimo();
     Hecho hecho = hechoBuilder.contribuyente(anonimo).build();
     assertFalse(hecho.esEditable());
   }

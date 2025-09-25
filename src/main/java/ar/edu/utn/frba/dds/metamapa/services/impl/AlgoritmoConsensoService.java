@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAlgoritmoConsensoService;
 import org.springframework.beans.factory.annotation.Autowired;

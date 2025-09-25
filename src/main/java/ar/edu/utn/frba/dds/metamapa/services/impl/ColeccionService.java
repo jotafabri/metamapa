@@ -2,12 +2,12 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
-import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.ListaDeFiltros;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ public class ColeccionService implements IColeccionService {
 
   @Autowired
   private IColeccionesRepository coleccionesRepository;
-
 
   //ADMIN:Operacion C(R)UD
   @Override
@@ -32,56 +31,23 @@ public class ColeccionService implements IColeccionService {
   //USUARIO: Navegacion filtrada sobre una coleccion , no muestra los RECHAZADOS y PENDIENTES.
   @Override
   public List<HechoDTO> getHechosByHandle(String handle,
-                                          String categoria,
-                                          String fecha_reporte_desde,
-                                          String fecha_reporte_hasta,
-                                          String fecha_acontecimiento_desde,
-                                          String fecha_acontecimiento_hasta,
-                                          String ubicacion,
-                                          Boolean soloConMultimedia,
-                                          Boolean soloConContribuyente,
-                                          Boolean curado) {
-    var filtro = new ListaDeFiltros().getListFromParams(categoria,
-        fecha_reporte_desde,
-        fecha_reporte_hasta,
-        fecha_acontecimiento_desde,
-        fecha_acontecimiento_hasta,
-        ubicacion,
-        soloConMultimedia,
-        soloConContribuyente);
-
-    return coleccionesRepository.findByHandle(handle)
-        .navegar(filtro, curado)
+                                          HechoFiltroDTO filtros,
+                                          Boolean curado
+  ) {
+    return this.coleccionesRepository.findColeccionByHandle(handle)
+        .navegar(filtros.getList(), curado)
         .stream()
-        .filter(h -> h.getEstado() == Estado.ACEPTADA)
+        .filter(h -> h.getEstado().equals(Estado.ACEPTADA))
         .map(HechoDTO::fromHecho)
         .toList();
   }
 
-  //ADMIN: Muestra todos los hechos de la coleccion , los que no fueron ASEPTADOS tambien.
+  //ADMIN: Muestra todos los hechos de la coleccion , los que no fueron ACEPTADOS tambien.
   @Override
   public List<HechoDTO> getHechosByHandleAdmin(String handle,
-                                               String categoria,
-                                               String fecha_reporte_desde,
-                                               String fecha_reporte_hasta,
-                                               String fecha_acontecimiento_desde,
-                                               String fecha_acontecimiento_hasta,
-                                               String ubicacion,
-                                               Boolean soloConMultimedia,
-                                               Boolean soloConContribuyente) {
-    var filtro = new ListaDeFiltros().getListFromParams(
-        categoria,
-        fecha_reporte_desde,
-        fecha_reporte_hasta,
-        fecha_acontecimiento_desde,
-        fecha_acontecimiento_hasta,
-        ubicacion,
-        soloConMultimedia,
-        soloConContribuyente
-    );
-
-    return coleccionesRepository.findByHandle(handle)
-        .navegar(filtro, false)
+                                               HechoFiltroDTO filtros) {
+    return coleccionesRepository.findColeccionByHandle(handle)
+        .navegar(filtros.getList(), false)
         .stream()
         .map(HechoDTO::fromHecho)
         .toList();
@@ -90,20 +56,22 @@ public class ColeccionService implements IColeccionService {
   //ADMIN:Operacion (C)RUD
   @Override
   public void crearDesdeDTO(ColeccionDTO coleccionDTO) {
-    this.coleccionesRepository.save(new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion()));
+    Coleccion coleccion = new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion());
+    coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
+    this.coleccionesRepository.save(coleccion);
   }
 
   //ADMIN:Operacion C(R)UD
   @Override
   public ColeccionDTO mostrarColeccion(String handle) {
-    var coleccion = this.coleccionesRepository.findByHandle(handle);
+    var coleccion = this.coleccionesRepository.findColeccionByHandle(handle);
     return ColeccionDTO.fromColeccion(coleccion);
   }
 
   //ADMIN:Operacion CR(U)D
   @Override
   public void actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    var coleccion = this.coleccionesRepository.findByHandle(handle);
+    var coleccion = this.coleccionesRepository.findColeccionByHandle(handle);
     if (coleccionDTO.getTitulo() != null) {
       coleccion.setTitulo(coleccionDTO.getTitulo());
     }
@@ -122,7 +90,15 @@ public class ColeccionService implements IColeccionService {
   //ADMIN:Operacion CRU(D)
   @Override
   public void eliminarColeccion(String handle) {
+    this.coleccionesRepository.deleteColeccionByHandle(handle);
+  }
 
-    this.coleccionesRepository.delete(handle);
+  private String generarHandleUnico(String baseTitulo) {
+    String base = baseTitulo.toLowerCase().replaceAll("[^a-z0-9]", "");
+    String candidato = base;
+    for (int i = 1; this.coleccionesRepository.existsByHandle(candidato); i++) {
+      candidato = base + i;
+    }
+    return candidato;
   }
 }

@@ -2,8 +2,8 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.consenso;
 
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 
 public class ConsensoPorMultiplesMenciones implements EstrategiaConsenso {
 
@@ -29,7 +29,6 @@ public class ConsensoPorMultiplesMenciones implements EstrategiaConsenso {
     if (!h1.getCategoria().equalsIgnoreCase(h2.getCategoria())) return false;
     if (Double.compare(h1.getLatitud(), h2.getLatitud()) != 0) return false;
     if (Double.compare(h1.getLongitud(), h2.getLongitud()) != 0) return false;
-    if (!h1.getFechaAcontecimiento().equals(h2.getFechaAcontecimiento())) return false;
-    return true;
+    return h1.getFechaAcontecimiento().equals(h2.getFechaAcontecimiento());
   }
 }

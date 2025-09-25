@@ -1,23 +1,36 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
 import java.util.List;
+import java.util.Objects;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.ProxyInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.NoArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@NoArgsConstructor
+@Entity
+@Table(name = "fuente_proxy")
 public class FuenteProxy extends Fuente {
-  private final WebClient webClient;
+  @Transient
+  private WebClient webClient;
+
+  @Column(name = "base_url", nullable = false)
+  private String baseUrl;
 
   // La baseUrl es seteada al momento de crear la fuente y agregarla a una coleccion
   public FuenteProxy(String baseUrl) {
+    this.baseUrl = baseUrl;
     this.webClient = WebClient.builder().baseUrl(baseUrl).build();
   }
 
-  @Override
   public List<Hecho> getHechos() {
-    return webClient.get()
+    this.hechos = webClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/desastres")
             .build())
@@ -27,19 +40,21 @@ public class FuenteProxy extends Fuente {
             .map(HechoDTO::toHecho)
             .toList()
         )
-        .block();
+        .block().stream().filter(h -> h.getEliminado().equals(false)).toList();
+      return this.hechos;
   }
 
-  @Override
   public Hecho getHechoFromId(Long id) {
-    return webClient.get()
-        .uri(uriBuilder -> uriBuilder
-            .path("/desastres/{id}")
-            .build(id)
-        )
-        .retrieve()
-        .bodyToMono(HechoDTO.class)
-        .map(HechoDTO::toHecho)
-        .block();
+    return this.hechos.stream().filter(h -> Objects.equals(h.getId(), id)).findFirst().orElse(
+        webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/desastres/{id}")
+                .build(id)
+            )
+            .retrieve()
+            .bodyToMono(HechoDTO.class)
+            .map(HechoDTO::toHecho)
+            .block()
+    );
   }
 }

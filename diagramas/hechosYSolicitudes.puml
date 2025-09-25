@@ -1,0 +1,177 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity contribuyente {
+* id <PK>
+--
+nombre: varchar(255)
+apellido: varchar(255)
+fecha_nacimiento: date
+anonimo: boolean
+}
+
+entity hecho {
+* id: long <PK>
+* contribuyente_id <FK>
+--
+titulo: varchar(255)
+categoria: varchar(255)
+latitud: float
+longitud: float
+fecha_acontecimiento: date
+fecha_carga: date
+eliminado: boolean
+limite_dias_edicion: long
+' vienen de un enumerado
+estado: varchar(255)
+origen: varchar(255)
+}
+
+entity hecho_multimedia {
+* id <PK>
+* hecho_id <FK>
+--
+path: varchar(255)
+}
+
+entity hecho_etiqueta {
+* id <PK>
+* hecho_id <FK>
+--
+nombre: varchar(255)
+}
+
+entity solicitud_eliminacion {
+* id <PK>
+* hecho_id <FK>
+--
+causa: varchar(255)
+' viene de un enumerado
+estado: varchar(255)
+}
+
+entity coleccion {
+* id <PK>
+--
+handle: varchar(255)
+titulo: varchar(255)
+descripcion: varchar(255)
+' Por converter
+estrategia_consenso: varchar(255)
+}
+
+entity coleccion_criterio {
+* coleccion_id <PK, FK>
+* criterio_id <PK, FK>
+}
+
+entity criterio {
+* id <PK>
+}
+
+entity criterio_categoria {
+* id <PK>
+--
+nombre_categoria
+}
+
+entity criterio_titulo {
+* id <PK>
+--
+titulo
+}
+
+entity criterio_contribuyente {
+* id <PK>
+--
+debeTenerContribuyente: boolean
+}
+
+entity criterio_multimedia {
+* id <PK>
+--
+debeTenerMultimedia: boolean
+}
+
+entity criterio_fechaAcontecimiento {
+* id <PK>
+--
+desde: date
+hasta: date
+}
+
+entity criterio_fechaCarga {
+* id <PK>
+--
+desde: date
+hasta: date
+}
+
+entity criterio_ubicacion {
+* id <PK>
+--
+latitud: double
+longitud: double
+}
+
+entity fuente {
+* id <PK>
+}
+
+entity fuente_estatica {
+* id <PK>
+--
+ruta: varchar(255)
+}
+
+entity fuente_dinamica {
+* id <PK>
+* contribuyente_id <FK>
+}
+
+entity fuente_proxy {
+* id <PK>
+--
+url: varchar(255)
+}
+
+entity fuente_hecho {
+* fuente_id <PK, FK>
+* hecho_id <PK, FK>
+}
+
+entity coleccion_fuente {
+* coleccion_id <PK, FK>
+* fuente_id <PK, FK>
+}
+
+entity coleccion_hecho {
+* coleccion_id <PK, FK>
+* hecho_id <PK,FK>
+}
+
+contribuyente ||--o{ hecho
+hecho ||--o{ hecho_multimedia
+hecho ||--o{ hecho_etiqueta
+hecho ||--o{ solicitud_eliminacion
+coleccion ||--o{ coleccion_criterio
+criterio ||--o{ coleccion_criterio
+criterio_categoria ||--|| criterio
+criterio_titulo ||--|| criterio
+criterio_contribuyente ||--|| criterio
+criterio_multimedia ||--|| criterio
+criterio_fechaAcontecimiento ||--|| criterio
+criterio_fechaCarga ||--|| criterio
+criterio_ubicacion ||--|| criterio
+fuente ||--o{ fuente_hecho
+hecho ||--o{ fuente_hecho
+fuente ||--|| fuente_estatica
+fuente ||--|| fuente_dinamica
+fuente ||--|| fuente_proxy
+contribuyente ||--o{ fuente_dinamica
+coleccion ||--o{ coleccion_fuente
+fuente ||--o{ coleccion_fuente
+coleccion ||--o{ coleccion_hecho
+hecho ||--o{ coleccion_hecho
+@enduml

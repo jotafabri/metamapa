@@ -1,8 +1,15 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.filtros;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.Hecho;
-
-public interface Filtro {
-  boolean cumple(Hecho hecho);
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "criterio")
+public abstract class Filtro extends Persistente {
+  public abstract Boolean cumple(Hecho hecho);
 }
