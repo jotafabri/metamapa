@@ -21,7 +21,7 @@ class NormalizadorLigeroTest {
     void testNormalizarTitulo() {
         String titulo = "  hólA MUndo!  ";
         String esperado = "Hola mundo";
-        String normalizado = normalizadorLigero.normalizarTitulo(titulo);
+        String normalizado = normalizadorLigero.normalizarCampo(titulo);
         assertEquals(esperado, normalizado);
     }
 
@@ -47,13 +47,13 @@ class NormalizadorLigeroTest {
 
     @Test
     void testNormalizarTextoNulo() {
-        assertNull(normalizadorLigero.normalizarTitulo(null));
+        assertNull(normalizadorLigero.normalizarCampo(null));
         assertNull(normalizadorLigero.normalizarCategoria(null));
     }
 
     @Test
     void testNormalizarTextoVacio() {
-        assertEquals("", normalizadorLigero.normalizarTitulo(""));
+        assertEquals("", normalizadorLigero.normalizarCampo(""));
         assertEquals("", normalizadorLigero.normalizarCategoria(""));
     }
 }
