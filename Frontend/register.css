@@ -81,7 +81,7 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.register-subtitle {
+.register-subtitle, p {
     color: #95959F;
     font-size: 1rem;
     line-height: 1.5;
