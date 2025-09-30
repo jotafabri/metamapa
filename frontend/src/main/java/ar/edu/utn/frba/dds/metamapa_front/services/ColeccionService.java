@@ -1,11 +1,10 @@
 package ar.edu.utn.frba.dds.metamapa_front.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ public class ColeccionService {
     return coleccionesApiService.getAllColecciones();
   }
 
-  public List<HechoDTO> getHechosByHandle(String handle) {
-    return coleccionesApiService.getHechosByHandle(handle);
+  public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros, Boolean curado) {
+    return coleccionesApiService.getHechosByHandle(handle, filtros, curado);
   }
 }
