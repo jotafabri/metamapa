@@ -9,6 +9,7 @@ public class ColeccionDTO {
   private String titulo;
   private String descripcion;
   private String algoritmo;
+  private Integer cantHechos;
 
   // Mapper
   public static ColeccionDTO fromColeccion(Coleccion coleccion) {
@@ -16,6 +17,7 @@ public class ColeccionDTO {
     dto.setHandle(coleccion.getHandle());
     dto.setTitulo(coleccion.getTitulo());
     dto.setDescripcion(coleccion.getDescripcion());
+    dto.setCantHechos(coleccion.getHechos().size());
     return dto;
   }
 }
