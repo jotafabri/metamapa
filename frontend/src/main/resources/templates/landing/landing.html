@@ -1,12 +1,10 @@
 <html th:replace="~{layout/base :: html}">
-<th:block th:fragment="extraStyles">
-    <link rel="stylesheet" th:href="@{/css/landing-styles.css}">
-</th:block>
+
 <div th:fragment="contenido">
 
-    <div th:replace="~{fragments/hero :: hero}"></div>
-    <div th:replace="~{fragments/impacto-social :: impacto-social}"></div>
-    <div th:replace="~{fragments/cambio-social :: cambio-social}"></div>
+    <div th:replace="~{landing/fragments/hero :: hero}"></div>
+    <div th:replace="~{landing/fragments/impacto-social :: impacto-social}"></div>
+    <div th:replace="~{landing/fragments/cambio-social :: cambio-social}"></div>
 
 </div>
 </html>

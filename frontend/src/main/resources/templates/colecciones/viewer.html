@@ -1,8 +1,5 @@
 <html th:replace="~{layout/base :: html}">
-<th:block th:fragment="extraStyles">
-    <link rel="stylesheet" th:href="@{/css/viewer.css}">
-    <link rel="stylesheet" th:href="@{/css/mapa.css}">
-</th:block>
+
 <div th:fragment="contenido" class="hero-section">
     <div class="main-layout">
         <div th:replace="~{colecciones/fragments/filtros :: filtros}"></div>

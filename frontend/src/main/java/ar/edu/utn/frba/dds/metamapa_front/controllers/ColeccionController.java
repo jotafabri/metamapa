@@ -8,6 +8,9 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,26 +24,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/colecciones")
 @RequiredArgsConstructor
 public class ColeccionController {
-
+  private static final Logger log = LoggerFactory.getLogger(ColeccionController.class);
   private final ColeccionService coleccionService;
 
   @GetMapping
+  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
   public String listarColecciones(Model model) {
     List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
     model.addAttribute("colecciones", colecciones);
     model.addAttribute("titulo", "Colecciones");
 
-    return "colecciones";
+    return "colecciones/colecciones";
   }
 
   @GetMapping("/{handle}")
+  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
   public String listarHechos(
       @PathVariable String handle,
       @ModelAttribute HechoFiltroDTO filtros,
       @RequestParam(required = false, defaultValue = "false") Boolean curado,
       Model model,
       RedirectAttributes redirectAttributes) {
-    try{
+    try {
       List<HechoDTO> hechos = coleccionService.getHechosByHandle(handle, filtros, curado);
 
       model.addAttribute("hechos", hechos);

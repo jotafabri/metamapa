@@ -8,7 +8,17 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/botones.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <th:block th:fragment="extraStyles"></th:block>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/contribuir.css}">
+    <link rel="stylesheet" th:href="@{/css/impactosocial.css}">
+    <link rel="stylesheet" th:href="@{/css/landing-styles.css}">
+    <link rel="stylesheet" th:href="@{/css/mapa.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/styles.css}">-->
+    <link rel="stylesheet" th:href="@{/css/styles2.css}">
+    <link rel="stylesheet" th:href="@{/css/viewer.css}">
+
     <meta charset="UTF-8">
 </head>
 <body>
@@ -16,7 +26,7 @@
 <header th:fragment="header" class="header">
     <div class="container">
         <nav class="navbar">
-            <a href="landing.html" class="logo-section">
+            <a th:href="@{/}" class="logo-section">
                 <div class="logo-icon">
                     <div class="logo-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -30,14 +40,14 @@
             </a>
 
             <div class="nav-menu">
-                <a th:href="" class="nav-link">Impacto Social</a>
+                <a href="" class="nav-link">Impacto Social</a>
                 <a href="#casos-uso" class="nav-link">Casos de Uso</a>
                 <a href="#arquitectura" class="nav-link">Tecnologia</a>
-                <a th:href="@{colecciones/colecciones}" class="nav-link">Colecciones</a>
+                <a th:href="@{colecciones}" class="nav-link">Colecciones</a>
             </div>
 
             <div class="button-section">
-                <a th:href="@{/accounts/login}" class="btn btn-secondary">Acceder</a>
+                <a th:href="@{/login}" class="btn btn-secondary">Acceder</a>
                 <a th:href="@{/contribuir}" class="btn btn-primary">Contribuir</a>
             </div>
         </nav>
@@ -74,7 +84,7 @@
             <div class="footer-seccion">
                 <h4 class="footer-titulo">Producto</h4>
                 <ul class="footer-links">
-                    <li><a th:href="@{/colecciones/colecciones}">Explorar Datos</a></li>
+                    <li><a th:href="@{/colecciones}">Explorar Datos</a></li>
                     <li><a th:href="@{/contribuir}">Contribuir</a></li>
                     <li><a href="/install">Instalar</a></li>
                     <li><a href="/api">API</a></li>

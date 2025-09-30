@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LandingController {
   @GetMapping("/")
   public String landing() {
-    return "redirect:/landing";
+    return "landing/landing";
   }
 
   @GetMapping("/404")
