@@ -1,0 +1,27 @@
+<html th:replace="~{layout/base :: html}">
+<th:block th:fragment="extraStyles">
+    <link rel="stylesheet" th:href="@{/css/styles2.css}">
+</th:block>
+<!-- Contenido principal -->
+<div th:fragment="contenido" class="main">
+    <h2 class="main-title">Colecciones de Datos</h2>
+    <p class="main-subtitle">Explora diversos conjuntos de datos.</p>
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+    <!-- Grid de colecciones -->
+    <section id="collections-grid" class="grid">
+        <div th:if="${colecciones}" class="collections-container">
+            <div th:utext="${colecciones}"></div>
+        </div>
+        <!-- Mensaje si no hay colecciones -->
+        <div th:unless="${colecciones}" class="no-collections">
+            <p>No hay colecciones disponibles en este momento.</p>
+        </div>
+    </section>
+</div>
+
+<script th:src="@{/js/colecciones.js}"></script>
+</html>
+
+

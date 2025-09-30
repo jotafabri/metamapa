@@ -6,13 +6,14 @@
     <title th:text="${titulo} + ' - Metamapa'"></title>
 
     <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/landing-styles.css}">
     <link rel="stylesheet" th:href="@{/css/botones.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <th:block th:fragment="extraStyles"></th:block>
     <meta charset="UTF-8">
 </head>
-
-<header class="header">
+<body>
+<!-- Fragmento de header -->
+<header th:fragment="header" class="header">
     <div class="container">
         <nav class="navbar">
             <a href="landing.html" class="logo-section">
@@ -29,20 +30,89 @@
             </a>
 
             <div class="nav-menu">
-                <a href="Impacto Social/impactosocial.html" class="nav-link">Impacto Social</a>
+                <a th:href="" class="nav-link">Impacto Social</a>
                 <a href="#casos-uso" class="nav-link">Casos de Uso</a>
                 <a href="#arquitectura" class="nav-link">Tecnologia</a>
-                <a href="Colecciones/colecciones.html" class="nav-link">Colecciones</a>
+                <a th:href="@{colecciones/colecciones}" class="nav-link">Colecciones</a>
             </div>
 
             <div class="button-section">
-                <a href="login.html" class="btn btn-secondary">Acceder</a>
-                <a href="contribuir.html" class="btn btn-primary">Contribuir</a>
+                <a th:href="@{/accounts/login}" class="btn btn-secondary">Acceder</a>
+                <a th:href="@{/contribuir}" class="btn btn-primary">Contribuir</a>
             </div>
         </nav>
     </div>
 </header>
-<body>
 
+<!-- Contenido principal -->
+<main>
+    <!-- Aca se inyecta el contenido específico -->
+    <div th:replace=":: contenido"></div>
+
+</main>
+
+<!-- Fragmento de footer -->
+<footer th:fragment="footer" class="footer">
+    <div class="container">
+        <div class="footer-contenido">
+            <div class="footer-seccion">
+                <div class="footer-logo">
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <span class="logo-text">MetaMapa</span>
+                </div>
+                <p class="footer-descripcion">
+                    Transformando la información colaborativa en acción social para un mundo mejor.
+                </p>
+            </div>
+
+            <div class="footer-seccion">
+                <h4 class="footer-titulo">Producto</h4>
+                <ul class="footer-links">
+                    <li><a th:href="@{/colecciones/colecciones}">Explorar Datos</a></li>
+                    <li><a th:href="@{/contribuir}">Contribuir</a></li>
+                    <li><a href="/install">Instalar</a></li>
+                    <li><a href="/api">API</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-seccion">
+                <h4 class="footer-titulo">Recursos</h4>
+                <ul class="footer-links">
+                    <li><a href="/docs">Documentación</a></li>
+                    <li><a href="/support">Soporte</a></li>
+                    <li><a href="/community">Comunidad</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-seccion">
+                <h4 class="footer-titulo">Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/privacy">Privacidad</a></li>
+                    <li><a href="/terms">Términos</a></li>
+                    <li><a href="/license">Licencia</a></li>
+                    <li><a href="/security">Seguridad</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 MetaMapa. Todos los derechos reservados.</p>
+            <div class="footer-social">
+                <a href="https://github.com/dds-utn/2025-tpa-ma-ma-grupo-26" target="_blank"
+                   class="social-link">GitHub</a>
+                <a href="https://x.com/?lang=es" target="_blank" class="social-link">Twitter</a>
+                <a href="https://ar.linkedin.com/" target="_blank" class="social-link">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+</footer>
+<th:block th:fragment="extraScripts"></th:block>
 </body>
 </html>

@@ -240,7 +240,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.7)
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.7);
     animation: float 3s ease-in-out infinite;
 }
 
@@ -551,7 +551,7 @@
 .btn-secondary:hover {
     background-color: #374151; /* 🔴 fondo al pasar el mouse */
     border-color: #6b7280;     /* 🔴 borde al pasar el mouse */
-    color: #FB9A34            /* 🔴 texto en color #FF5141 al pasar el mouse */
+    color: #FB9A34;            /* 🔴 texto en color #FF5141 al pasar el mouse */
     transform: translateY(-1px);
 }
 

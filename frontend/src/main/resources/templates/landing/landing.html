@@ -1,46 +1,8 @@
-<html>
-
-<head>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/landing-styles.css">
-    <link rel="stylesheet" href="../static/css/botones.css">
-    <link rel="stylesheet" href="../static/css/footer.css">
-    <meta charset="UTF-8">
-
-</head>
-
-<body>
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="landing.html" class="logo-section">
-                    <div class="logo-icon">
-                        <div class="logo-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="logo-text">MetaMapa</span>
-                </a>
-
-                <div class="nav-menu">
-                    <a href="Impacto Social/impactosocial.html" class="nav-link">Impacto Social</a>
-                    <a href="#casos-uso" class="nav-link">Casos de Uso</a>
-                    <a href="#arquitectura" class="nav-link">Tecnologia</a>
-                    <a href="Colecciones/colecciones.html" class="nav-link">Colecciones</a>
-                </div>
-
-                <div class="button-section">
-                    <a href="login.html" class="btn btn-secondary">Acceder</a>
-                    <a href="contribuir.html" class="btn btn-primary">Contribuir</a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
+<html th:replace="~{layout/base :: html}">
+<th:block th:fragment="extraStyles">
+    <link rel="stylesheet" th:href="@{/css/landing-styles.css}">
+</th:block>
+<div th:fragment="contenido">
     <section class="hero-section">
             <div class="hero-content">
                     <div class="text-section">
@@ -57,7 +19,7 @@
                         </p>
 
                         <div class="button-group">
-                            <a href="viewer.html" class="btn btn-primary btn-hero">
+                            <a th:href="@{/viewer}" class="btn btn-primary btn-hero">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
@@ -65,7 +27,7 @@
                                 </svg>
                                 Explorar Datos
                             </a>
-                        <a href="contribuir.html" class="btn btn-tertiary">
+                            <a th:href="@{/contribuir}" class="btn btn-tertiary">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -176,6 +138,8 @@
 
     </section>
 
+    <div th:replace="~{fragments/impactosocial :: impactosocial}"></div>
+
     <section class="seccion-cambio-social">
         <div class="contenedor-principal">
             <div class="contenido-centrado">
@@ -189,8 +153,8 @@
                 </p>
          
                 <div class="contenedor-botones">
-              
-                    <a href="contribuir.html" class="btn btn-hero btn-quaternary">
+
+                    <a th:href="@{/contribuir}" class="btn btn-hero btn-quaternary">
                         <svg class="icono-boton" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="17 8 12 3 7 8"></polyline>
@@ -198,10 +162,8 @@
                         </svg>
                         Reportar Información
                     </a>
-                    
-                    
-      
-<a href="register.html" class="btn btn-hero btn-secondary">
+
+                    <a th:href="@{/register}" class="btn btn-hero btn-secondary">
     <svg class="icono-boton" xmlns="http://www.w3.org/2000/svg"
          fill="none" stroke="currentColor" stroke-width="2"
          stroke-linecap="round" stroke-linejoin="round"
@@ -231,68 +193,5 @@
             </div>
         </div>
     </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-contenido">
-                <div class="footer-seccion">
-                    <div class="footer-logo">
-                        <div class="logo-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                        </div>
-                        <span class="logo-text">MetaMapa</span>
-                    </div>
-                    <p class="footer-descripcion">
-                        Transformando la información colaborativa en acción social para un mundo mejor.
-                    </p>
-                </div>
-    
-                <div class="footer-seccion">
-                    <h4 class="footer-titulo">Producto</h4>
-                    <ul class="footer-links">
-                        <li><a href="/collections">Explorar Datos</a></li>
-                        <li><a href="/contribute">Contribuir</a></li>
-                        <li><a href="/install">Instalar</a></li>
-                        <li><a href="/api">API</a></li>
-                    </ul>
-                </div>
-    
-                <div class="footer-seccion">
-                    <h4 class="footer-titulo">Recursos</h4>
-                    <ul class="footer-links">
-                        <li><a href="/docs">Documentación</a></li>
-                        <li><a href="/support">Soporte</a></li>
-                        <li><a href="/community">Comunidad</a></li>
-                        <li><a href="/blog">Blog</a></li>
-                    </ul>
-                </div>
-    
-                <div class="footer-seccion">
-                    <h4 class="footer-titulo">Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="/privacy">Privacidad</a></li>
-                        <li><a href="/terms">Términos</a></li>
-                        <li><a href="/license">Licencia</a></li>
-                        <li><a href="/security">Seguridad</a></li>
-                    </ul>
-                </div>
-            </div>
-    
-            <div class="footer-bottom">
-                <p>&copy; 2024 MetaMapa. Todos los derechos reservados.</p>
-                <div class="footer-social">
-                    <a href="https://github.com/dds-utn/2025-tpa-ma-ma-grupo-26" target="_blank" class="social-link">GitHub</a>
-                    <a href="https://x.com/?lang=es" target="_blank" class="social-link">Twitter</a>
-                    <a href="https://ar.linkedin.com/" target="_blank" class="social-link">LinkedIn</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-</body>
-
-
+</div>
 </html>

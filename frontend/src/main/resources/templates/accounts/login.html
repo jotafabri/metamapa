@@ -1,0 +1,87 @@
+<html th:replace="~{layout/base :: html}">
+<th:block th:fragment="extraStyles">
+    <link rel="stylesheet" th:href="@{/css/login}">
+</th:block>
+<div th:fragment="contenido">
+    <section class="login-section">
+        <div class="login-container">
+            <div class="login-wrapper">
+
+                <div class="navigate-back">
+                    <a th:href="@{/}" class="navigate-back-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span>Volver al inicio</span>
+                    </a>
+                </div>
+
+                <div class="login-card">
+                    <div class="login-header">
+                        <h1 class="login-title">Iniciar Sesión</h1>
+                        <p class="login-subtitle">
+                            Accede a tu cuenta para contribuir y gestionar contenido histórico
+                        </p>
+                    </div>
+
+                    <div class="login-content">
+                        <form class="login-form" action="#" method="post">
+                            <div class="form-fields">
+
+                                <div class="field-group">
+                                    <label for="email" class="field-label">Correo electrónico</label>
+                                    <input type="email" id="email" name="email" class="field-input"
+                                           placeholder="Correo Electrónico" required aria-describedby="email-help">
+                                    <p id="email-help" class="field-help">
+                                        Ingresa el correo asociado a tu cuenta
+                                    </p>
+                                </div>
+
+                                <div class="field-group">
+                                    <label for="password" class="field-label">Contraseña</label>
+                                    <!--<div class="password-wrapper">-->
+                                    <input type="password" id="password" name="password" class="field-input"
+                                           placeholder="Contraseña" required aria-describedby="password-help">
+                                    <!-- </div> -->
+                                    <p id="password-help" class="field-help">
+                                        Mínimo 8 caracteres con al menos una mayúscula
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="form-options">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="remember" name="remember">
+                                    <label for="remember">Recordarme</label>
+                                </div>
+                                <a href="/recuperar-password" class="forgot-password">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-login">
+                                Iniciar Sesión
+                            </button>
+                        </form>
+
+                        <div class="register-link">
+                            <p>
+                                ¿No tienes una cuenta?
+                                <a th:href="@{/register}">Regístrate aquí</a>
+                            </p>
+                            <p>
+                                ¿Eres administrador?
+                                <a th:href="@{/login-admin}">Ingresar como
+                                    Administrador</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<th:block th:fragment="extraScripts">
+    <script th:src="@{/js/togglePassword.js}"></script>
+</th:block>
+</html>
