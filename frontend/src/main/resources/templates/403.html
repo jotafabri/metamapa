@@ -1,0 +1,8 @@
+<html th:replace="~{layout/base :: html}">
+    <div th:fragment="contenido">
+        <div class="forbidden-container">
+                <img th:src="@{/images/403.png}" alt="Imagen 403" class="forbidden-image">
+                <h1 th:text="${mensaje} ?: 'Lo sentimos, usted no posee permisos para ingresar a esta página'" class="forbidden-image"></h1>
+        </div>
+    </div>
+</html>

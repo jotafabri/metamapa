@@ -1,0 +1,134 @@
+<div th:fragment="filtros" class="sidebar">
+    <div class="search-section">
+        <label class="search-label">Buscar Hechos</label>
+        <div style="position: relative;">
+                    <span class="search-icon"
+                          style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">🔍</span>
+            <input type="text" class="search-input" placeholder="Buscar por título, descripción...">
+        </div>
+    </div>
+
+    <div class="toggle-container">
+        <div class="toggle-label">
+            <div class="toggle-dot"></div>
+            <span>Búsqueda curada</span>
+        </div>
+        <div class="toggle-switch">
+            <div class="toggle-knob"></div>
+        </div>
+    </div>
+
+    <div class="info-alert" id="curatedInfo" style="display: none;">
+        <strong>Búsqueda curada:</strong> Se muestran exclusivamente hechos respaldados por consenso de
+        múltiples fuentes.
+    </div>
+    <div class="toggle-container">
+        <div class="toggle-label">
+            <div class="toggle-dot"></div>
+            <span>Solo con multimedia</span>
+        </div>
+        <div class="toggle-switch">
+            <div class="toggle-knob"></div>
+        </div>
+    </div>
+
+    <div class="toggle-container">
+        <div class="toggle-label" onclick="toggleContributor()">
+            <div class="toggle-dot"></div>
+            <span>Solo con contribuyente</span>
+        </div>
+        <div class="toggle-switch">
+            <div class="toggle-knob"></div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
+            </svg>
+            <h3 style="font-weight: 600; color: #E88827;">Filtros</h3>
+        </div>
+
+        <!-- Date Range -->
+        <div class="form-group">
+            <label class="form-label">
+                <svg class="icon-svg" style="margin-right: 4px;" fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Rango de Fechas
+            </label>
+            <div class="date-grid">
+                <div>
+                    <div class="date-label">Desde</div>
+                    <input type="date" class="form-input">
+                </div>
+                <div>
+                    <div class="date-label">Hasta</div>
+                    <input type="date" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Categoría</label>
+            <select class="form-input">
+                <option value="all">Todas las categorías</option>
+                <option value="Emergencias">Emergencias</option>
+                <option value="Medio Ambiente">Medio Ambiente</option>
+                <option value="Derechos Humanos">Derechos Humanos</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Fuente</label>
+            <select class="form-input">
+                <option value="all">Todas las fuentes</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">
+                <svg class="icon-svg" style="margin-right: 4px;" fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Fecha de reporte
+            </label>
+            <div class="date-grid">
+                <div>
+                    <div class="date-label">Desde</div>
+                    <input type="date" class="form-input">
+                </div>
+                <div>
+                    <div class="date-label">Hasta</div>
+                    <input type="date" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="search-label">
+                <svg class="icon-svg" style="margin-right: 4px;" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                          d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"/>
+                </svg>
+                Ubicación
+            </label>
+            <input type="text" class="search-input" placeholder="Ingrese ubicación...">
+        </div>
+
+        <button class="clear-btn">
+            <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Limpiar Filtros
+        </button>
+
+    </div>
+</div>

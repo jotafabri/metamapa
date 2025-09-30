@@ -11,8 +11,15 @@ public class LandingController {
     return "redirect:/landing";
   }
 
+  @GetMapping("/404")
   public String notFound(Model model) {
     model.addAttribute("titulo", "No encontrado");
     return "404";
+  }
+
+  @GetMapping("/403")
+  public String forbidden(Model model) {
+    model.addAttribute("titulo", "Acceso denegado");
+    return "403";
   }
 }
