@@ -1,5 +1,5 @@
 spring.application.name=metamapa
-app.base-url=http://localhost:8080
+app.base-url=http://localhost:8080/api
 proxy.base-url=https://api-ddsi.disilab.ar/public/api
 tiempo.algoritmo=0 0 3 * * *
 limite.dias.edicion=7

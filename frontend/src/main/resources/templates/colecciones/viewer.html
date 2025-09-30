@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
+<html th:replace="~{layout/base :: html}">
+<th:block th:fragment="extraStyles">
+    <link rel="stylesheet" th:href="@{/css/viewer.css}">
+    <link rel="stylesheet" th:href="@{/css/mapa.css}">
+</th:block>
+<th:block th:fragment="extraScripts">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script th:src="@{/js/mapa.js}"></script>
+</th:block>
 
-<head>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/login.css">
-    <link rel="stylesheet" href="../static/css/botones.css">
-    <link rel="stylesheet" href="../static/css/viewer.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
-    <link rel="stylesheet" href="../static/css/mapa.css">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMapa - Iniciar Sesión</title>
-
-</head>
-    
-<body class="hero-section">
+<div th:fragment="contenido" class="hero-section">
 
     <div class="main-layout">
 
@@ -26,7 +19,7 @@
                 <label class="search-label">Buscar Hechos</label>
                 <div style="position: relative;">
                     <span class="search-icon"
-                        style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">🔍</span>
+                          style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">🔍</span>
                     <input type="text" class="search-input" placeholder="Buscar por título, descripción...">
                 </div>
             </div>
@@ -68,7 +61,8 @@
             <div style="margin-bottom: 1.5rem;">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
                     <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
                     </svg>
                     <h3 style="font-weight: 600; color: #E88827;">Filtros</h3>
                 </div>
@@ -76,8 +70,10 @@
                 <!-- Date Range -->
                 <div class="form-group">
                     <label class="form-label">
-                        <svg class="icon-svg" style="margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        <svg class="icon-svg" style="margin-right: 4px;" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         Rango de Fechas
                     </label>
@@ -112,8 +108,10 @@
 
                 <div class="form-group">
                     <label class="form-label">
-                        <svg class="icon-svg" style="margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        <svg class="icon-svg" style="margin-right: 4px;" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         Fecha de reporte
                     </label>
@@ -132,7 +130,8 @@
                 <div class="form-group">
                     <label class="search-label">
                         <svg class="icon-svg" style="margin-right: 4px;" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"/>
+                            <path fill-rule="evenodd"
+                                  d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"/>
                         </svg>
                         Ubicación
                     </label>
@@ -141,7 +140,8 @@
 
                 <button class="clear-btn">
                     <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                     </svg>
                     Limpiar Filtros
                 </button>
@@ -156,17 +156,12 @@
 
         </div>
 
-        
+
         <div class="map-container">
             <div id="map"></div>
         </div>
-            
+
     </div>
-   
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
-    
-    <script src="../static/js/mapa.js"></script>
-</body>
+</div>
+
 </html>
