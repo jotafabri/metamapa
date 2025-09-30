@@ -1,471 +1,183 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contribuir con MetaMapa</title>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/contribuir.css">
-    <link rel="stylesheet" href="../static/css/botones.css">
+<html th:replace="~{layout/base :: html}">
+<th:block th:fragment="extraStyles">
+    <link rel="stylesheet" th:href="@{/css/contribuir}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+</th:block>
+<th:block th:fragment="extraScripts">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script th:src="@{/js/mapa2.js}"></script>
+    <script th:src="@{/js/mostrarPaso.js}"></script>
+</th:block>
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<div th:fragment="contenido" class="contribucion-seccion">
+    <div class="contribucion-contenedor">
+        <div class="contribucion-wrapper">
 
-</head>
-<body>
-    <header class="header">
-
-        <div class="container">
-            <nav class="navbar">
-                <a href="landing/landing.html" class="logo-section">
-                    <div class="logo-icon">
-                        <div class="logo-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="logo-text">MetaMapa</span>
+            <!-- Botón para volver -->
+            <div class="volver-atras">
+                <a href="landing/landing.html" class="volver-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    <span>Volver al inicio</span>
                 </a>
-    
-                <div class="button-section">
-                    <a href="/registro" class="btn btn-secondary">Registrarse</a>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <section class="contribucion-seccion">
-        <div class="contribucion-contenedor">
-            <div class="contribucion-wrapper">
+            </div>
 
-                <!-- Botón para volver -->
-                <div class="volver-atras">
-                    <a href="landing/landing.html" class="volver-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 12H5M12 19l-7-7 7-7" />
-                        </svg>
-                        <span>Volver al inicio</span>
-                    </a>
+            <div class="indicador-progreso">
+                <div class="paso-progreso activo" data-paso="1">
+                    <div class="numero-paso">1</div>
+                    <span>Información Básica</span>
                 </div>
+                <div class="linea-progreso-1"></div>
+                <div class="paso-progreso" data-paso="2">
+                    <div class="numero-paso">2</div>
+                    <span>Ubicación y Fecha</span>
+                </div>
+                <div class="linea-progreso-2"></div>
+                <div class="paso-progreso" data-paso="3">
+                    <div class="numero-paso">3</div>
+                    <span>Multimedia y Fuentes</span>
+                </div>
+            </div>
 
-                <div class="indicador-progreso">
-                    <div class="paso-progreso activo" data-paso="1">
-                        <div class="numero-paso">1</div>
-                        <span>Información Básica</span>
-                    </div>
-                    <div class="linea-progreso-1"></div>
-                    <div class="paso-progreso" data-paso="2">
-                        <div class="numero-paso">2</div>
-                        <span>Ubicación y Fecha</span>
-                    </div>
-                    <div class="linea-progreso-2"></div>
-                    <div class="paso-progreso" data-paso="3">
-                        <div class="numero-paso">3</div>
-                        <span>Multimedia y Fuentes</span>
-                    </div>
+
+            <div class="formulario-tarjeta">
+
+                <div class="formulario-encabezado">
+                    <h1 class="formulario-titulo">Reportar Información Crítica</h1>
+                    <p class="formulario-subtitulo">
+                        Contribuye con información que puede ayudar a resolver problemas sociales críticos
+                    </p>
                 </div>
 
+                <div class="formulario-contenido">
+                    <form id="formulario-contribucion" class="formulario-principal">
 
-                <div class="formulario-tarjeta">
-                    
-                    <div class="formulario-encabezado">
-                        <h1 class="formulario-titulo">Reportar Información Crítica</h1>
-                        <p class="formulario-subtitulo">
-                            Contribuye con información que puede ayudar a resolver problemas sociales críticos
-                        </p>
-                    </div>
 
-                    <div class="formulario-contenido">
-                        <form id="formulario-contribucion" class="formulario-principal">
+                        <div class="seccion-paso activa" data-paso="1">
+                            <div class="campos-formulario">
 
-                     
-                            <div class="seccion-paso activa" data-paso="1">
-                                <div class="campos-formulario">
-                                    
-                                    <div class="grupo-campo">
-                                        <label for="titulo" class="etiqueta-campo">Título del Hecho *</label>
-                                        <input type="text" id="titulo" name="titulo" class="entrada-campo" 
-                                               maxlength="100" required placeholder="Ej: Incendio en zona industrial">
-                                        <p class="ayuda-campo">Máximo 100 caracteres</p>
-                                    </div>
-
-                                    <div class="grupo-campo">
-                                        <label for="descripcion" class="etiqueta-campo">Descripción Detallada *</label>
-                                        <textarea id="descripcion" name="descripcion" class="entrada-campo area-texto" 
-                                                  minlength="100" maxlength="2000" required 
-                                                  placeholder="Describe detalladamente lo que ocurrió..."></textarea>
-                                        <p class="ayuda-campo">Mínimo 100 caracteres, máximo 2000</p>
-                                    </div>
-
-                                    <div class="grupo-campo">
-                                        <label for="categoria" class="etiqueta-campo">Categoría *</label>
-                                        <select id="categoria" name="categoria" class="entrada-campo" required>
-                                            <option value="">Selecciona la categoría</option>
-                                            <option value="incendio">Incendio</option>
-                                            <option value="inundacion">Inundación</option>
-                                            <option value="accidente">Accidente</option>
-                                            <option value="otro">Otro</option>
-                                        </select>
-                                    </div>
+                                <div class="grupo-campo">
+                                    <label for="titulo" class="etiqueta-campo">Título del Hecho *</label>
+                                    <input type="text" id="titulo" name="titulo" class="entrada-campo"
+                                           maxlength="100" required placeholder="Ej: Incendio en zona industrial">
+                                    <p class="ayuda-campo">Máximo 100 caracteres</p>
                                 </div>
 
-                                <div class="navegacion-pasos">
-                                    <button type="button" class="btn btn-primary siguiente-paso">Continuar</button>
+                                <div class="grupo-campo">
+                                    <label for="descripcion" class="etiqueta-campo">Descripción Detallada *</label>
+                                    <textarea id="descripcion" name="descripcion" class="entrada-campo area-texto"
+                                              minlength="100" maxlength="2000" required
+                                              placeholder="Describe detalladamente lo que ocurrió..."></textarea>
+                                    <p class="ayuda-campo">Mínimo 100 caracteres, máximo 2000</p>
+                                </div>
+
+                                <div class="grupo-campo">
+                                    <label for="categoria" class="etiqueta-campo">Categoría *</label>
+                                    <select id="categoria" name="categoria" class="entrada-campo" required>
+                                        <option value="">Selecciona la categoría</option>
+                                        <option value="incendio">Incendio</option>
+                                        <option value="inundacion">Inundación</option>
+                                        <option value="accidente">Accidente</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
                                 </div>
                             </div>
 
-<div class="seccion-paso" data-paso="2">
-    <div class="paso2-contenedor">
+                            <div class="navegacion-pasos">
+                                <button type="button" class="btn btn-primary siguiente-paso">Continuar</button>
+                            </div>
+                        </div>
 
-        <!-- Columna izquierda: Inputs -->
-        <div class="campos-izquierda">
-            <div class="grupo-campo">
-                <label for="fecha">Fecha del Hecho *</label>
-                <input type="date" id="fecha" name="fecha" class="entrada-campo" required>
+                        <div class="seccion-paso" data-paso="2">
+                            <div class="paso2-contenedor">
+
+                                <!-- Columna izquierda: Inputs -->
+                                <div class="campos-izquierda">
+                                    <div class="grupo-campo">
+                                        <label for="fecha">Fecha del Hecho *</label>
+                                        <input type="date" id="fecha" name="fecha" class="entrada-campo" required>
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="latitud">Latitud *</label>
+                                        <input type="text" id="latitud" name="latitud" class="entrada-campo" required
+                                               readonly
+                                               placeholder="Haz clic en el mapa">
+                                    </div>
+
+                                    <div class="grupo-campo">
+                                        <label for="longitud">Longitud *</label>
+                                        <input type="text" id="longitud" name="longitud" class="entrada-campo" required
+                                               readonly
+                                               placeholder="Haz clic en el mapa">
+                                    </div>
+
+                                </div>
+
+                                <!-- Columna derecha: Mapa -->
+                                <div class="mapa-derecha">
+                                    <label>Ubicación en el Mapa *</label>
+                                    <div id="mapa"></div>
+                                    <p class="ayuda-campo">Haz clic en el mapa para marcar la ubicación exacta.</p>
+                                </div>
+                            </div>
+
+                            <div class="navegacion-pasos">
+                                <button type="button" class="btn btn-tertiary paso-anterior">Atrás</button>
+                                <button type="button" class="btn btn-primary siguiente-paso">Continuar</button>
+                            </div>
+                        </div>
+
+
+                        <div class="seccion-paso" data-paso="3">
+                            <div class="campos-formulario">
+
+                                <div class="grupo-campo">
+                                    <label for="multimedia" class="etiqueta-campo">Multimedia (Opcional)</label>
+                                    <input type="file" id="multimedia" name="multimedia" class="entrada-archivo"
+                                           multiple>
+                                    <p class="ayuda-campo">Puedes subir imágenes, videos o documentos</p>
+                                </div>
+
+                                <div class="grupo-campo">
+                                    <label for="fuentes" class="etiqueta-campo">Fuentes y Referencias *</label>
+                                    <textarea id="fuentes" name="fuentes" class="entrada-campo area-texto"
+                                              required
+                                              placeholder="Enlaces a noticias, documentos oficiales, testimonios, etc."></textarea>
+                                    <p class="ayuda-campo">Proporciona las fuentes que respalden tu información</p>
+                                </div>
+
+                                <div class="grupo-campo">
+                                    <label for="notas" class="etiqueta-campo">Notas Adicionales</label>
+                                    <textarea id="notas" name="notas" class="entrada-campo area-texto"
+                                              placeholder="Cualquier información adicional relevante..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="navegacion-pasos">
+                                <button type="button" class="btn btn-tertiary paso-anterior">Atrás</button>
+                                <button type="submit" class="btn btn-primary enviar-contribucion">Enviar Contribución
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
 
-            <div class="grupo-campo">
-                <label for="precision">Precisión de la Fecha</label>
-                <select id="precision" name="precision" class="entrada-campo">
-                    <option value="">¿Qué tan precisa es la fecha?</option>
-                    <option value="exacta">Exacta</option>
-                    <option value="aproximada">Aproximada</option>
-                </select>
+            <div class="seccion-ayuda">
+                <h3 class="titulo-ayuda">¿Necesitas Ayuda?</h3>
+                <p class="descripcion-ayuda">Consulta nuestras guías de contribución o contacta al equipo de soporte</p>
+                <div class="botones-ayuda">
+                    <button class="btn btn-tertiary">Guías de Contribución</button>
+                    <button class="btn btn-quaternary">Contactar Soporte</button>
+                </div>
             </div>
-
-            <div class="grupo-campo">
-                <label for="pais">País *</label>
-<select id="pais" name="pais" class="entrada-campo" required>
-  <option value="">Selecciona el país</option>
-  <option value="af">Afganistán</option>
-  <option value="al">Albania</option>
-  <option value="dz">Argelia</option>
-  <option value="ad">Andorra</option>
-  <option value="ao">Angola</option>
-  <option value="ag">Antigua y Barbuda</option>
-  <option value="ar">Argentina</option>
-  <option value="am">Armenia</option>
-  <option value="au">Australia</option>
-  <option value="at">Austria</option>
-  <option value="az">Azerbaiyán</option>
-  <option value="bs">Bahamas</option>
-  <option value="bh">Baréin</option>
-  <option value="bd">Bangladesh</option>
-  <option value="bb">Barbados</option>
-  <option value="by">Bielorrusia</option>
-  <option value="be">Bélgica</option>
-  <option value="bz">Belice</option>
-  <option value="bj">Benín</option>
-  <option value="bt">Bután</option>
-  <option value="bo">Bolivia</option>
-  <option value="ba">Bosnia y Herzegovina</option>
-  <option value="bw">Botsuana</option>
-  <option value="br">Brasil</option>
-  <option value="bn">Brunéi</option>
-  <option value="bg">Bulgaria</option>
-  <option value="bf">Burkina Faso</option>
-  <option value="bi">Burundi</option>
-  <option value="cv">Cabo Verde</option>
-  <option value="kh">Camboya</option>
-  <option value="cm">Camerún</option>
-  <option value="ca">Canadá</option>
-  <option value="cf">República Centroafricana</option>
-  <option value="td">Chad</option>
-  <option value="cl">Chile</option>
-  <option value="cn">China</option>
-  <option value="co">Colombia</option>
-  <option value="km">Comoras</option>
-  <option value="cd">República Democrática del Congo</option>
-  <option value="cg">Congo</option>
-  <option value="cr">Costa Rica</option>
-  <option value="ci">Costa de Marfil</option>
-  <option value="hr">Croacia</option>
-  <option value="cu">Cuba</option>
-  <option value="cy">Chipre</option>
-  <option value="cz">República Checa</option>
-  <option value="dk">Dinamarca</option>
-  <option value="dj">Yibuti</option>
-  <option value="dm">Dominica</option>
-  <option value="do">República Dominicana</option>
-  <option value="ec">Ecuador</option>
-  <option value="eg">Egipto</option>
-  <option value="sv">El Salvador</option>
-  <option value="gq">Guinea Ecuatorial</option>
-  <option value="er">Eritrea</option>
-  <option value="ee">Estonia</option>
-  <option value="sz">Esuatini</option>
-  <option value="et">Etiopía</option>
-  <option value="fj">Fiyi</option>
-  <option value="fi">Finlandia</option>
-  <option value="fr">Francia</option>
-  <option value="ga">Gabón</option>
-  <option value="gm">Gambia</option>
-  <option value="ge">Georgia</option>
-  <option value="de">Alemania</option>
-  <option value="gh">Ghana</option>
-  <option value="gr">Grecia</option>
-  <option value="gd">Granada</option>
-  <option value="gt">Guatemala</option>
-  <option value="gn">Guinea</option>
-  <option value="gw">Guinea-Bisáu</option>
-  <option value="gy">Guyana</option>
-  <option value="ht">Haití</option>
-  <option value="hn">Honduras</option>
-  <option value="hu">Hungría</option>
-  <option value="is">Islandia</option>
-  <option value="in">India</option>
-  <option value="id">Indonesia</option>
-  <option value="ir">Irán</option>
-  <option value="iq">Iraq</option>
-  <option value="ie">Irlanda</option>
-  <option value="il">Israel</option>
-  <option value="it">Italia</option>
-  <option value="jm">Jamaica</option>
-  <option value="jp">Japón</option>
-  <option value="jo">Jordania</option>
-  <option value="kz">Kazajistán</option>
-  <option value="ke">Kenia</option>
-  <option value="ki">Kiribati</option>
-  <option value="kw">Kuwait</option>
-  <option value="kg">Kirguistán</option>
-  <option value="la">Laos</option>
-  <option value="lv">Letonia</option>
-  <option value="lb">Líbano</option>
-  <option value="ls">Lesoto</option>
-  <option value="lr">Liberia</option>
-  <option value="ly">Libia</option>
-  <option value="li">Liechtenstein</option>
-  <option value="lt">Lituania</option>
-  <option value="lu">Luxemburgo</option>
-  <option value="mg">Madagascar</option>
-  <option value="mw">Malawi</option>
-  <option value="my">Malasia</option>
-  <option value="mv">Maldivas</option>
-  <option value="ml">Malí</option>
-  <option value="mt">Malta</option>
-  <option value="mh">Islas Marshall</option>
-  <option value="mr">Mauritania</option>
-  <option value="mu">Mauricio</option>
-  <option value="mx">México</option>
-  <option value="fm">Micronesia</option>
-  <option value="md">Moldavia</option>
-  <option value="mc">Mónaco</option>
-  <option value="mn">Mongolia</option>
-  <option value="me">Montenegro</option>
-  <option value="ma">Marruecos</option>
-  <option value="mz">Mozambique</option>
-  <option value="mm">Myanmar</option>
-  <option value="na">Namibia</option>
-  <option value="nr">Nauru</option>
-  <option value="np">Nepal</option>
-  <option value="nl">Países Bajos</option>
-  <option value="nz">Nueva Zelanda</option>
-  <option value="ni">Nicaragua</option>
-  <option value="ne">Níger</option>
-  <option value="ng">Nigeria</option>
-  <option value="kp">Corea del Norte</option>
-  <option value="mk">Macedonia del Norte</option>
-  <option value="no">Noruega</option>
-  <option value="om">Omán</option>
-  <option value="pk">Pakistán</option>
-  <option value="pw">Palaos</option>
-  <option value="pa">Panamá</option>
-  <option value="pg">Papúa Nueva Guinea</option>
-  <option value="py">Paraguay</option>
-  <option value="pe">Perú</option>
-  <option value="ph">Filipinas</option>
-  <option value="pl">Polonia</option>
-  <option value="pt">Portugal</option>
-  <option value="qa">Catar</option>
-  <option value="ro">Rumania</option>
-  <option value="ru">Rusia</option>
-  <option value="rw">Ruanda</option>
-  <option value="kn">San Cristóbal y Nieves</option>
-  <option value="lc">Santa Lucía</option>
-  <option value="vc">San Vicente y las Granadinas</option>
-  <option value="ws">Samoa</option>
-  <option value="sm">San Marino</option>
-  <option value="st">Santo Tomé y Príncipe</option>
-  <option value="sa">Arabia Saudita</option>
-  <option value="sn">Senegal</option>
-  <option value="rs">Serbia</option>
-  <option value="sc">Seychelles</option>
-  <option value="sl">Sierra Leona</option>
-  <option value="sg">Singapur</option>
-  <option value="sk">Eslovaquia</option>
-  <option value="si">Eslovenia</option>
-  <option value="sb">Islas Salomón</option>
-  <option value="so">Somalia</option>
-  <option value="za">Sudáfrica</option>
-  <option value="kr">Corea del Sur</option>
-  <option value="ss">Sudán del Sur</option>
-  <option value="es">España</option>
-  <option value="lk">Sri Lanka</option>
-  <option value="sd">Sudán</option>
-  <option value="sr">Surinam</option>
-  <option value="se">Suecia</option>
-  <option value="ch">Suiza</option>
-  <option value="sy">Siria</option>
-  <option value="tj">Tayikistán</option>
-  <option value="tz">Tanzania</option>
-  <option value="th">Tailandia</option>
-  <option value="tl">Timor Oriental</option>
-  <option value="tg">Togo</option>
-  <option value="to">Tonga</option>
-  <option value="tt">Trinidad y Tobago</option>
-  <option value="tn">Túnez</option>
-  <option value="tr">Turquía</option>
-  <option value="tm">Turkmenistán</option>
-  <option value="tv">Tuvalu</option>
-  <option value="ug">Uganda</option>
-  <option value="ua">Ucrania</option>
-  <option value="ae">Emiratos Árabes Unidos</option>
-  <option value="gb">Reino Unido</option>
-  <option value="us">Estados Unidos</option>
-  <option value="uy">Uruguay</option>
-  <option value="uz">Uzbekistán</option>
-  <option value="vu">Vanuatu</option>
-  <option value="va">Ciudad del Vaticano</option>
-  <option value="ve">Venezuela</option>
-  <option value="vn">Vietnam</option>
-  <option value="ye">Yemen</option>
-  <option value="zm">Zambia</option>
-  <option value="zw">Zimbabue</option>
-</select>
-
-            </div>
-
-            <div class="grupo-campo">
-                <label for="region">Región/Provincia</label>
-                <input type="text" id="region" name="region" class="entrada-campo" placeholder="Opcional">
-            </div>
-
-<div class="grupo-campo">
-    <label for="latitud">Latitud *</label>
-    <input type="text" id="latitud" name="latitud" class="entrada-campo" required readonly
-           placeholder="Haz clic en el mapa">
-</div>
-
-<div class="grupo-campo">
-    <label for="longitud">Longitud *</label>
-    <input type="text" id="longitud" name="longitud" class="entrada-campo" required readonly
-           placeholder="Haz clic en el mapa">
-</div>
 
         </div>
-
-        <!-- Columna derecha: Mapa -->
-        <div class="mapa-derecha">
-            <label>Ubicación en el Mapa *</label>
-            <div id="mapa"></div>
-            <p class="ayuda-campo">Haz clic en el mapa para marcar la ubicación exacta.</p>
-        </div>
-    </div>
-
-    <div class="navegacion-pasos">
-        <button type="button" class="btn btn-tertiary paso-anterior">Atrás</button>
-        <button type="button" class="btn btn-primary siguiente-paso">Continuar</button>
     </div>
 </div>
 
 
-
-                        
-                            <div class="seccion-paso" data-paso="3">
-                                <div class="campos-formulario">
-                                    
-                                    <div class="grupo-campo">
-                                        <label for="multimedia" class="etiqueta-campo">Multimedia (Opcional)</label>
-                                        <input type="file" id="multimedia" name="multimedia" class="entrada-archivo" multiple>
-                                        <p class="ayuda-campo">Puedes subir imágenes, videos o documentos</p>
-                                    </div>
-
-                                    <div class="grupo-campo">
-                                        <label for="fuentes" class="etiqueta-campo">Fuentes y Referencias *</label>
-                                        <textarea id="fuentes" name="fuentes" class="entrada-campo area-texto" 
-                                                  required placeholder="Enlaces a noticias, documentos oficiales, testimonios, etc."></textarea>
-                                        <p class="ayuda-campo">Proporciona las fuentes que respalden tu información</p>
-                                    </div>
-
-                                    <div class="grupo-campo">
-                                        <label for="notas" class="etiqueta-campo">Notas Adicionales</label>
-                                        <textarea id="notas" name="notas" class="entrada-campo area-texto" 
-                                                  placeholder="Cualquier información adicional relevante..."></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="navegacion-pasos">
-                                    <button type="button" class="btn btn-tertiary paso-anterior">Atrás</button>
-                                    <button type="submit" class="btn btn-primary enviar-contribucion">Enviar Contribución</button>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-
-                <div class="seccion-ayuda">
-                    <h3 class="titulo-ayuda">¿Necesitas Ayuda?</h3>
-                    <p class="descripcion-ayuda">Consulta nuestras guías de contribución o contacta al equipo de soporte</p>
-                    <div class="botones-ayuda">
-                        <button class="btn btn-tertiary">Guías de Contribución</button>
-                        <button class="btn btn-quaternary">Contactar Soporte</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const pasos = document.querySelectorAll('.seccion-paso');
-        const botonesSiguiente = document.querySelectorAll('.siguiente-paso');
-        const botonesAnterior = document.querySelectorAll('.paso-anterior');
-        const indicador = document.querySelectorAll('.paso-progreso');
-
-        let pasoActual = 1;
-
-function mostrarPaso(paso) {
-    pasos.forEach(sec => sec.classList.toggle('activa', Number(sec.dataset.paso) === paso));
-    indicador.forEach(ind => ind.classList.toggle('activo', Number(ind.dataset.paso) <= paso));
-
-    const wrapper = document.querySelector('.contribucion-wrapper');
-    wrapper.classList.toggle('paso2-activo', paso === 2);
-
-    const indicadorCont = document.querySelector('.indicador-progreso');
-    indicadorCont.classList.toggle('paso2', paso === 2);
-    indicadorCont.classList.toggle('paso3', paso === 3);
-}
-
-
-
-        botonesSiguiente.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (pasoActual < pasos.length) {
-                    pasoActual++;
-                    mostrarPaso(pasoActual);
-                }
-            });
-        });
-
-        botonesAnterior.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (pasoActual > 1) {
-                    pasoActual--;
-                    mostrarPaso(pasoActual);
-                }
-            });
-        });
-
-        mostrarPaso(pasoActual);
-    });
-    </script>
-
-  <script src="../static/js/mapa2.js"></script>
-</body>
 </html>
