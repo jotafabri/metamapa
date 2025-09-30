@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ColeccionService {
   @Autowired
-  private ColeccionesApiService coleccionesApiService;
+  private MetamapaApiService metamapaApiService;
 
   public List<ColeccionDTO> getAllColecciones() {
-    return coleccionesApiService.getAllColecciones();
+    return metamapaApiService.getAllColecciones();
   }
 
   public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros, Boolean curado) {
-    return coleccionesApiService.getHechosByHandle(handle, filtros, curado);
+    return metamapaApiService.getHechosByHandle(handle, filtros, curado);
   }
 }

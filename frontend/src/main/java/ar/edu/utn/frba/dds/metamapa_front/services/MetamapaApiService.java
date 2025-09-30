@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-public class ColeccionesApiService {
+public class MetamapaApiService {
 
   private final WebClient webClient;
   private final WebApiCallerService webApiCallerService;
@@ -21,7 +21,7 @@ public class ColeccionesApiService {
   private final String coleccionesServiceUrl;
 
   @Autowired
-  public ColeccionesApiService(
+  public MetamapaApiService(
       WebApiCallerService webApiCallerService,
       @Value("${auth.service.url}") String authServiceUrl,
       @Value("${colecciones.service.url}") String coleccionesServiceUrl
