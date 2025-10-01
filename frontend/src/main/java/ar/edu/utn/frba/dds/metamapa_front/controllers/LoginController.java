@@ -12,4 +12,10 @@ public class LoginController {
     model.addAttribute("titulo", "Iniciar sesión");
     return "accounts/login";
   }
+
+  @GetMapping("/register")
+  public String register(Model model) {
+    model.addAttribute("titulo", "Registro");
+    return "accounts/register";
+  }
 }

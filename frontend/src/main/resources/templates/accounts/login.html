@@ -1,18 +1,10 @@
 <html th:replace="~{layout/base :: html}">
 
-<div th:fragment="contenido">
-    <section class="login-section">
+    <div th:fragment="contenido" class="login-section">
         <div class="login-container">
             <div class="login-wrapper">
 
-                <div class="navigate-back">
-                    <a th:href="@{/}" class="navigate-back-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 12H5M12 19l-7-7 7-7"/>
-                        </svg>
-                        <span>Volver al inicio</span>
-                    </a>
-                </div>
+                <div th:replace="~{fragments/go-back :: go-back}"></div>
 
                 <div class="login-card">
                     <div class="login-header">
@@ -77,9 +69,6 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
-<th:block th:fragment="extraScripts">
-    <script th:src="@{/js/togglePassword.js}"></script>
-</th:block>
+        <script th:src="@{/js/togglePassword.js}"></script>
+    </div>
 </html>

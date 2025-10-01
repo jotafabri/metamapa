@@ -1,24 +1,9 @@
 <html th:replace="~{layout/base :: html}">
-
-<th:block th:fragment="extraScripts">
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script th:src="@{/js/mapa2.js}"></script>
-    <script th:src="@{/js/mostrarPaso.js}"></script>
-</th:block>
-
 <div th:fragment="contenido" class="contribucion-seccion">
     <div class="contribucion-contenedor">
         <div class="contribucion-wrapper">
 
-            <!-- Botón para volver -->
-            <div class="volver-atras">
-                <a href="landing/landing.html" class="volver-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
-                    </svg>
-                    <span>Volver al inicio</span>
-                </a>
-            </div>
+            <div th:replace="~{fragments/go-back :: go-back}"></div>
 
             <div class="indicador-progreso">
                 <div class="paso-progreso activo" data-paso="1">
@@ -164,16 +149,20 @@
             </div>
 
             <div class="seccion-ayuda">
-                <h3 class="titulo-ayuda">¿Necesitas Ayuda?</h3>
-                <p class="descripcion-ayuda">Consulta nuestras guías de contribución o contacta al equipo de soporte</p>
+                <h3 class="titulo-ayuda">¿Tienes más para contribuir?</h3>
+                <p class="descripcion-ayuda">Registrate para poder ver y editar tus contribuciones.</p>
                 <div class="botones-ayuda">
-                    <button class="btn btn-tertiary">Guías de Contribución</button>
-                    <button class="btn btn-quaternary">Contactar Soporte</button>
+                    <a th:href="@{/registro}" class="btn btn-tertiary">Registrarse</a>
+                    <a th:href="@{/login}" class="btn btn-quaternary">Iniciar Sesión</a>
                 </div>
             </div>
 
         </div>
     </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script th:src="@{/js/mapa2.js}"></script>
+    <script th:src="@{/js/mostrarPaso.js}"></script>
 </div>
 
 

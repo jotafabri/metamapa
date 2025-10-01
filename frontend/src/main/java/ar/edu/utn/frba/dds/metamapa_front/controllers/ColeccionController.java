@@ -28,7 +28,7 @@ public class ColeccionController {
   private final ColeccionService coleccionService;
 
   @GetMapping
-  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
+//  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
   public String listarColecciones(Model model) {
     List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
     model.addAttribute("colecciones", colecciones);
@@ -38,7 +38,7 @@ public class ColeccionController {
   }
 
   @GetMapping("/{handle}")
-  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
+//  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
   public String listarHechos(
       @PathVariable String handle,
       @ModelAttribute HechoFiltroDTO filtros,

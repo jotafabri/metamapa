@@ -1,54 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
+<html th:replace="~{layout/base :: html}">
 
-<head>
-    <link rel="stylesheet" href="../../static/css/header.css">
-    <link rel="stylesheet" href="../../static/css/register.css">
-    <link rel="stylesheet" href="../../static/css/botones.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMapa - Registro</title>
-</head>
-
-<body>
-<header class="header">
-    <div class="container">
-        <nav class="navbar">
-            <a href="../landing/landing.html" class="logo-section">
-                <div class="logo-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                </div>
-                <span class="logo-text">MetaMapa</span>
-            </a>
-            <div class="nav-menu">
-                <a href="#" class="nav-link">Explorar</a>
-                <a href="#" class="nav-link">Colecciones</a>
-                <a href="#" class="nav-link">Sobre Nosotros</a>
-                <a href="#" class="nav-link">Ayuda</a>
-            </div>
-            <div class="button-section">
-                <a href="login.html" class="btn btn-secondary">Iniciar Sesión</a>
-            </div>
-        </nav>
-    </div>
-</header>
-
-<section class="register-section">
+<div th:fragment="contenido" class="register-section">
     <div class="register-container">
         <div class="register-wrapper">
 
-            <div class="navigate-back">
-                <a href="../landing/landing.html" class="navigate-back-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                    <span>Volver al inicio</span>
-                </a>
-            </div>
+            <div th:replace="~{fragments/go-back :: go-back}"></div>
 
             <div class="register-card">
                 <div class="register-header">
@@ -69,35 +25,27 @@
                             </div>
 
                             <div class="field-group">
-                                <label for="apellido" class="field-label">Apellido</label>
-                                <input type="text" id="apellido" name="apellido" class="field-input"
-                                       placeholder="Tu apellido" required>
-                            </div>
-
-                            <div class="field-group">
                                 <label for="email" class="field-label">Correo electrónico</label>
                                 <input type="email" id="email" name="email" class="field-input"
                                        placeholder="ejemplo@correo.com" required>
                             </div>
 
                             <div class="field-group">
-                                <label for="fechaNacimiento" class="field-label">Fecha de nacimiento</label>
-                                <input type="date" id="fechaNacimiento" name="fechaNacimiento"
-                                       class="field-input" required>
+                                <label for="password" class="field-label">Contraseña</label>
+                                <input type="password" id="password" name="password" class="field-input"
+                                       placeholder="Crea una contraseña" required
+                                       aria-describedby="password-help">
+                                <p id="password-help" class="field-help">
+                                    Mínimo 8 caracteres con al menos una mayúscula
+                                </p>
                             </div>
 
                             <div class="field-group">
-                                <label for="pais" class="field-label">País</label>
-                                <select id="pais" name="pais" class="field-input" required>
-                                    <option value="" disabled selected>Selecciona tu país</option>
-                                    <option value="argentina">Argentina</option>
-                                    <option value="chile">Chile</option>
-                                    <option value="mexico">México</option>
-                                    <option value="espana">España</option>
-                                    <option value="colombia">Colombia</option>
-                                    <option value="otros">Otro</option>
-                                </select>
+                                <label for="confirmPassword" class="field-label">Confirmar Contraseña</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="field-input"
+                                       placeholder="Repite tu contraseña" required>
                             </div>
+
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-register">
@@ -108,7 +56,7 @@
                     <div class="login-link">
                         <p>
                             ¿Ya tienes una cuenta?
-                            <a href="login.html">Inicia sesión aquí</a>
+                            <a th:href="@{/login}">Inicia sesión aquí</a>
                         </p>
                     </div>
                 </div>
@@ -116,7 +64,5 @@
 
         </div>
     </div>
-</section>
-</body>
-
+</div>
 </html>

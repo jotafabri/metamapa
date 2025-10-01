@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LandingController {
   @GetMapping("/")
-  public String landing() {
+  public String landing(Model model) {
+    model.addAttribute("titulo", "Información Colaborativa para el Bien Social");
     return "landing/landing";
   }
 
