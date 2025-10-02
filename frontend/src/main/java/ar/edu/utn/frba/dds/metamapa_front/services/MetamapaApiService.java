@@ -27,18 +27,18 @@ public class MetamapaApiService {
   private final WebClient webClient;
   private final WebApiCallerService webApiCallerService;
   private final String authServiceUrl;
-  private final String coleccionesServiceUrl;
+  private final String metamapaServiceUrl;
 
   @Autowired
   public MetamapaApiService(
       WebApiCallerService webApiCallerService,
       @Value("${auth.service.url}") String authServiceUrl,
-      @Value("${colecciones.service.url}") String coleccionesServiceUrl
+      @Value("${colecciones.service.url}") String metamapaServiceUrl
   ) {
     this.webClient = WebClient.builder().build();
     this.webApiCallerService = webApiCallerService;
     this.authServiceUrl = authServiceUrl;
-    this.coleccionesServiceUrl = coleccionesServiceUrl;
+    this.metamapaServiceUrl = metamapaServiceUrl;
   }
 
   public AuthResponseDTO login(String username, String password) {
@@ -82,7 +82,7 @@ public class MetamapaApiService {
 
   public List<ColeccionDTO> getAllColecciones() {
     List<ColeccionDTO> response = webApiCallerService.getListPublic(
-        coleccionesServiceUrl,
+        metamapaServiceUrl + "/colecciones",
         ColeccionDTO.class
     );
     return response != null ? response : List.of();
@@ -94,7 +94,7 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO getColeccionByHandle(String handle) {
-    ColeccionDTO response = webApiCallerService.get(coleccionesServiceUrl + handle, ColeccionDTO.class);
+    ColeccionDTO response = webApiCallerService.get(metamapaServiceUrl + "/colecciones/" + handle, ColeccionDTO.class);
     if (response == null) {
       throw new NotFoundException("Coleccion", handle);
     }
@@ -102,7 +102,7 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {
-    ColeccionDTO response = webApiCallerService.post(coleccionesServiceUrl, coleccionDTO, ColeccionDTO.class);
+    ColeccionDTO response = webApiCallerService.post(metamapaServiceUrl + "/colecciones", coleccionDTO, ColeccionDTO.class);
     if (response == null) {
       throw new RuntimeException("Error al crear coleccion en el servicio externo");
     }
@@ -110,7 +110,7 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    ColeccionDTO response = webApiCallerService.patch(coleccionesServiceUrl + handle, coleccionDTO, ColeccionDTO.class);
+    ColeccionDTO response = webApiCallerService.patch(metamapaServiceUrl + "/colecciones/" + handle, coleccionDTO, ColeccionDTO.class);
     if (response == null) {
       throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
     }
@@ -118,11 +118,35 @@ public class MetamapaApiService {
   }
 
   public void eliminarColeccion(String handle) {
-    webApiCallerService.delete(coleccionesServiceUrl + handle);
+    webApiCallerService.delete(metamapaServiceUrl + "/colecciones/" + handle);
+  }
+
+  public HechoDTO getHechoById(Long id) {
+    HechoDTO response = webApiCallerService.get(metamapaServiceUrl + "/hechos/" + id.toString(), HechoDTO.class);
+    if (response == null) {
+      throw new NotFoundException("Hecho", id.toString());
+    }
+    return response;
+  }
+
+  public HechoDTO crearHecho(HechoDTO hechoDTO) {
+    HechoDTO response = webApiCallerService.post(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al crear hecho en el servicio externo");
+    }
+    return response;
+  }
+
+  public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
+    HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString(), hechoDTO, HechoDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al actualizar hecho en el servicio externo");
+    }
+    return response;
   }
 
   private String generarUrl(String handle, HechoFiltroDTO filtros, Boolean curado) {
-    String baseUrl = coleccionesServiceUrl + handle + "/hechos" + "?curado=" + curado.toString();
+    String baseUrl = metamapaServiceUrl + "/colecciones/" + handle + "/hechos" + "?curado=" + curado.toString();
     StringBuilder url = new StringBuilder(baseUrl);
 
     for (Field field : HechoFiltroDTO.class.getDeclaredFields()) {
