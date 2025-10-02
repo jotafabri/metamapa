@@ -80,7 +80,7 @@ public class MetamapaApiService {
   }
 
   public List<ColeccionDTO> getAllColecciones() {
-    List<ColeccionDTO> response = webApiCallerService.getList(
+    List<ColeccionDTO> response = webApiCallerService.getListPublic(
         coleccionesServiceUrl +
             "/colecciones",
         ColeccionDTO.class

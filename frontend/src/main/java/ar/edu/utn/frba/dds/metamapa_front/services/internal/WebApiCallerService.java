@@ -112,6 +112,39 @@ public class WebApiCallerService {
   }
 
   /**
+   * Ejecuta una llamada HTTP GET pública (sin autenticación)
+   */
+  public <T> T getPublic(String url, Class<T> responseType) {
+    try {
+      return webClient
+          .get()
+          .uri(url)
+          .retrieve()
+          .bodyToMono(responseType)
+          .block();
+    } catch (Exception e) {
+      throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Ejecuta una llamada HTTP GET pública que retorna una lista (sin autenticación)
+   */
+  public <T> java.util.List<T> getListPublic(String url, Class<T> responseType) {
+    try {
+      return webClient
+          .get()
+          .uri(url)
+          .retrieve()
+          .bodyToFlux(responseType)
+          .collectList()
+          .block();
+    } catch (Exception e) {
+      throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
+    }
+  }
+
+  /**
    * Ejecuta una llamada HTTP POST
    */
   public <T> T post(String url, Object body, Class<T> responseType) {
