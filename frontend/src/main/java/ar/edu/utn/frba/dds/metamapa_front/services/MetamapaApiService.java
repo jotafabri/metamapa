@@ -94,7 +94,7 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO getColeccionByHandle(String handle) {
-    ColeccionDTO response = webApiCallerService.get(metamapaServiceUrl + "/colecciones/" + handle, ColeccionDTO.class);
+    ColeccionDTO response = webApiCallerService.getPublic(metamapaServiceUrl + "/colecciones/" + handle, ColeccionDTO.class);
     if (response == null) {
       throw new NotFoundException("Coleccion", handle);
     }

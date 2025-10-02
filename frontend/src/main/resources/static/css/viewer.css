@@ -1,11 +1,11 @@
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.hero-section {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
+/* Excluir elementos de Leaflet del box-sizing */
+.hero-section :not(.leaflet-container):not(.leaflet-container *) {
+    box-sizing: border-box;
+}
 
 .main-layout {
     display: flex;

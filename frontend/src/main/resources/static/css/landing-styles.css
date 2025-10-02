@@ -1,39 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* Estilos para la landing page */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.container {
-    max-width: 88rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-@media (min-width: 640px) {
-    .container {
-        padding: 0 1.5rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    .container {
-        padding: 0 2rem;
-    }
-}
-
-.hero-section {
+.landing-hero-section {
     position: relative;
     padding: 5rem 3rem 8rem 3rem;
     background: linear-gradient(135deg, rgb(30,32,34) 0%, rgb(50,52,54) 100%);
     overflow: hidden;
 }
 
-.hero-section::before {
+.landing-hero-section::before {
     content: '';
     position: absolute;
     top: 0;
@@ -491,28 +467,28 @@
 }
 
 @media (max-width: 768px) {
-    .hero-section {
+    .landing-hero-section {
         padding: 3rem 1.5rem 5rem 1.5rem;
     }
-    
+
     .main-title {
         font-size: 2rem;
     }
-    
+
     .main-description {
         font-size: 1.125rem;
     }
-    
+
     .features-grid {
         grid-template-columns: 1fr;
         gap: 0.75rem;
     }
-    
+
     .map-marker {
         width: 1.25rem;
         height: 1.25rem;
     }
-    
+
     .map-marker svg {
         width: 0.6rem;
         height: 0.6rem;
@@ -520,45 +496,26 @@
 }
 
 @media (max-width: 480px) {
-    .hero-section {
+    .landing-hero-section {
         padding: 2rem 1rem 4rem 1rem;
     }
-    
+
     .main-title {
         font-size: 1.75rem;
     }
-    
+
     .main-description {
         font-size: 1rem;
     }
-    
+
     .data-points {
         gap: 0.5rem;
     }
-    
+
     .data-point {
         font-size: 0.7rem;
         padding: 0.2rem 0.4rem;
     }
-}
-
-
-.btn-secondary {
-    color: #f9fafb;
-}
-
-
-.btn-secondary:hover {
-    background-color: #374151; /* 🔴 fondo al pasar el mouse */
-    border-color: #6b7280;     /* 🔴 borde al pasar el mouse */
-    color: #FB9A34;            /* 🔴 texto en color #FF5141 al pasar el mouse */
-    transform: translateY(-1px);
-}
-
-
-.hero-section::before,
-.hero-section::after {
-    content: none;
 }
 
 /* Agregar círculos al mockup-container */
