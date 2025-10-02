@@ -193,6 +193,22 @@ public class WebApiCallerService {
   }
 
   /**
+   * Ejecuta una llamada HTTP PATCH
+   */
+  public <T> T patch(String url, Object body, Class<T> responseType) {
+    return executeWithTokenRetry(accessToken ->
+        webClient
+            .patch()
+            .uri(url)
+            .header("Authorization", "Bearer " + accessToken)
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(responseType)
+            .block()
+    );
+  }
+
+  /**
    * Refresca el access token usando el refresh token
    */
   private AuthResponseDTO refreshToken(String refreshToken) {

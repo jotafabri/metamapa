@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
+import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,20 +82,47 @@ public class MetamapaApiService {
 
   public List<ColeccionDTO> getAllColecciones() {
     List<ColeccionDTO> response = webApiCallerService.getListPublic(
-        coleccionesServiceUrl +
-            "/colecciones",
+        coleccionesServiceUrl,
         ColeccionDTO.class
     );
     return response != null ? response : List.of();
   }
 
   public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros, Boolean curado) {
-    List<HechoDTO> response = webApiCallerService.getList(this.generarUrl(handle, filtros, curado), HechoDTO.class);
+    List<HechoDTO> response = webApiCallerService.getListPublic(this.generarUrl(handle, filtros, curado), HechoDTO.class);
     return response != null ? response : List.of();
   }
 
+  public ColeccionDTO getColeccionByHandle(String handle) {
+    ColeccionDTO response = webApiCallerService.get(coleccionesServiceUrl + handle, ColeccionDTO.class);
+    if (response == null) {
+      throw new NotFoundException("Coleccion", handle);
+    }
+    return response;
+  }
+
+  public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {
+    ColeccionDTO response = webApiCallerService.post(coleccionesServiceUrl, coleccionDTO, ColeccionDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al crear coleccion en el servicio externo");
+    }
+    return response;
+  }
+
+  public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
+    ColeccionDTO response = webApiCallerService.patch(coleccionesServiceUrl + handle, coleccionDTO, ColeccionDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
+    }
+    return response;
+  }
+
+  public void eliminarColeccion(String handle) {
+    webApiCallerService.delete(coleccionesServiceUrl + handle);
+  }
+
   private String generarUrl(String handle, HechoFiltroDTO filtros, Boolean curado) {
-    String baseUrl = coleccionesServiceUrl + "/colecciones/" + handle + "/hechos" + "?curado=" + curado.toString();
+    String baseUrl = coleccionesServiceUrl + handle + "/hechos" + "?curado=" + curado.toString();
     StringBuilder url = new StringBuilder(baseUrl);
 
     for (Field field : HechoFiltroDTO.class.getDeclaredFields()) {

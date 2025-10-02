@@ -1,0 +1,35 @@
+<html th:replace="~{layout/base :: html}">
+    <div th:fragment="contenido" class="admin-container">
+
+        <h1 class="admin-title">Panel de Administración</h1>
+
+        <div class="dashboard-grid">
+
+            <div class="dashboard-card">
+                <h2 class="card-value">15,420</h2>
+                <p class="card-sub">+12% desde el mes pasado</p>
+                <span class="card-label">Total de Hechos</span>
+            </div>
+
+            <div class="dashboard-card alert">
+                <h2 class="card-value">23</h2>
+                <p class="card-sub">Requieren atención inmediata</p>
+                <span class="card-label">Pendientes de Revisión</span>
+            </div>
+
+            <div class="dashboard-card">
+                <h2 class="card-value">8,934</h2>
+                <p class="card-sub">+5% desde el mes pasado</p>
+                <span class="card-label">Usuarios Activos</span>
+            </div>
+
+            <div class="dashboard-card alert">
+                <h2 class="card-value">7</h2>
+                <p class="card-sub">Pendientes de revisión</p>
+                <span class="card-label">Solicitudes de Eliminación</span>
+            </div>
+
+        </div>
+    </div>
+
+</html>

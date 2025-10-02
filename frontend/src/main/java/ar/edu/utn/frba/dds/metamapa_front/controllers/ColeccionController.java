@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -59,4 +61,80 @@ public class ColeccionController {
     }
   }
 
+  @GetMapping("/nueva")
+  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
+  public String mostrarFormularioCrear(Model model) {
+    model.addAttribute("coleccion", new ColeccionDTO());
+    model.addAttribute("titulo", "Crear colección");
+    return "colecciones/crear";
+  }
+
+  @PostMapping("/crear")
+  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
+  public String crearColeccion(@ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
+                               BindingResult bindingResult,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+    try {
+      ColeccionDTO coleccionCreada = coleccionService.crearColeccion(coleccionDTO);
+      return "redirect:/admin/colecciones";
+    } catch (Exception e) {
+      log.error("Error al crear nueva colección", e);
+      model.addAttribute("titulo", "Crear colección");
+      return "colecciones/crear";
+    }
+  }
+
+  @GetMapping("/{handle}/editar")
+  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
+  public String mostrarFormularioEditar(
+      @PathVariable String handle,
+      Model model) {
+    try {
+      ColeccionDTO coleccionDTO = coleccionService.getColeccionByHandle(handle).get();
+
+      model.addAttribute("coleccion", coleccionDTO);
+      model.addAttribute("titulo", "Editar colección");
+      return "colecciones/editar";
+    } catch (NotFoundException e) {
+      return "redirect:/404";
+    }
+  }
+
+  @PostMapping("/{handle}/actualizar")
+  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
+  public String actualizarColeccion(@PathVariable String handle,
+                               @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
+                               BindingResult bindingResult,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+    try {
+      ColeccionDTO coleccionActualizada = coleccionService.actualizarColeccion(handle, coleccionDTO);
+
+      return "redirect:/admin/colecciones";
+    } catch (NotFoundException e) {
+      return "redirect:/404";
+    } catch (Exception e) {
+      log.error("Error al editar colección {}", handle, e);
+      model.addAttribute("titulo", "Editar colección");
+      return "colecciones/editar";
+    }
+  }
+
+  @PostMapping("/{handle}/eliminar")
+  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
+  public String eliminarColeccion(@PathVariable String handle,
+                                  @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
+                                  BindingResult bindingResult,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+    try {
+      coleccionService.eliminarColeccion(handle);
+      return "redirect:/admin/colecciones";
+    } catch (NotFoundException e) {
+      return "redirect:/404";
+    } catch (Exception e) {
+      return "colecciones/crear";
+    }
+  }
 }
