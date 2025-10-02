@@ -115,21 +115,20 @@ public class HechosController {
     }
   }
 
-  @PostMapping("/{id}/enviar-solicitud")
-  public String crearSolicitudEliminacion(@PathVariable Long id,
-                                          @ModelAttribute("solicitud") SolicitudEliminacionDTO solicitudEliminacionDTO,
-                                          BindingResult bindingResult,
-                                          Model model,
-                                          RedirectAttributes redirectAttributes
-  ) {
-    try {
-      SolicitudEliminacionDTO solicitudCreada = solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-      return "redirect:/colecciones/colecciones";
-    } catch (Exception e) {
-      log.error("Error al crear solicitud de eliminación", e);
-      model.addAttribute("titulo", "Solicitar eliminación");
-      return "hechos/solicitar-eliminacion";
-    }
-    }
-  }
+//  @PostMapping("/{id}/enviar-solicitud")
+//  public String crearSolicitudEliminacion(@PathVariable Long id,
+//                                          @ModelAttribute("solicitud") SolicitudEliminacionDTO solicitudEliminacionDTO,
+//                                          BindingResult bindingResult,
+//                                          Model model,
+//                                          RedirectAttributes redirectAttributes
+//  ) {
+//    try {
+//      SolicitudEliminacionDTO solicitudCreada = solicitudesService.crearSolicitud(solicitudEliminacionDTO);
+//      return "redirect:/colecciones/colecciones";
+//    } catch (Exception e) {
+//      log.error("Error al crear solicitud de eliminación", e);
+//      model.addAttribute("titulo", "Solicitar eliminación");
+//      return "hechos/solicitar-eliminacion";
+//    }
+//    }
 }

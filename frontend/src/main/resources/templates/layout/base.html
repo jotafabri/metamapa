@@ -59,7 +59,7 @@
                         </button>
                     </form>
                 </div>
-                <a th:href="@{/contribuir}" class="btn btn-primary">Contribuir</a>
+                <a th:href="@{/hechos/nuevo}" class="btn btn-primary">Contribuir</a>
                 <div sec:authorize="hasRole('ADMIN')">
                     <a th:href="@{/admin}" class="btn btn-quaternary">Panel Admin</a>
                 </div>
@@ -99,7 +99,7 @@
                 <h4 class="footer-titulo">Producto</h4>
                 <ul class="footer-links">
                     <li><a th:href="@{/colecciones}">Explorar Datos</a></li>
-                    <li><a th:href="@{/contribuir}">Contribuir</a></li>
+                    <li><a th:href="@{/templates/hechos}">Contribuir</a></li>
                     <li><a href="/install">Instalar</a></li>
                     <li><a href="/api">API</a></li>
                 </ul>
