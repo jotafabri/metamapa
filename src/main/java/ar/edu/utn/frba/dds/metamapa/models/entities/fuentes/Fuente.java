@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.PersistenteIdSecuencial;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +15,8 @@ import lombok.Setter;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)// TODO cambiar a table per class o single table
 @Table(name = "fuente")
-public abstract class Fuente extends Persistente {
+public abstract class Fuente extends PersistenteIdSecuencial {
+
 
   /*
   @ManyToMany

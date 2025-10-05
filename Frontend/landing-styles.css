@@ -196,11 +196,12 @@
 .mockup-container {
     position: relative;
     border-radius: 1rem;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     background-color: #1e1f20;
     padding: 1rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
 }
 
 .mockup-container:hover {
@@ -221,6 +222,7 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 .map-center {
@@ -561,30 +563,218 @@
     content: none;
 }
 
-/* Agregar círculos al mockup-container */
+
+
+
 .mockup-container::before,
 .mockup-container::after {
     content: '';
     position: absolute;
     border-radius: 50%;
     opacity: 0.25;
-    z-index: 1; /* Debajo de los marcadores pero encima del fondo */
+    z-index: 2;
+    pointer-events: none;
 }
 
-/* Círculo grande inferior izquierdo */
+
 .mockup-container::before {
     width: 8rem;
     height: 8rem;
     background: #FB9A34;
-    bottom: 1rem;
-    left: 1rem;
+    bottom: -2rem;
+    left: -2rem;
 }
 
-/* Círculo grande superior derecho */
 .mockup-container::after {
     width: 6rem;
     height: 6rem;
     background: #DC2626;
-    top: 1rem;
-    right: 1rem;
+    top: -1rem;
+    right: -1rem;
+
 }
+
+/* Hexágonos dentro de los círculos */
+.mockup-container {
+    position: relative;
+}
+/* Hexágono con picos arriba y abajo */
+.mockup-container .hexagon-before,
+.mockup-container .hexagon-after {
+    position: absolute;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Inferior izquierdo */
+.mockup-container .hexagon-before {
+    opacity: 0;
+    width: 8rem; 
+    bottom: -2rem;
+    left: -2rem;
+    background: #FB9A34;
+    clip-path: polygon(
+        50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%
+    );
+}
+
+/* Superior derecho */
+.mockup-container .hexagon-after {
+    
+    opacity: 0.25;
+    width: 6rem;
+    top: -1rem;
+    right: -1rem;
+    background: #DC2626;
+    clip-path: polygon(
+        50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%
+    );
+}
+
+/*
+
+.mockup-container::before {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, #FFE3B0 0%, #E88827 70%, transparent 100%);
+    z-index: 5;
+    pointer-events: none;
+    filter: blur(20px);
+    
+}
+
+
+.mockup-container .hex-ray {
+    position: absolute;
+    top: 4rem;
+    left: 4rem;
+    width: 20px;
+    height: 30rem; 
+    pointer-events: none;
+    z-index: 3;
+    filter: blur(2px);
+    opacity: 0.3;
+
+
+    background: linear-gradient(to bottom, rgba(255, 226, 176, 0.8), rgba(255, 226, 176, 0));
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    
+    transform: rotate(-90deg);
+    transform-origin: top;
+}
+
+
+.mockup-container .hex-ray.ray2 {
+    position: absolute;
+    top: 4rem;
+    left: 4rem;
+    width: 20px;
+    height: 9rem;
+    pointer-events: none;
+    z-index: 3;
+    filter: blur(2px);
+    opacity: 0.25;
+    background: linear-gradient(to bottom, rgba(255, 226, 176, 0.8), rgba(255, 226, 176, 0));
+    clip-path: polygon(50% 0%, 35% 100%, 65% 100%);
+    transform: rotate(90deg);
+    transform-origin: top;
+}
+
+
+
+
+
+.mockup-container .hex-flare {
+    position: absolute;
+    aspect-ratio: 1;
+    clip-path: polygon(
+        50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%
+    );
+    pointer-events: none;
+    z-index: 4;
+    transform-origin: center;
+    animation: hexFlare 6s ease-in-out infinite alternate;
+}
+
+
+.mockup-container .hex-flare.hex1 {
+    width: 3rem;
+    top: 0.8rem;
+    left: 4rem;
+    background: #FB9A34;
+    opacity: 0.35;
+    transform: rotate(5deg);
+}
+
+.mockup-container .hex-flare.hex2 {
+    width: 3.5rem;
+    top: 2rem;
+    left: 0.5rem;
+    background: #E88827;
+    opacity: 0.3;
+    transform: rotate(-8deg);
+}
+
+
+.mockup-container .hex-flare.hex3 {
+    width: 4rem;
+    top: 4rem;
+    left: 6rem;
+    background: #FB9A34;
+    opacity: 0.25;
+    transform: rotate(10deg);
+}
+
+.mockup-container .hex-flare.hex4 {
+    width: 4.5rem;
+    top: 5.5rem;
+    left: 9rem;
+    background: #DC2626;
+    opacity: 0.2;
+    transform: rotate(-5deg);
+}
+
+
+.mockup-container .hex-flare.hex5 {
+    width: 5rem;
+    top: 8rem;
+    left: 16rem;
+    background: #E88827;
+    opacity: 0.15;
+    transform: rotate(7deg);
+}
+
+.mockup-container .hex-flare.hex6 {
+    width: 5.5rem;
+    top: 9.5rem;
+    left: 18rem;
+    background: #FB9A34;
+    opacity: 0.1;
+    transform: rotate(-10deg);
+}
+
+
+@keyframes hexFlare {
+    0% {
+        transform: rotate(var(--rotate, 0deg)) scale(1);
+        opacity: var(--opacity, 0.25);
+    }
+    50% {
+        transform: rotate(calc(var(--rotate, 0deg) + 20deg)) scale(1.05);
+        opacity: calc(var(--opacity, 0.25) + 0.1);
+    }
+    100% {
+        transform: rotate(var(--rotate, 0deg)) scale(1);
+        opacity: var(--opacity, 0.25);
+    }
+}
+*/

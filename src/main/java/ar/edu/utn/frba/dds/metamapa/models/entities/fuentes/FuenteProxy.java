@@ -6,10 +6,7 @@ import java.util.Objects;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.ProxyInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -17,6 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Entity
 @Table(name = "fuente_proxy")
 public class FuenteProxy extends Fuente {
+
+
   @Transient
   private WebClient webClient;
 
