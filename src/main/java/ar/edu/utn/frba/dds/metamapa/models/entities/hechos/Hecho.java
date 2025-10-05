@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.metamapa.converters.LocalDateTimeConverter;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 import jakarta.persistence.CollectionTable;
@@ -99,6 +100,11 @@ public class Hecho extends Persistente {
   @Embedded
   private Ubicacion ubicacion;
 
+  @ManyToOne
+  @JoinColumn(name = "fuente_id") // columna en la tabla hecho
+  private Fuente fuente;
+
+
   public boolean esEditable() {
     if (this.contribuyente == null || this.contribuyente.isEsAnonimo()) {
       return false;
@@ -140,3 +146,4 @@ public class Hecho extends Persistente {
   }
 
 }
+

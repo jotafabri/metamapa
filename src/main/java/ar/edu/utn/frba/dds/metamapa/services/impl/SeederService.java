@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.*;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
@@ -43,7 +45,7 @@ public class SeederService implements ISeederService {
 
     @PostConstruct
     @Override
-    @Transactional // ← Agregar transaccional para manejar todo en una transacción
+    @Transactional
     public void init() {
 
         // Limpiar base de datos
@@ -209,5 +211,29 @@ public class SeederService implements ISeederService {
         coleccionPrueba3.actualizarColeccion();
         coleccionPrueba3.actualizarCurados();
         coleccionesRepository.save(coleccionPrueba3);
+
+           /* --- BLOQUE DE PRUEBA DE FILTROS --- */
+                Filtro categoriaFiltro = new FiltroCategoria("Desastre Natural");
+        Filtro fechaFiltro = new FiltroFechaAcontecimiento(
+                LocalDate.parse("01/01/2000", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay(),
+                LocalDate.parse("31/12/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")).atTime(23,59)
+        );
+        Filtro multimediaFiltro = new FiltroMultimedia(true);
+        Filtro contribuyenteFiltro = new FiltroContribuyente(true);
+        Filtro ubicacionFiltro = FiltroUbicacion.fromString("-33.4489, -70.6693"); // Santiago
+
+        System.out.println("=== RESULTADOS DE FILTROS ===");
+        for (Hecho hecho : hechosDinamicos) {
+            System.out.println("Hecho: " + hecho.getTitulo());
+            System.out.println("  Categoria Desastre Natural? " + categoriaFiltro.cumple(hecho));
+            System.out.println("  Fecha dentro rango? " + fechaFiltro.cumple(hecho));
+            System.out.println("  Tiene multimedia? " + multimediaFiltro.cumple(hecho));
+            System.out.println("  Tiene contribuyente? " + contribuyenteFiltro.cumple(hecho));
+            System.out.println("  Esta en Santiago? " + ubicacionFiltro.cumple(hecho));
+        }
+
+
     }
+
+
 }

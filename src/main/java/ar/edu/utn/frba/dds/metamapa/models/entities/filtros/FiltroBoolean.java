@@ -1,14 +1,19 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.filtros;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class FiltroBoolean extends Filtro {
+
+  @Column(name = "condicion")
   private Boolean condicion;
 
   @Override

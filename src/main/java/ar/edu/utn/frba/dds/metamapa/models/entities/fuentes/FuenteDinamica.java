@@ -1,13 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +17,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "fuente_dinamica")
 public class FuenteDinamica extends Fuente {
-  @ManyToOne(fetch = FetchType.EAGER)
-  private Contribuyente contribuyente; // TODO no debería ser por usuario. Es mejor que sea una sola para todos los usuarios
+  /*@ManyToOne(fetch = FetchType.EAGER)*/
+  // TODO no debería ser por usuario. Es mejor que sea una sola para todos los usuarios
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Contribuyente> contribuyentes = new ArrayList<>();
 
   public List<Hecho> getHechos() {
     return (hechos.stream().filter(h -> h.getEliminado().equals(false)).toList());
@@ -41,6 +41,7 @@ public class FuenteDinamica extends Fuente {
   public void agregarHecho(Hecho hecho) {
     if (!this.hechos.contains(hecho)) {
       this.hechos.add(hecho);
+      hecho.setFuente(this);
     }
   }
 
