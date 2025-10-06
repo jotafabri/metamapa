@@ -19,8 +19,8 @@ public class ColeccionService {
     return metamapaApiService.getAllColecciones();
   }
 
-  public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros, Boolean curado) {
-    return metamapaApiService.getHechosByHandle(handle, filtros, curado);
+  public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros, Boolean curado, Integer page, Integer size) {
+    return metamapaApiService.getHechosByHandle(handle, filtros, curado, page, size);
   }
 
   public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {

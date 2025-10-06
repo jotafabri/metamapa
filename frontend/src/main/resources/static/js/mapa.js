@@ -8,8 +8,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     try {
+        // Coordenadas por defecto (Buenos Aires)
+        let defaultLat = -34.6037;
+        let defaultLng = -58.3816;
+        let defaultZoom = 12;
 
-        let map = L.map('map').setView([-34.4221, -58.8468], 12);
+        // Si hay hechos, usar el primero como centro
+        if (window.hechosData && window.hechosData.length > 0) {
+            const primerHechoConUbicacion = window.hechosData.find(h => h.latitud && h.longitud);
+            if (primerHechoConUbicacion) {
+                defaultLat = primerHechoConUbicacion.latitud;
+                defaultLng = primerHechoConUbicacion.longitud;
+            }
+        }
+
+        let map = L.map('map').setView([defaultLat, defaultLng], defaultZoom);
 
         let osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
@@ -23,21 +36,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
         osmLayer.addTo(map);
 
+        // Agregar marcadores de los hechos
+        if (window.hechosData && window.hechosData.length > 0) {
+            console.log(`Agregando ${window.hechosData.length} marcadores al mapa`);
 
-        const prueba = L.marker([-34.4221, -58.8468], { icon: crerMarcadorSegundTipo('water') })
-            .addTo(map)
-            .bindPopup('¡Mapa funcionando!<br>Tigre, Buenos Aires')
-            .openPopup();
+            const markers = [];
+            window.hechosData.forEach(hecho => {
+                if (hecho.latitud && hecho.longitud) {
+                    // Mapear categoría a tipo de marcador
+                    let tipoMarcador = 'alert'; // default
+                    if (hecho.categoria) {
+                        const cat = hecho.categoria.toLowerCase();
+                        if (cat.includes('incendio')) {
+                            tipoMarcador = 'fire';
+                        } else if (cat.includes('inundacion') || cat.includes('inundación')) {
+                            tipoMarcador = 'water';
+                        }
+                    }
 
-        const prueba2 = L.marker([-34.00, -58.8468], { icon: crerMarcadorSegundTipo('fire') })
-            .addTo(map)
-            .bindPopup('¡Mapa funcionando!<br>Tigre, Buenos Aires')
-            .openPopup();
+                    const marker = L.marker([hecho.latitud, hecho.longitud], {
+                        icon: crerMarcadorSegundTipo(tipoMarcador)
+                    }).addTo(map);
 
-        const prueba3 = L.marker([-34.2, -58.8468], { icon: crerMarcadorSegundTipo('alert') })
-            .addTo(map)
-            .bindPopup('¡Mapa funcionando!<br>Tigre, Buenos Aires')
-            .openPopup();
+                    // Crear popup con información del hecho
+                    const popupContent = `
+                        <div class="marker-popup">
+                            <h4>${hecho.titulo || 'Sin título'}</h4>
+                            <p>${hecho.descripcion || 'Sin descripción'}</p>
+                            ${hecho.categoria ? `<span class="popup-categoria">${hecho.categoria}</span>` : ''}
+                        </div>
+                    `;
+                    marker.bindPopup(popupContent);
+                    markers.push(marker);
+                }
+            });
+
+            // Ajustar zoom para mostrar todos los marcadores
+            if (markers.length > 1) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
 
         window.toggleSatellite = function () {
             if (map.hasLayer(osmLayer)) {

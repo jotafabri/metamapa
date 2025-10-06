@@ -72,13 +72,25 @@ public class ColeccionesController {
   public List<HechoDTO> getHechosByHandle(
       @PathVariable String handle,
       @ModelAttribute HechoFiltroDTO filtros,
-      @RequestParam(required = false, defaultValue = "false") Boolean curado
+      @RequestParam(required = false, defaultValue = "false") Boolean curado,
+      @RequestParam(required = false, defaultValue = "0") Integer page,
+      @RequestParam(required = false, defaultValue = "10") Integer size
   ) {
-    return coleccionService.getHechosByHandle(
+    List<HechoDTO> todosLosHechos = coleccionService.getHechosByHandle(
         handle,
         filtros,
         curado
     );
+
+    // Aplicar paginación manualmente
+    int start = page * size;
+    int end = Math.min(start + size, todosLosHechos.size());
+
+    if (start >= todosLosHechos.size()) {
+      return List.of();
+    }
+
+    return todosLosHechos.subList(start, end);
   }
 
   // localhost:8080/colecciones/admin/{handle}/hechos

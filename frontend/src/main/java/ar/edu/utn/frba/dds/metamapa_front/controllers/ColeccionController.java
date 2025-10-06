@@ -45,14 +45,20 @@ public class ColeccionController {
       @PathVariable String handle,
       @ModelAttribute HechoFiltroDTO filtros,
       @RequestParam(required = false, defaultValue = "false") Boolean curado,
+      @RequestParam(required = false, defaultValue = "0") Integer page,
+      @RequestParam(required = false, defaultValue = "10") Integer size,
       Model model,
       RedirectAttributes redirectAttributes) {
     try {
-      List<HechoDTO> hechos = coleccionService.getHechosByHandle(handle, filtros, curado);
+      // Obtener hechos paginados
+      List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros, curado, page, size);
 
-      model.addAttribute("hechos", hechos);
+      model.addAttribute("hechosPaginados", hechosPaginados);
       model.addAttribute("titulo", "Colección");
-      model.addAttribute("totalHechos", hechos.size());
+      model.addAttribute("currentPage", page);
+      model.addAttribute("pageSize", size);
+      model.addAttribute("hasMore", hechosPaginados.size() == size);
+      model.addAttribute("noFooter", true); // Ocultar footer en viewer
 
       return "colecciones/viewer";
     } catch (NotFoundException ex) {

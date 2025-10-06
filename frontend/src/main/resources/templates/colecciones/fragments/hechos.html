@@ -1,3 +1,67 @@
-<div th:fragment="hechos" class="results-header">
-    <h3 class="results-title">Resultados</h3>
+<div th:fragment="hechos" class="hechos-column">
+    <div class="results-header">
+        <h3 class="results-title">Resultados</h3>
+        <span class="results-count">Página <span th:text="${currentPage + 1}">1</span></span>
+    </div>
+
+    <div class="hechos-list">
+        <div th:each="hecho : ${hechosPaginados}" class="hecho-card">
+            <div class="hecho-header">
+                <h4 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h4>
+                <span class="hecho-fecha" th:if="${hecho.fechaAcontecimiento != null}"
+                      th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">2024-01-01</span>
+            </div>
+            <p class="hecho-descripcion" th:text="${hecho.descripcion}">Descripción del hecho</p>
+            <div class="hecho-footer">
+                <span class="hecho-ubicacion" th:if="${hecho.latitud != null and hecho.longitud != null}">
+                    <svg class="location-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span th:text="${hecho.latitud} + ', ' + ${hecho.longitud}">Ubicación</span>
+                </span>
+                <span class="hecho-categoria" th:if="${hecho.categoria != null}" th:text="${hecho.categoria}"></span>
+            </div>
+        </div>
+
+        <div th:if="${hechosPaginados.isEmpty()}" class="no-results">
+            <p>No hay hechos para mostrar</p>
+        </div>
+    </div>
+
+    <div class="pagination-controls">
+        <button class="pagination-btn"
+                th:disabled="${currentPage == 0}"
+                onclick="navigatePage(-1)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Anterior
+        </button>
+
+        <button class="pagination-btn"
+                th:disabled="${!hasMore}"
+                onclick="navigatePage(1)">
+            Siguiente
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function navigatePage(direction) {
+            const currentPage = /*[[${currentPage}]]*/ 0;
+            const pageSize = /*[[${pageSize}]]*/ 10;
+            const newPage = currentPage + direction;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('page', newPage);
+            url.searchParams.set('size', pageSize);
+
+            window.location.href = url.toString();
+        }
+        /*]]>*/
+    </script>
 </div>

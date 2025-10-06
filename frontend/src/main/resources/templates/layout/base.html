@@ -28,7 +28,7 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
-<body>
+<body th:classappend="${noFooter} ? 'no-footer' : ''">
 <!-- Fragmento de header -->
 <header th:fragment="header" class="header">
     <div class="container">
@@ -81,7 +81,7 @@
 </main>
 
 <!-- Fragmento de footer -->
-<footer th:fragment="footer" class="footer">
+<footer th:fragment="footer" class="footer" th:unless="${noFooter}">
     <div class="container">
         <div class="footer-contenido">
             <div class="footer-seccion">
