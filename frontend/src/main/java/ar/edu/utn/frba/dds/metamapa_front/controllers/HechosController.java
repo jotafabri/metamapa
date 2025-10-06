@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
+import ar.edu.utn.frba.dds.metamapa_front.services.SolicitudesService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class HechosController {
   private static final Logger log = LoggerFactory.getLogger(HechosController.class);
   private final HechosService hechosService;
+  private final SolicitudesService solicitudesService;
 
   @GetMapping("/{id}")
   public String verDetalleHecho(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -115,20 +117,20 @@ public class HechosController {
     }
   }
 
-//  @PostMapping("/{id}/enviar-solicitud")
-//  public String crearSolicitudEliminacion(@PathVariable Long id,
-//                                          @ModelAttribute("solicitud") SolicitudEliminacionDTO solicitudEliminacionDTO,
-//                                          BindingResult bindingResult,
-//                                          Model model,
-//                                          RedirectAttributes redirectAttributes
-//  ) {
-//    try {
-//      SolicitudEliminacionDTO solicitudCreada = solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-//      return "redirect:/colecciones/colecciones";
-//    } catch (Exception e) {
-//      log.error("Error al crear solicitud de eliminación", e);
-//      model.addAttribute("titulo", "Solicitar eliminación");
-//      return "hechos/solicitar-eliminacion";
-//    }
-//    }
+  @PostMapping("/{id}/enviar-solicitud")
+  public String crearSolicitudEliminacion(@PathVariable Long id,
+                                          @ModelAttribute("solicitud") SolicitudEliminacionDTO solicitudEliminacionDTO,
+                                          BindingResult bindingResult,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes
+  ) {
+    try {
+      SolicitudEliminacionDTO solicitudCreada = solicitudesService.crearSolicitud(solicitudEliminacionDTO);
+      return "redirect:/colecciones/colecciones";
+    } catch (Exception e) {
+      log.error("Error al crear solicitud de eliminación", e);
+      model.addAttribute("titulo", "Solicitar eliminación");
+      return "hechos/solicitar-eliminacion";
+    }
+  }
 }

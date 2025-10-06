@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
@@ -145,7 +146,23 @@ public class MetamapaApiService {
     return response;
   }
 
+public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
+    SolicitudEliminacionDTO response = webApiCallerService.post(metamapaServiceUrl + "/solicitudes", solicitudDTO, SolicitudEliminacionDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al crear solicitud de eliminación en el servicio externo");
+    }
+    return response;
+  }
+
+  public void aceptarSolicitudEliminacion(Long id) {
+    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/aceptar", null, null );
+  }
+
+  public void rechazarSolicitudEliminacion(Long id) {
+    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null );
+  }
   private String generarUrl(String handle, HechoFiltroDTO filtros, Boolean curado, Integer page, Integer size) {
+
     String baseUrl = metamapaServiceUrl + "/colecciones/" + handle + "/hechos" + "?curado=" + curado.toString();
     StringBuilder url = new StringBuilder(baseUrl);
 
