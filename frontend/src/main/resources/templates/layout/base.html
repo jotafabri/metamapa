@@ -6,23 +6,12 @@
     <title th:text="${titulo} + ' - Metamapa'"></title>
 
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
+
 
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/botones.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/login.css}">
-    <link rel="stylesheet" th:href="@{/css/register.css}">
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" th:href="@{/css/contribuir.css}">
-    <link rel="stylesheet" th:href="@{/css/impactosocial.css}">
-    <link rel="stylesheet" th:href="@{/css/landing-styles.css}">
-    <link rel="stylesheet" th:href="@{/css/mapa.css}">
-    <!--<link rel="stylesheet" th:href="@{/css/styles.css}">-->
-   <link rel="stylesheet" th:href="@{/css/styles2.css}">
-    <link rel="stylesheet" th:href="@{/css/viewer.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/styles.css}">-->
 
     <!-- Meta tags para CSRF -->
     <meta name="_csrf" th:content="${_csrf.token}"/>

@@ -60,7 +60,7 @@ public class HechosController {
     } catch (Exception e) {
       log.error("Error al crear nuevo hecho", e);
       model.addAttribute("titulo", "Contribuir");
-      return "hechos/contribuir";
+      return "redirect:/hechos/nuevo";
     }
   }
 

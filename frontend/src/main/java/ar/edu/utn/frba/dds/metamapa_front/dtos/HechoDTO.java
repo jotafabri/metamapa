@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -22,5 +23,5 @@ public class HechoDTO {
   private LocalDateTime fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
 
-  private List<String> multimedia;
+  private List<MultipartFile> multimedia;
 }

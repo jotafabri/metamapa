@@ -1,6 +1,7 @@
 <html th:replace="~{layout/base :: html}">
 
 <div th:fragment="contenido" class="hero-section">
+    <link rel="stylesheet" th:href="@{/css/viewer.css}">
     <div class="main-layout">
         <div th:replace="~{colecciones/fragments/filtros :: filtros}"></div>
         <div th:replace="~{colecciones/fragments/mapa :: mapa}"></div>
