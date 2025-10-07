@@ -1,0 +1,25 @@
+<div th:fragment="step-indicators" class="indicador-progreso">
+    <div class="paso-progreso activo" data-paso="1">
+        <div class="numero-paso">1</div>
+        <span>Información Básica</span>
+    </div>
+    <div class="linea-progreso-1"></div>
+    <div class="paso-progreso" data-paso="2">
+        <div class="numero-paso">2</div>
+        <span>Ubicación y Fecha</span>
+    </div>
+    <div class="linea-progreso-2"></div>
+    <div class="paso-progreso" data-paso="3">
+        <div class="numero-paso">3</div>
+        <span>Multimedia y Fuentes</span>
+    </div>
+</div>
+
+<div th:fragment="unauthenticated-help" sec:authorize="!isAuthenticated()" class="seccion-ayuda">
+    <h3 class="titulo-ayuda">¿Tienes más para contribuir?</h3>
+    <p class="descripcion-ayuda">Registrate para poder ver y editar tus contribuciones.</p>
+    <div class="botones-ayuda">
+        <a th:href="@{/registro}" class="btn btn-tertiary">Registrarse</a>
+        <a th:href="@{/login}" class="btn btn-quaternary">Iniciar Sesión</a>
+    </div>
+</div>

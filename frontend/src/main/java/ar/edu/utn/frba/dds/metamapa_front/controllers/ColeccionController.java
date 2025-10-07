@@ -58,7 +58,6 @@ public class ColeccionController {
       model.addAttribute("currentPage", page);
       model.addAttribute("pageSize", size);
       model.addAttribute("hasMore", hechosPaginados.size() == size);
-      model.addAttribute("noFooter", true); // Ocultar footer en viewer
 
       return "colecciones/viewer";
     } catch (NotFoundException ex) {
