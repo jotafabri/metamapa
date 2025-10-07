@@ -113,31 +113,8 @@
     gap: 1.25rem;
 }
 
-.field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .register-form .field-group {
     margin-bottom: 1rem;
-}
-
-.field-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: white;
-}
-
-.field-input {
-    background-color: #121212;
-    color: #E88827;
-    height: 2.75rem;
-    padding: 0 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .field-input:focus {
@@ -160,26 +137,36 @@ select.field-input {
     position: relative;
 }
 
+.password-wrapper .field-input {
+    padding-right: 2.75rem;
+}
+
 .password-toggle {
     position: absolute;
     right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
     background: none;
     border: none;
     color: #6b7280;
     cursor: pointer;
     padding: 0.25rem;
     transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .password-toggle:hover {
-    color: #374151;
+    color: #E88827;
 }
 
 .password-toggle svg {
-    width: 1rem;
-    height: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.password-toggle:hover svg {
+    filter: drop-shadow(0 0 8px rgba(232, 136, 39, 0.6));
 }
 
 .field-help {

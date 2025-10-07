@@ -26,26 +26,26 @@
                         <div class="seccion-paso activa" data-paso="1">
                             <div class="campos-formulario">
 
-                                <div class="grupo-campo">
-                                    <label for="titulo" class="etiqueta-campo">Título del Hecho *</label>
-                                    <input type="text" id="titulo" name="titulo" class="entrada-campo"
-                                           maxlength="100" required placeholder="Ej: Incendio en zona industrial"
+                                <div class="field-group">
+                                    <label for="titulo" class="field-label">Título del Hecho *</label>
+                                    <input type="text" id="titulo" name="titulo" class="field-input"
+                                           maxlength="100" required autofocus placeholder="Ej: Incendio en zona industrial"
                                            th:field="*{titulo}">
                                     <p class="ayuda-campo">Máximo 100 caracteres</p>
                                 </div>
 
-                                <div class="grupo-campo">
-                                    <label for="descripcion" class="etiqueta-campo">Descripción Detallada *</label>
-                                    <textarea id="descripcion" name="descripcion" class="entrada-campo area-texto"
+                                <div class="field-group">
+                                    <label for="descripcion" class="field-label">Descripción Detallada *</label>
+                                    <textarea id="descripcion" name="descripcion" class="field-input area-texto"
                                               minlength="100" maxlength="2000" required
                                               placeholder="Describe detalladamente lo que ocurrió..."
                                               th:field="*{descripcion}"></textarea>
                                     <p class="ayuda-campo">Mínimo 100 caracteres, máximo 2000</p>
                                 </div>
 
-                                <div class="grupo-campo">
-                                    <label for="categoria" class="etiqueta-campo">Categoría *</label>
-                                    <select id="categoria" name="categoria" class="entrada-campo" required
+                                <div class="field-group">
+                                    <label for="categoria" class="field-label">Categoría *</label>
+                                    <select id="categoria" name="categoria" class="field-input" required
                                             th:field="*{categoria}">
                                         <option value="">Selecciona la categoría</option>
                                         <option value="incendio">Incendio</option>
@@ -66,22 +66,22 @@
 
                                 <!-- Columna izquierda: Inputs -->
                                 <div class="campos-izquierda">
-                                    <div class="grupo-campo">
+                                    <div class="field-group">
                                         <label for="fecha">Fecha del Hecho *</label>
-                                        <input type="date" id="fecha" name="fecha" class="entrada-campo" required
+                                        <input type="date" id="fecha" name="fecha" class="field-input" required
                                                th:field="*{fechaAcontecimiento}">
                                     </div>
 
-                                    <div class="grupo-campo">
+                                    <div class="field-group">
                                         <label for="latitud">Latitud *</label>
-                                        <input type="text" id="latitud" name="latitud" class="entrada-campo" required
+                                        <input type="text" id="latitud" name="latitud" class="field-input" required
                                                readonly
                                                placeholder="Haz clic en el mapa" , th:field="*{latitud}">
                                     </div>
 
-                                    <div class="grupo-campo">
+                                    <div class="field-group">
                                         <label for="longitud">Longitud *</label>
-                                        <input type="text" id="longitud" name="longitud" class="entrada-campo" required
+                                        <input type="text" id="longitud" name="longitud" class="field-input" required
                                                readonly
                                                placeholder="Haz clic en el mapa" , th:field="*{longitud}">
                                     </div>
@@ -106,24 +106,24 @@
                         <div class="seccion-paso" data-paso="3">
                             <div class="campos-formulario">
 
-                                <div class="grupo-campo">
-                                    <label for="multimedia" class="etiqueta-campo">Multimedia (Opcional)</label>
+                                <div class="field-group">
+                                    <label for="multimedia" class="field-label">Multimedia (Opcional)</label>
                                     <input type="file" id="multimedia" name="multimedia" class="entrada-archivo"
                                            multiple th:field="*{multimedia}">
                                     <p class="ayuda-campo">Puedes subir imágenes o videos</p>
                                 </div>
 
-                                <!--                                <div class="grupo-campo">-->
-                                <!--                                    <label for="fuentes" class="etiqueta-campo">Fuentes y Referencias *</label>-->
-                                <!--                                    <textarea id="fuentes" name="fuentes" class="entrada-campo area-texto"-->
+                                <!--                                <div class="field-group">-->
+                                <!--                                    <label for="fuentes" class="field-label">Fuentes y Referencias *</label>-->
+                                <!--                                    <textarea id="fuentes" name="fuentes" class="field-input area-texto"-->
                                 <!--                                              required-->
                                 <!--                                              placeholder="Enlaces a noticias, documentos oficiales, testimonios, etc."></textarea>-->
                                 <!--                                    <p class="ayuda-campo">Proporciona las fuentes que respalden tu información</p>-->
                                 <!--                                </div>-->
 
-                                <!--                                <div class="grupo-campo">-->
-                                <!--                                    <label for="notas" class="etiqueta-campo">Notas Adicionales</label>-->
-                                <!--                                    <textarea id="notas" name="notas" class="entrada-campo area-texto"-->
+                                <!--                                <div class="field-group">-->
+                                <!--                                    <label for="notas" class="field-label">Notas Adicionales</label>-->
+                                <!--                                    <textarea id="notas" name="notas" class="field-input area-texto"-->
                                 <!--                                              placeholder="Cualquier información adicional relevante..."></textarea>-->
                                 <!--                                </div>-->
                             </div>
