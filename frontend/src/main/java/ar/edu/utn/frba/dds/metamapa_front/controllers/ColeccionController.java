@@ -32,7 +32,13 @@ public class ColeccionController {
   @GetMapping
 //  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
   public String listarColecciones(Model model) {
-    List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
+    List<ColeccionDTO> colecciones;
+    try {
+      colecciones = coleccionService.getAllColecciones();
+    } catch (Exception e) {
+      // ignorado
+      colecciones = List.of();
+    }
     model.addAttribute("colecciones", colecciones);
     model.addAttribute("titulo", "Colecciones");
 

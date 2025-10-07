@@ -1,8 +1,7 @@
-<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: html}">
-
+<html  th:replace="~{layout/base :: html}">
 <!-- Contenido principal -->
 <div th:fragment="contenido" class="main">
-    <link rel="stylesheet" th:href="@{/css/styles2.css}">
+    <link rel="stylesheet" th:href="@{/css/colecciones.css}">
     <h2 class="main-title">Colecciones de Datos</h2>
     <p class="main-subtitle">Explora diversos conjuntos de datos.</p>
     <div th:if="${error}" class="error-message">
@@ -27,9 +26,9 @@
             <p>No hay colecciones disponibles en este momento.</p>
         </div>
     </section>
+    <script th:src="@{/js/colecciones.js}"></script>
 </div>
 
-<script th:src="@{/js/colecciones.js}"></script>
 </html>
 
 

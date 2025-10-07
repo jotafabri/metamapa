@@ -3,6 +3,7 @@
         <div class="not-found-container">
                 <img th:src="@{/images/404.png}" alt="Imagen 404" class="not-found-image">
                 <h1 th:text="${mensaje} ?: 'El recurso no fue encontrado'" class="not-found-message"></h1>
+            <div th:replace="~{fragments/footer :: footer}"></div>
         </div>
     </div>
 </html>

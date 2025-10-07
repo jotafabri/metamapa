@@ -1,10 +1,4 @@
 /* Estilos específicos para la página de colecciones */
-
-body {
-  background: #1E1F20;
-  color: #fff;
-}
-
 .nav {
   display: flex;
   height: 4rem;

@@ -1,7 +1,3 @@
-.hero-section {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
 /* Excluir elementos de Leaflet del box-sizing */
 .hero-section :not(.leaflet-container):not(.leaflet-container *) {
     box-sizing: border-box;

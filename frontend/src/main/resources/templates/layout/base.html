@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${titulo} + ' - Metamapa'"></title>
 
-    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/botones.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
 
     <!-- Meta tags para CSRF -->
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -15,48 +14,7 @@
 </head>
 <body>
 <!-- Fragmento de header -->
-<header th:fragment="header" class="header">
-    <div class="container">
-        <nav class="navbar">
-            <a th:href="@{/}" class="logo-section">
-                <div class="logo-icon">
-                    <div class="logo-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                    </div>
-                </div>
-                <span class="logo-text">MetaMapa</span>
-            </a>
-
-            <div class="nav-menu">
-                <a href="" class="nav-link">Impacto Social</a>
-                <a href="#casos-uso" class="nav-link">Casos de Uso</a>
-                <a href="#arquitectura" class="nav-link">Tecnologia</a>
-                <a th:href="@{/colecciones}" class="nav-link">Colecciones</a>
-            </div>
-
-            <div class="button-section">
-                <div sec:authorize="!isAuthenticated()">
-                    <a th:href="@{/login}" class="btn btn-secondary">Acceder</a>
-                </div>
-                <div sec:authorize="isAuthenticated()">
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-secondary" type="submit">
-                            Cerrar sesión
-                        </button>
-                    </form>
-                </div>
-                <a th:href="@{/hechos/nuevo}" class="btn btn-primary">Contribuir</a>
-                <div sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/admin}" class="btn btn-quaternary">Panel Admin</a>
-                </div>
-            </div>
-        </nav>
-    </div>
-</header>
+<header th:replace="~{fragments/header :: header}"></header>
 
 <!-- Contenido principal -->
 <main>
