@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -15,12 +16,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "fuente_dinamica")
+@DiscriminatorValue("dinamica")
 public class FuenteDinamica extends Fuente {
-  @ManyToOne(fetch = FetchType.EAGER)
-  private Contribuyente contribuyente; // TODO no debería ser por usuario. Es mejor que sea una sola para todos los usuarios
 
   public List<Hecho> getHechos() {
     return (hechos.stream().filter(h -> h.getEliminado().equals(false)).toList());

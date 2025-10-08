@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "criterio_ubicacion")
+@DiscriminatorValue("ubicacion")
 public class FiltroUbicacion extends Filtro {
 
   @Column(name = "latitud")

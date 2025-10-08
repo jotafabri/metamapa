@@ -7,6 +7,7 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.input.ProxyInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -15,38 +16,37 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "fuente_proxy")
+@DiscriminatorValue("proxy")
 public class FuenteProxy extends Fuente {
   @Transient
   private WebClient webClient;
 
-  @Column(name = "base_url", nullable = false)
-  private String baseUrl;
+  public FuenteProxy(String ruta) {
+    this.ruta = ruta;
+  }
 
-  // La baseUrl es seteada al momento de crear la fuente y agregarla a una coleccion
-  public FuenteProxy(String baseUrl) {
-    this.baseUrl = baseUrl;
-    this.webClient = WebClient.builder().baseUrl(baseUrl).build();
+  private WebClient getWebClient() {
+    if (webClient == null) {
+      webClient = WebClient.builder().baseUrl(ruta).build();
+    }
+    return webClient;
   }
 
   public List<Hecho> getHechos() {
-    this.hechos = webClient.get()
-        .uri(uriBuilder -> uriBuilder
-            .path("/desastres")
-            .build())
+    this.hechos = getWebClient().get()
+        .uri(uriBuilder -> uriBuilder.path("/desastres").build())
         .retrieve()
         .bodyToMono(ProxyInputDTO.class)
         .map(inputDTO -> inputDTO.getData().stream()
             .map(HechoDTO::toHecho)
-            .toList()
-        )
+            .toList())
         .block().stream().filter(h -> h.getEliminado().equals(false)).toList();
-      return this.hechos;
+    return this.hechos;
   }
 
   public Hecho getHechoFromId(Long id) {
     return this.hechos.stream().filter(h -> Objects.equals(h.getId(), id)).findFirst().orElse(
-        webClient.get()
+        getWebClient().get()
             .uri(uriBuilder -> uriBuilder
                 .path("/desastres/{id}")
                 .build(id)
