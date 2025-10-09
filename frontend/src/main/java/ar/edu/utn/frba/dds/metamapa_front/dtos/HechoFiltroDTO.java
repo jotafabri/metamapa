@@ -1,6 +1,16 @@
 package ar.edu.utn.frba.dds.metamapa_front.dtos;
 
-public class HechoFiltroDTO {  private String categoria;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class HechoFiltroDTO {
+  private String categoria;
   private String fechaReporteDesde;
   private String fechaReporteHasta;
   private String fechaAcontecimientoDesde;
@@ -8,4 +18,7 @@ public class HechoFiltroDTO {  private String categoria;
   private String ubicacion;
   private Boolean soloConMultimedia;
   private Boolean soloConContribuyente;
+  private Boolean curado = false;
+  private Integer page = 0;
+  private Integer size = 10;
 }

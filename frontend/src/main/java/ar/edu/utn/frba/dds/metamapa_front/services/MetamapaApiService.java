@@ -89,8 +89,8 @@ public class MetamapaApiService {
     return response != null ? response : List.of();
   }
 
-  public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros, Boolean curado, Integer page, Integer size) {
-    List<HechoDTO> response = webApiCallerService.getListPublic(this.generarUrl(handle, filtros, curado, page, size), HechoDTO.class);
+  public List<HechoDTO> getHechosByHandle(String handle, HechoFiltroDTO filtros) {
+    List<HechoDTO> response = webApiCallerService.getListPublic(this.generarUrl(handle, filtros), HechoDTO.class);
     return response != null ? response : List.of();
   }
 
@@ -161,7 +161,10 @@ public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO
   public void rechazarSolicitudEliminacion(Long id) {
     webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null );
   }
-  private String generarUrl(String handle, HechoFiltroDTO filtros, Boolean curado, Integer page, Integer size) {
+  private String generarUrl(String handle, HechoFiltroDTO filtros) {
+    Boolean curado = filtros.getCurado();
+    Integer page = filtros.getPage();
+    Integer size = filtros.getSize();
 
     String baseUrl = metamapaServiceUrl + "/colecciones/" + handle + "/hechos" + "?curado=" + curado.toString();
     StringBuilder url = new StringBuilder(baseUrl);

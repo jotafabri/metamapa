@@ -42,11 +42,10 @@ public class SeederService implements ISeederService {
   @Value("${app.base-url}")
   private String baseUrl;
 
-  @PostConstruct
+//  @PostConstruct
   @Override
   @Transactional // ← Agregar transaccional para manejar todo en una transacción
   public void init() {
-
     // Limpiar base de datos
     coleccionesRepository.deleteAll();
     fuentesRepository.deleteAll();

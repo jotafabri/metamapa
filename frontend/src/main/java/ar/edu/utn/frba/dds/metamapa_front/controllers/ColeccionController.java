@@ -46,21 +46,20 @@ public class ColeccionController {
   }
 
   @GetMapping("/{handle}")
-//  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
-  public String listarHechos(
+  public String mostrarHechos(
       @PathVariable String handle,
-      @ModelAttribute HechoFiltroDTO filtros,
-      @RequestParam(required = false, defaultValue = "false") Boolean curado,
-      @RequestParam(required = false, defaultValue = "0") Integer page,
-      @RequestParam(required = false, defaultValue = "10") Integer size,
+      @ModelAttribute("filtros") HechoFiltroDTO filtros,
       Model model,
       RedirectAttributes redirectAttributes) {
     try {
       // Obtener hechos paginados
-      List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros, curado, page, size);
+      List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros);
 
-      model.addAttribute("hechosPaginados", hechosPaginados);
+      Integer page = filtros.getPage();
+      Integer size = filtros.getSize();
+
       model.addAttribute("titulo", "Colección");
+      model.addAttribute("hechosPaginados", hechosPaginados);
       model.addAttribute("currentPage", page);
       model.addAttribute("pageSize", size);
       model.addAttribute("hasMore", hechosPaginados.size() == size);
@@ -70,6 +69,20 @@ public class ColeccionController {
       redirectAttributes.addFlashAttribute("mensaje", ex.getMessage());
       return "redirect:/404";
     }
+  }
+
+  @PostMapping("/{handle}")
+  public String listarHechos(
+      @PathVariable String handle,
+      @ModelAttribute("filtros") HechoFiltroDTO filtros,
+      Model model,
+      RedirectAttributes redirectAttributes
+  ) {
+    return mostrarHechos(
+        handle,
+        filtros,
+        model,
+        redirectAttributes);
   }
 
   @GetMapping("/nueva")
@@ -115,10 +128,10 @@ public class ColeccionController {
   @PostMapping("/{handle}/actualizar")
   @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
   public String actualizarColeccion(@PathVariable String handle,
-                               @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
-                               BindingResult bindingResult,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+                                    @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
+                                    BindingResult bindingResult,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
     try {
       ColeccionDTO coleccionActualizada = coleccionService.actualizarColeccion(handle, coleccionDTO);
 

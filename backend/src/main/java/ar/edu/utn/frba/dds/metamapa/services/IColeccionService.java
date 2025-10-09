@@ -10,8 +10,7 @@ public interface IColeccionService {
   List<ColeccionDTO> getAllColecciones();
 
   List<HechoDTO> getHechosByHandle(String handle,
-                                   HechoFiltroDTO filtros,
-                                   Boolean curado);
+                                   HechoFiltroDTO filtros);
 
   List<HechoDTO> getHechosByHandleAdmin(String handle,
                                         HechoFiltroDTO filtros);

@@ -31,11 +31,10 @@ public class ColeccionService implements IColeccionService {
   //USUARIO: Navegacion filtrada sobre una coleccion , no muestra los RECHAZADOS y PENDIENTES.
   @Override
   public List<HechoDTO> getHechosByHandle(String handle,
-                                          HechoFiltroDTO filtros,
-                                          Boolean curado
+                                          HechoFiltroDTO filtros
   ) {
     return this.coleccionesRepository.findColeccionByHandle(handle)
-        .navegar(filtros.getList(), curado)
+        .navegar(filtros.getList(), filtros.getCurado())
         .stream()
         .filter(h -> h.getEstado().equals(Estado.ACEPTADA))
         .map(HechoDTO::fromHecho)

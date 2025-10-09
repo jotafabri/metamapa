@@ -23,5 +23,5 @@ public class HechoDTO {
   private LocalDateTime fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
 
-  private List<MultipartFile> multimedia;
+  private List<String> multimedia;
 }

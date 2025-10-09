@@ -13,7 +13,9 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroFechaAcon
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroFechaCarga;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroMultimedia;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl.FiltroUbicacion;
+import lombok.Data;
 
+@Data
 public class HechoFiltroDTO {
   private String categoria;
   private String fechaReporteDesde;
@@ -23,6 +25,9 @@ public class HechoFiltroDTO {
   private String ubicacion;
   private Boolean soloConMultimedia;
   private Boolean soloConContribuyente;
+  private Boolean curado = false;
+  private Integer page = 0;
+  private Integer size = 10;
 
   public List<Filtro> getList() {
     List<Filtro> criterios = new ArrayList<Filtro>();
