@@ -79,7 +79,7 @@ public class ColeccionesController {
     );
 
     // Aplicar paginación manualmente
-    int start = filtros.getPage() * filtros.getSize();
+    int start = Math.max(0, filtros.getPage() * filtros.getSize());
     int end = Math.min(start + filtros.getSize(), todosLosHechos.size());
 
     if (start >= todosLosHechos.size()) {

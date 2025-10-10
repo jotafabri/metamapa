@@ -59,6 +59,7 @@ public class ColeccionController {
       Integer size = filtros.getSize();
 
       model.addAttribute("titulo", "Colección");
+      model.addAttribute("handle", handle);
       model.addAttribute("hechosPaginados", hechosPaginados);
       model.addAttribute("currentPage", page);
       model.addAttribute("pageSize", size);

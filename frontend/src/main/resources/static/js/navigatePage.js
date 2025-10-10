@@ -1,9 +1,9 @@
 /*<![CDATA[*/
 function navigatePage(direction) {
-    const currentPage = /*[[${currentPage}]]*/ 0;
-    const pageSize = /*[[${pageSize}]]*/ 10;
-    const newPage = currentPage + direction;
     const url = new URL(window.location.href);
+    const currentPage = parseInt(url.searchParams.get('page') || /*[[${currentPage}]]*/ 0);
+    const pageSize = parseInt(url.searchParams.get('size') || /*[[${pageSize}]]*/ 10);
+    const newPage = currentPage + direction;
     url.searchParams.set('page', newPage);
     url.searchParams.set('size', pageSize);
 
