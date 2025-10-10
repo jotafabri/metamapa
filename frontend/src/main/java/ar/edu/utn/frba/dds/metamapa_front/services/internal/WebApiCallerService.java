@@ -172,6 +172,23 @@ public class WebApiCallerService {
   }
 
   /**
+   * Ejecuta una llamada HTTP POST pública (sin autenticación)
+   */
+  public <T> T postPublic(String url, Object body, Class<T> responseType) {
+    try {
+      return webClient
+          .post()
+          .uri(url)
+          .bodyValue(body)
+          .retrieve()
+          .bodyToMono(responseType)
+          .block();
+    } catch (Exception e) {
+      throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
+    }
+  }
+
+  /**
    * Ejecuta una llamada HTTP PUT
    */
   public <T> T put(String url, Object body, Class<T> responseType) {

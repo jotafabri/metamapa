@@ -8,6 +8,12 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 public interface IHechosService {
   List<HechoDTO> getHechosWithParams(HechoFiltroDTO filtros);
 
+  HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO);
+
+  HechoDTO getHechoById(Long id);
+
+  HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO);
+
   /*public List<HechoOutputDTO> buscarTodos(
           String categoria,
           String fecha_reporte_desde,

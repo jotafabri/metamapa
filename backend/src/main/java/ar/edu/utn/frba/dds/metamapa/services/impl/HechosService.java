@@ -52,6 +52,43 @@ public class HechosService implements IHechosService {
         .toList();
   }
 
+  @Override
+  public HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO) {
+    Hecho hecho = this.crearHecho(
+        hechoDTO.getTitulo(),
+        hechoDTO.getDescripcion(),
+        hechoDTO.getCategoria(),
+        hechoDTO.getLatitud(),
+        hechoDTO.getLongitud(),
+        hechoDTO.getFechaAcontecimiento()
+    );
+    Hecho hechoGuardado = this.hechosRepository.save(hecho);
+    return HechoDTO.fromHecho(hechoGuardado);
+  }
+
+  @Override
+  public HechoDTO getHechoById(Long id) {
+    Hecho hecho = this.hechosRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + id));
+    return HechoDTO.fromHecho(hecho);
+  }
+
+  @Override
+  public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
+    Hecho hecho = this.hechosRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + id));
+
+    hecho.setTitulo(hechoDTO.getTitulo());
+    hecho.setDescripcion(hechoDTO.getDescripcion());
+    hecho.setCategoria(hechoDTO.getCategoria());
+    hecho.setLatitud(hechoDTO.getLatitud());
+    hecho.setLongitud(hechoDTO.getLongitud());
+    hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento());
+
+    Hecho hechoActualizado = this.hechosRepository.save(hecho);
+    return HechoDTO.fromHecho(hechoActualizado);
+  }
+
 /*
 //dinamicos
 

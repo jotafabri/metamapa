@@ -10,6 +10,10 @@ import ar.edu.utn.frba.dds.metamapa.services.ISeederServiceDinamica;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +56,21 @@ public class HechosController {
       @ModelAttribute HechoFiltroDTO filtros
   ) {
     return this.hechosService.getHechosWithParams(filtros);
+  }
+
+  @PostMapping
+  public HechoDTO crearHecho(@RequestBody HechoDTO hechoDTO) {
+    return this.hechosService.crearHechoDesdeDTO(hechoDTO);
+  }
+
+  @GetMapping("/{id}")
+  public HechoDTO getHechoById(@PathVariable Long id) {
+    return this.hechosService.getHechoById(id);
+  }
+
+  @PatchMapping("/{id}")
+  public HechoDTO actualizarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoDTO) {
+    return this.hechosService.actualizarHecho(id, hechoDTO);
   }
 
   @GetMapping("/inicializar")

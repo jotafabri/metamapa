@@ -136,7 +136,7 @@ public class MetamapaApiService {
   }
 
   public HechoDTO crearHecho(HechoDTO hechoDTO) {
-    HechoDTO response = webApiCallerService.post(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+    HechoDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
     if (response == null) {
       throw new RuntimeException("Error al crear hecho en el servicio externo");
     }
