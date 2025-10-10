@@ -9,21 +9,23 @@
     </div>
     <!-- Grid de colecciones -->
     <section id="collections-grid" class="grid">
-        <div th:if="${colecciones}" th:each="coleccion : ${colecciones}" class="card">
-            <div class="card-header">
-                <span class="tag">Colección</span>
-            </div>
-            <div class="card-title" th:text="${coleccion.titulo}">Título</div>
-            <div class="card-desc" th:text="${coleccion.descripcion}">Descripción</div>
-            <div class="card-meta">
-                <span th:text="${coleccion.cantHechos} + ' hechos'">0 hechos</span>
-                <span th:text="'Algoritmo: ' + (${coleccion.algoritmo} ?: 'N/A')">Algoritmo: N/A</span>
-            </div>
-            <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}" class="btn-secondary">Ver colección</a>
-        </div>
         <!-- Mensaje si no hay colecciones -->
-        <div th:unless="${colecciones}" class="no-collections">
+        <div th:if="${#lists.isEmpty(colecciones)}" class="no-collections">
             <p>No hay colecciones disponibles en este momento.</p>
+        </div>
+        <div th:unless="${#lists.isEmpty(colecciones)}" >
+            <div th:each="coleccion : ${colecciones}" class="card">
+                <div class="card-header">
+                    <span class="tag">Colección</span>
+                </div>
+                <div class="card-title" th:text="${coleccion.titulo}">Título</div>
+                <div class="card-desc" th:text="${coleccion.descripcion}">Descripción</div>
+                <div class="card-meta">
+                    <span th:text="${coleccion.cantHechos} + ' hechos'">0 hechos</span>
+                    <span th:text="'Algoritmo: ' + (${coleccion.algoritmo} ?: 'N/A')">Algoritmo: N/A</span>
+                </div>
+                <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}" class="btn-secondary">Ver colección</a>
+            </div>
         </div>
     </section>
     <script th:src="@{/js/colecciones.js}"></script>

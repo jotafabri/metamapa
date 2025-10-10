@@ -21,8 +21,8 @@ public abstract class FiltroFecha extends Filtro {
   @Override
   public Boolean cumple(Hecho hecho) {
     LocalDateTime fecha = this.getFecha(hecho);
-    return (fecha.isEqual(desde) || fecha.isAfter(desde))
-        && (fecha.isEqual(hasta) || fecha.isBefore(hasta));
+    return (desde == null || !fecha.isBefore(desde))
+        && (hasta == null || !fecha.isAfter(hasta));
   }
 
   protected abstract LocalDateTime getFecha(Hecho hecho);

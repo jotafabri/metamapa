@@ -46,24 +46,31 @@
     box-shadow: 0 2px 8px rgba(251, 154, 52, 0.2);
 }
 
-.btn-secondary {
-    background-color: transparent;
-    color: #111827;
-    border: 1px solid #d1d5db;
+.btn-primary.w-full {
+    width: 100% !important;
 }
 
-.btn-secondary:hover,
-.btn-secondary:focus {
-    background-color: #f3f4f6;
-    color: rgb(220, 38, 38);
-    border-color: rgb(220, 38, 38);
+.btn-secondary {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #3a3a3a;
+}
+
+.btn-secondary:hover
+ {
+    color: #d77f24;
+    border-color: #d77f24;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(251, 154, 52, 0.3);
 }
 
 .btn-secondary:active {
     transform: translateY(0);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(251, 154, 52, 0.2);
+}
+
+.btn-secondary.w-full {
+    width: 100% !important;
 }
 
 .btn-hero {
