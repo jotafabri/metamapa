@@ -28,9 +28,6 @@
   text-decoration: none;
 }
 
-
-
-
 /* Main content */
 .main {
   text-align: center;
@@ -115,6 +112,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2; /* máximo 2 líneas */
   -webkit-box-orient: vertical;
+    padding-bottom: 1em;
 }
 
 /* Metadatos (hechos y curados) */

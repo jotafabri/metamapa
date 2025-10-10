@@ -1,4 +1,4 @@
-<html  th:replace="~{layout/base :: html}">
+<html th:replace="~{layout/base :: html}">
 <!-- Contenido principal -->
 <div th:fragment="contenido" class="main">
     <link rel="stylesheet" th:href="@{/css/colecciones.css}">
@@ -8,23 +8,20 @@
         <p th:text="${error}"></p>
     </div>
     <!-- Grid de colecciones -->
-    <section id="collections-grid" class="grid">
+    <section id="collections-grid">
         <!-- Mensaje si no hay colecciones -->
         <div th:if="${#lists.isEmpty(colecciones)}" class="no-collections">
             <p>No hay colecciones disponibles en este momento.</p>
         </div>
-        <div th:unless="${#lists.isEmpty(colecciones)}" >
+        <div th:unless="${#lists.isEmpty(colecciones)}" class="grid">
             <div th:each="coleccion : ${colecciones}" class="card">
-                <div class="card-header">
-                    <span class="tag">Colección</span>
-                </div>
                 <div class="card-title" th:text="${coleccion.titulo}">Título</div>
                 <div class="card-desc" th:text="${coleccion.descripcion}">Descripción</div>
-                <div class="card-meta">
-                    <span th:text="${coleccion.cantHechos} + ' hechos'">0 hechos</span>
-                    <span th:text="'Algoritmo: ' + (${coleccion.algoritmo} ?: 'N/A')">Algoritmo: N/A</span>
-                </div>
-                <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}" class="btn-secondary">Ver colección</a>
+                <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}"
+                   th:text="'Ver ' + ${coleccion.cantHechos} + ' hecho' + (${coleccion.cantHechos} != 1 ? 's' : '')"
+                   class="btn btn-primary">
+                    Ver hechos
+                </a>
             </div>
         </div>
     </section>
