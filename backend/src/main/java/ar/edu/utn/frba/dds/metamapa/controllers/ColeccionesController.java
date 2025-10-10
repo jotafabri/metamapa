@@ -89,6 +89,11 @@ public class ColeccionesController {
     return todosLosHechos.subList(start, end);
   }
 
+  @GetMapping("/{handle}/categorias")
+  public List<String> getCategoriasByHandle(@PathVariable String handle) {
+    return this.coleccionService.getCategoriasByHandle(handle);
+  }
+
   // localhost:8080/colecciones/admin/{handle}/hechos
   @GetMapping("/admin/{handle}/hechos")
   public List<HechoDTO> getHechosByHandleAdmin(
@@ -101,9 +106,9 @@ public class ColeccionesController {
     );
   }
 
-    @GetMapping("/refrescar")
-    public void refrescarColeccion() {
-        this.agregacionService.refrescarColecciones();
-    }
+  @GetMapping("/refrescar")
+  public void refrescarColeccion() {
+    this.agregacionService.refrescarColecciones();
+  }
 
 }

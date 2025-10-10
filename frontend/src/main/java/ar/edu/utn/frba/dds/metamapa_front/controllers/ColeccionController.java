@@ -54,6 +54,7 @@ public class ColeccionController {
     try {
       // Obtener hechos paginados
       List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros);
+      List<String> listaCategorias = coleccionService.getCategoriasByHandle(handle);
 
       Integer page = filtros.getPage();
       Integer size = filtros.getSize();
@@ -61,6 +62,7 @@ public class ColeccionController {
       model.addAttribute("titulo", "Colección");
       model.addAttribute("handle", handle);
       model.addAttribute("hechosPaginados", hechosPaginados);
+      model.addAttribute("listaCategorias", listaCategorias);
       model.addAttribute("currentPage", page);
       model.addAttribute("pageSize", size);
       model.addAttribute("hasMore", hechosPaginados.size() == size);

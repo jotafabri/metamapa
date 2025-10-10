@@ -15,6 +15,8 @@ public interface IColeccionService {
   List<HechoDTO> getHechosByHandleAdmin(String handle,
                                         HechoFiltroDTO filtros);
 
+  List<String> getCategoriasByHandle(String handle);
+
   void crearDesdeDTO(ColeccionDTO coleccionDTO);
 
   ColeccionDTO mostrarColeccion(String handle);

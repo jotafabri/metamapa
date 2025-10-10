@@ -52,6 +52,10 @@ public class ColeccionService implements IColeccionService {
         .toList();
   }
 
+  public List<String> getCategoriasByHandle(String handle) {
+    return coleccionesRepository.findDistinctCategoriasByHandle(handle);
+  }
+
   //ADMIN:Operacion (C)RUD
   @Override
   public void crearDesdeDTO(ColeccionDTO coleccionDTO) {

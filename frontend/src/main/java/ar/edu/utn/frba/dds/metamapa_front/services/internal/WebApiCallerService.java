@@ -1,10 +1,13 @@
 package ar.edu.utn.frba.dds.metamapa_front.services.internal;
 
+import java.util.List;
+
 import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RefreshTokenDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -132,6 +135,14 @@ public class WebApiCallerService {
    */
   public <T> java.util.List<T> getListPublic(String url, Class<T> responseType) {
     try {
+      if (responseType == String.class) {
+        return (List<T>) webClient
+            .get()
+            .uri(url)
+            .retrieve()
+            .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
+            .block();
+      }
       return webClient
           .get()
           .uri(url)

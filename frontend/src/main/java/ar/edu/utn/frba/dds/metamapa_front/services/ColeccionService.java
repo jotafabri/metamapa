@@ -23,6 +23,10 @@ public class ColeccionService {
     return metamapaApiService.getHechosByHandle(handle, filtros);
   }
 
+  public List<String> getCategoriasByHandle(String handle) {
+    return metamapaApiService.getCategoriasByHandle(handle);
+  }
+
   public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {
     return metamapaApiService.crearColeccion(coleccionDTO);
   }

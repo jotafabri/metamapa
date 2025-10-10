@@ -94,6 +94,11 @@ public class MetamapaApiService {
     return response != null ? response : List.of();
   }
 
+  public List<String> getCategoriasByHandle(String handle) {
+    List<String> response = webApiCallerService.getListPublic(metamapaServiceUrl + "/colecciones/" + handle + "/categorias", String.class);
+    return response != null ? response : List.of();
+  }
+
   public ColeccionDTO getColeccionByHandle(String handle) {
     ColeccionDTO response = webApiCallerService.getPublic(metamapaServiceUrl + "/colecciones/" + handle, ColeccionDTO.class);
     if (response == null) {
