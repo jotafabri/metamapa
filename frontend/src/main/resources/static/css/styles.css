@@ -18,6 +18,7 @@ label {
     margin-top: 15px;
     font-weight: bold;
 }
+
 input, textarea, select {
     width: 100%;
     padding: 10px;
@@ -25,9 +26,11 @@ input, textarea, select {
     border-radius: 6px;
     border: none;
 }
+
 textarea {
     min-height: 80px;
 }
+
 button {
     color: white;
     border: none;
@@ -41,9 +44,11 @@ button {
     display: flex;
     justify-content: space-between;
 }
+
 .back-btn {
     background: #374151;
 }
+
 .back-btn:hover {
     background: #4b5563;
 }
@@ -82,4 +87,29 @@ button {
 .field-input::placeholder {
     color: white;
     opacity: 0.7;
+}
+
+/* Alertas personalizadas */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 1em;
+}
+.alert-success {
+    background-color: #1a3a2a;
+    color: #7dffb3;
+}
+.alert-danger {
+    background-color: #3a1a1a;
+    color: #ff7d7d;
+}
+.alert-warning {
+    background-color: #3a3a1a;
+    color: #ffd97d;
+}
+.alert-info {
+    background-color: #1a2a3a;
+    color: #7dd9ff;
 }

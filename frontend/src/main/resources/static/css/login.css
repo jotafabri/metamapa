@@ -93,7 +93,7 @@
 
 .login-content,
 .register-content {
-    padding: 2rem;
+    padding: 0 2rem 2rem;
 }
 
 .login-form,
@@ -242,32 +242,6 @@ select.field-input {
 .login-link a:hover {
     color: #ff9f40;
     text-shadow: 0 0 12px rgba(255, 159, 64, 1);
-}
-
-.alert {
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 500;
-}
-
-.alert-success {
-    background-color: #d1e7dd;
-    color: #0f5132;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    color: #842029;
-}
-
-.alert-warning {
-    background-color: #fff3cd;
-    color: #664d03;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    color: #055160;
 }
 
 @media (max-width: 640px) {
