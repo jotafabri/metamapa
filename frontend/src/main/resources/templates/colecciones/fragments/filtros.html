@@ -126,9 +126,9 @@
             <button class="btn-primary w-full" type="submit">
                 Aplicar Filtros
             </button>
-            <button class="btn-secondary w-full" type="reset">
+            <a th:href="@{/colecciones/{handle}(handle=${handle})}" class="btn btn-secondary w-full" style="margin-top: 0.5rem;">
                 Limpiar Filtros
-            </button>
+            </a>
 
     </div>
     </form>
