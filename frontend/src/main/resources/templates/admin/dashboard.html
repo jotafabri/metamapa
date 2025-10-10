@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | MetaMapa</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<header class="main-header">
+    <div class="header-content">
+        <img th:src="@{/img/logo.png}" alt="MetaMapa" class="logo">
+        <nav>
+            <a href="/admin/dashboard" class="nav-link active">Dashboard</a>
+            <a href="/admin/colecciones" class="nav-link">Colecciones</a>
+            <a href="/admin/fuentes" class="nav-link">Fuentes</a>
+            <a href="/admin/hechos" class="nav-link">Hechos</a>
+            <a href="/logout" class="nav-link">Salir</a>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-dashboard">
+    <h1>Panel de Control</h1>
+
+    <section class="dashboard-summary">
+        <div class="dashboard-card">
+            <h2 th:text="${totalHechos}">0</h2>
+            <p>Hechos registrados</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${totalFuentes}">0</h2>
+            <p>Fuentes configuradas</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${totalSolicitudes}">0</h2>
+            <p>Solicitudes de eliminación</p>
+        </div>
+        <div class="dashboard-card">
+            <h2 th:text="${totalColecciones}">0</h2>
+            <p>Colecciones totales</p>
+        </div>
+    </section>
+
+    <section class="dashboard-stats">
+        <h2>Estadísticas del Sistema</h2>
+        <div class="stat-row">
+            <p><strong>Categoría con más hechos:</strong></p>
+            <p th:text="${categoriaTop != null ? categoriaTop : 'Sin datos'}"></p>
+        </div>
+        <div class="stat-row">
+            <p><strong>Solicitudes marcadas como spam:</strong></p>
+            <p th:text="${solicitudesSpam != null ? solicitudesSpam : '0'}"></p>
+        </div>
+
+        <div class="dashboard-actions">
+            <a class="button" th:href="@{/admin/dashboard/actualizar}">🔁 Actualizar estadísticas</a>
+            <a class="button" th:href="@{/admin/dashboard/exportar}">📥 Exportar CSV</a>
+        </div>
+    </section>
+
+    <section class="dashboard-actions">
+        <h2>Gestión</h2>
+        <div class="action-buttons">
+            <a href="/admin/colecciones" class="button"> Gestionar Colecciones</a>
+            <a href="/admin/fuentes" class="button"> Configurar Fuentes</a>
+            <a href="/admin/hechos" class="button"> Revisar Hechos</a>
+            <a href="/admin/solicitudes" class="button"> Revisar Solicitudes</a>
+            <a href="/admin/importar" class="button"> Importar CSV</a>
+        </div>
+    </section>
+</main>
+
+<footer class="main-footer">
+    <p>&copy; 2025 MetaMapa — Panel de Administración</p>
+</footer>
+</body>
+</html>
