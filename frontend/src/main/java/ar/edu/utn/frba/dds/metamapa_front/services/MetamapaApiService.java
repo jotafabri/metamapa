@@ -4,7 +4,14 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.Rol;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.UsuarioDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
@@ -74,6 +81,7 @@ public class MetamapaApiService {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);
     }
   }
+
   public RolesPermisosDTO getRolesPermisos(String email) {
     try {
       // Llamar al nuevo endpoint /api/auth/user con el email
@@ -175,24 +183,20 @@ public class MetamapaApiService {
     return response;
   }
 
-public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
-    SolicitudEliminacionDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/solicitudes", solicitudDTO, SolicitudEliminacionDTO.class);
-    if (response == null) {
-      throw new RuntimeException("Error al crear solicitud de eliminación en el servicio externo");
-    }
-    return response;
+  public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
+    webApiCallerService.postPublic(metamapaServiceUrl + "/solicitudes", solicitudDTO, SolicitudEliminacionDTO.class);
   }
 
   public void aceptarSolicitudEliminacion(Long id) {
-    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/aceptar", null, null );
+    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/aceptar", null, null);
   }
 
   public void rechazarSolicitudEliminacion(Long id) {
-    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null );
+    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null);
   }
 
   public void crearUsuario(UsuarioDTO usuarioDTO) {
-     webApiCallerService.postPublic(metamapaServiceUrl + "/api/auth/usuarios", usuarioDTO, UsuarioDTO.class);
+    webApiCallerService.postPublic(metamapaServiceUrl + "/api/auth/usuarios", usuarioDTO, UsuarioDTO.class);
   }
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {

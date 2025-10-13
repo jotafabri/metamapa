@@ -25,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class HechosController {
   private static final Logger log = LoggerFactory.getLogger(HechosController.class);
   private final HechosService hechosService;
-  private final SolicitudesService solicitudesService;
 
   @GetMapping("/{id}")
   public String verDetalleHecho(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -100,18 +99,4 @@ public class HechosController {
     }
   }
 
-  @PostMapping("/solicitar-eliminacion")
-  public String crearSolicitudEliminacion(@ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
-                                          BindingResult bindingResult,
-                                          Model model,
-                                          RedirectAttributes redirectAttributes
-  ) {
-    try {
-      solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-      return "redirect:/";
-    } catch (Exception e) {
-      log.error("Error al crear solicitud de eliminación", e);
-      return "redirect:/";
-    }
-  }
 }

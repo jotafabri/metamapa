@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <form id="form-eliminacion" th:action="@{/hechos/solicitar-eliminacion}" th:object="${solicitudEliminacion}" method="post">
+                <form id="form-eliminacion" th:action="@{/solicitudes}" th:object="${solicitudEliminacion}" method="post">
                     <input type="hidden" id="hecho-id" name="hechoId" value="" th:field="*{idHecho}">
 
                     <div class="form-group">
