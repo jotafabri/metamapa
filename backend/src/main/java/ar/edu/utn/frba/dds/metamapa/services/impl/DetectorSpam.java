@@ -8,6 +8,6 @@ public class DetectorSpam implements IDetectorSpam {
 
   @Override
   public boolean esSpam(String texto) {
-    return texto.length() > 200;
+    return texto.length() > 50000;
   }
 }

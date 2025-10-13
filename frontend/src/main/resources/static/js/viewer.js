@@ -106,10 +106,6 @@ function solicitarEliminacion(hechoId) {
         new Date(hecho.fechaAcontecimiento).toLocaleDateString('es-AR') : '';
     document.getElementById('hecho-id').value = hechoId;
 
-    // Actualizar action del form
-    const form = document.getElementById('form-eliminacion');
-    form.action = `/api/hechos/${hechoId}/solicitar-eliminacion`;
-
     // Mostrar modal
     document.getElementById('modal-eliminacion').style.display = 'flex';
     document.body.style.overflow = 'hidden';

@@ -176,7 +176,7 @@ public class MetamapaApiService {
   }
 
 public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
-    SolicitudEliminacionDTO response = webApiCallerService.post(metamapaServiceUrl + "/solicitudes", solicitudDTO, SolicitudEliminacionDTO.class);
+    SolicitudEliminacionDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/solicitudes", solicitudDTO, SolicitudEliminacionDTO.class);
     if (response == null) {
       throw new RuntimeException("Error al crear solicitud de eliminación en el servicio externo");
     }

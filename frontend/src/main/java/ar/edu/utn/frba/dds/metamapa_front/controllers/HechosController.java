@@ -100,17 +100,18 @@ public class HechosController {
     }
   }
 
-  @PostMapping("/{id}/solicitar-eliminacion")
-  public void crearSolicitudEliminacion(@PathVariable Long id,
-                                          @ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
+  @PostMapping("/solicitar-eliminacion")
+  public String crearSolicitudEliminacion(@ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
                                           BindingResult bindingResult,
                                           Model model,
                                           RedirectAttributes redirectAttributes
   ) {
     try {
       solicitudesService.crearSolicitud(solicitudEliminacionDTO);
+      return "redirect:/";
     } catch (Exception e) {
       log.error("Error al crear solicitud de eliminación", e);
+      return "redirect:/";
     }
   }
 }
