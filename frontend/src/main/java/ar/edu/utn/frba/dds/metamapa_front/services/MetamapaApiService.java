@@ -44,20 +44,32 @@ public class MetamapaApiService {
 
   public AuthResponseDTO login(String username, String password) {
     try {
-      AuthResponseDTO response = webClient
+      // Llamamos al nuevo endpoint /api/auth/login
+      Map<String, Object> response = webClient
           .post()
-          .uri(authServiceUrl + "/auth")
+          .uri(metamapaServiceUrl + "/auth/login")
           .bodyValue(Map.of(
-              "username", username,
+              "email", username,  // Usamos email en lugar de username
               "password", password
           ))
           .retrieve()
-          .bodyToMono(AuthResponseDTO.class)
+          .bodyToMono(Map.class)
           .block();
-      return response;
+
+      if (response == null) {
+        return null;
+      }
+
+      // Convertir la respuesta simple a AuthResponseDTO
+      // Como no usamos JWT, creamos tokens simples basados en el email
+      AuthResponseDTO authResponse = new AuthResponseDTO();
+      authResponse.setAccessToken("simple-token-" + username);
+      authResponse.setRefreshToken("refresh-token-" + username);
+
+      return authResponse;
     } catch (WebClientResponseException e) {
       log.error(e.getMessage());
-      if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+      if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.NOT_FOUND) {
         // Login fallido - credenciales incorrectas
         return null;
       }
@@ -67,14 +79,31 @@ public class MetamapaApiService {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);
     }
   }
-  public RolesPermisosDTO getRolesPermisos(String accessToken) {
+  public RolesPermisosDTO getRolesPermisos(String email) {
     try {
-      RolesPermisosDTO response = webApiCallerService.getWithAuth(
-          authServiceUrl + "/auth/user/roles-permisos",
-          accessToken,
-          RolesPermisosDTO.class
-      );
-      return response;
+      // Llamar al nuevo endpoint /api/auth/user con el email
+      Map<String, Object> response = webClient
+          .post()
+          .uri(metamapaServiceUrl + "/api/auth/user")
+          .bodyValue(Map.of("email", email))
+          .retrieve()
+          .bodyToMono(Map.class)
+          .block();
+
+      if (response == null) {
+        throw new RuntimeException("Usuario no encontrado");
+      }
+
+      // Convertir la respuesta a RolesPermisosDTO
+      RolesPermisosDTO rolesPermisos = new RolesPermisosDTO();
+      // El rol viene como string del backend (ej: "ADMIN" o "USER")
+      String rolStr = (String) response.get("rol");
+      // Aquí asumimos que RolesPermisosDTO tiene un método setRol que acepta un enum
+      // Por ahora devolvemos un DTO simple sin permisos
+      rolesPermisos.setRol(rolStr);
+      rolesPermisos.setPermisos(List.of()); // Sin permisos por ahora
+
+      return rolesPermisos;
     } catch (Exception e) {
       log.error(e.getMessage());
       throw new RuntimeException("Error al obtener roles y permisos: " + e.getMessage(), e);

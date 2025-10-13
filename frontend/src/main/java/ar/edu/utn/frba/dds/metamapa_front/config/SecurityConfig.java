@@ -28,15 +28,12 @@ public class SecurityConfig {
             .ignoringRequestMatchers("/hechos/crear")
         )
         .authorizeHttpRequests(auth -> auth
-            // Recursos estáticos y login público
             .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/videos/**", "/colecciones", "/colecciones/**", "/hechos/**", "/404").permitAll()
-            // Ejemplo: Acceso a alumnos: ADMIN y DOCENTE
             //.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-            // Lo demás requiere autenticación
             .anyRequest().authenticated()
         )
         .formLogin(form -> form
-            .loginPage("/login")    // tu template de login
+            .loginPage("/login")
             .permitAll()
                 .successHandler(((request, response, authentication) -> {
                   var auth = authentication.getAuthorities();
