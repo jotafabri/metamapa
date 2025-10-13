@@ -36,10 +36,12 @@ public class SecurityConfig {
         )
         .formLogin(form -> form
             .loginPage("/login")
+            .usernameParameter("email")
+            .passwordParameter("password")
             .permitAll()
                 .successHandler(((request, response, authentication) -> {
                   var auth = authentication.getAuthorities();
-                  if (auth.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+                  if (auth.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
                     response.sendRedirect("/admin");
                   } else {
                     response.sendRedirect("/colecciones");

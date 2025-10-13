@@ -192,7 +192,7 @@ public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO
   }
 
   public void crearUsuario(UsuarioDTO usuarioDTO) {
-     webApiCallerService.postPublic(metamapaServiceUrl + "/usuarios", usuarioDTO, UsuarioDTO.class);
+     webApiCallerService.postPublic(metamapaServiceUrl + "/api/auth/usuarios", usuarioDTO, UsuarioDTO.class);
   }
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {

@@ -22,7 +22,7 @@
                             <div class="field-group">
                                 <label for="nombre" class="field-label">Nombre</label>
                                 <input type="text" id="nombre" name="nombre" class="field-input"
-                                       placeholder="Tu nombre" required>
+                                       placeholder="Tu nombre" required th:field="*{nombre}">
                             </div>
 
                             <div class="field-group">
@@ -34,7 +34,7 @@
                             <div class="field-group">
                                 <label for="password" class="field-label">Contraseña</label>
                                 <input type="password" id="password" name="password" class="field-input"
-                                       placeholder="Crea una contraseña" required
+                                       placeholder="Crea una contraseña" required th:field="*{password}"
                                        aria-describedby="password-help">
                                 <p id="password-help" class="field-help">
                                     Mínimo 8 caracteres con al menos una mayúscula
@@ -44,7 +44,7 @@
                             <div class="field-group">
                                 <label for="confirmPassword" class="field-label">Confirmar Contraseña</label>
                                 <input type="password" id="confirmPassword" name="confirmPassword" class="field-input"
-                                       placeholder="Repite tu contraseña" required th:field="*{password}">
+                                       placeholder="Repite tu contraseña" required>
                             </div>
 
                         </div>

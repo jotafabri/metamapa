@@ -29,7 +29,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "coleccion")
 public class Coleccion extends Persistente {
-  @Column(name = "handle")
+  @Column(name = "handle", unique = true)
   private String handle;
 
   @Column(name = "titulo")
