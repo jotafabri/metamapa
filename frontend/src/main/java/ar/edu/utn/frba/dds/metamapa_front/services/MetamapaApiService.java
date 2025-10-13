@@ -4,12 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
@@ -44,10 +39,10 @@ public class MetamapaApiService {
 
   public AuthResponseDTO login(String username, String password) {
     try {
-      // Llamamos al nuevo endpoint /api/auth/login
+      // Llamamos alll nuevo endpoint /api/auth/login
       Map<String, Object> response = webClient
           .post()
-          .uri(metamapaServiceUrl + "/auth/login")
+          .uri(metamapaServiceUrl + "/api/auth/login")
           .bodyValue(Map.of(
               "email", username,  // Usamos email en lugar de username
               "password", password
@@ -100,7 +95,7 @@ public class MetamapaApiService {
       String rolStr = (String) response.get("rol");
       // Aquí asumimos que RolesPermisosDTO tiene un método setRol que acepta un enum
       // Por ahora devolvemos un DTO simple sin permisos
-      rolesPermisos.setRol(rolStr);
+      rolesPermisos.setRol(Rol.valueOf(rolStr));
       rolesPermisos.setPermisos(List.of()); // Sin permisos por ahora
 
       return rolesPermisos;
@@ -195,6 +190,11 @@ public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO
   public void rechazarSolicitudEliminacion(Long id) {
     webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null );
   }
+
+  public void crearUsuario(UsuarioDTO usuarioDTO) {
+     webApiCallerService.postPublic(metamapaServiceUrl + "/usuarios", usuarioDTO, UsuarioDTO.class);
+  }
+
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
     Boolean curado = filtros.getCurado();
     Integer page = filtros.getPage();

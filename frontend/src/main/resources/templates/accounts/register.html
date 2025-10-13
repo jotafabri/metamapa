@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="register-content">
-                    <form class="register-form" action="#" method="post">
+                    <form class="register-form" th:action="@{/register}" th:object="${usuario}" method="post">
                         <div class="form-fields">
 
                             <div class="field-group">
@@ -28,7 +28,7 @@
                             <div class="field-group">
                                 <label for="email" class="field-label">Correo electrónico</label>
                                 <input type="email" id="email" name="email" class="field-input"
-                                       placeholder="ejemplo@correo.com" required>
+                                       placeholder="ejemplo@correo.com" required th:field="*{email}">
                             </div>
 
                             <div class="field-group">
@@ -44,7 +44,7 @@
                             <div class="field-group">
                                 <label for="confirmPassword" class="field-label">Confirmar Contraseña</label>
                                 <input type="password" id="confirmPassword" name="confirmPassword" class="field-input"
-                                       placeholder="Repite tu contraseña" required>
+                                       placeholder="Repite tu contraseña" required th:field="*{password}">
                             </div>
 
                         </div>
