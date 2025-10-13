@@ -100,37 +100,17 @@ public class HechosController {
     }
   }
 
-  @GetMapping("/{id}/solicitar-eliminacion")
-  public String mostrarFormularioSolicitud(
-      @PathVariable Long id,
-      Model model
-  ) {
-    try {
-      HechoDTO hechoDTO = hechosService.getHechoById(id).get();
-
-      model.addAttribute("hecho", hechoDTO);
-      model.addAttribute("titulo", "Solicitar eliminación");
-
-      return "hechos/solicitar-eliminacion";
-    } catch (NotFoundException e) {
-      return "redirect:/404";
-    }
-  }
-
-  @PostMapping("/{id}/enviar-solicitud")
-  public String crearSolicitudEliminacion(@PathVariable Long id,
-                                          @ModelAttribute("solicitud") SolicitudEliminacionDTO solicitudEliminacionDTO,
+  @PostMapping("/{id}/solicitar-eliminacion")
+  public void crearSolicitudEliminacion(@PathVariable Long id,
+                                          @ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
                                           BindingResult bindingResult,
                                           Model model,
                                           RedirectAttributes redirectAttributes
   ) {
     try {
-      SolicitudEliminacionDTO solicitudCreada = solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-      return "redirect:/colecciones/colecciones";
+      solicitudesService.crearSolicitud(solicitudEliminacionDTO);
     } catch (Exception e) {
       log.error("Error al crear solicitud de eliminación", e);
-      model.addAttribute("titulo", "Solicitar eliminación");
-      return "hechos/solicitar-eliminacion";
     }
   }
 }

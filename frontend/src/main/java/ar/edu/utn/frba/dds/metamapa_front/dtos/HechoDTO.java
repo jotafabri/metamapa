@@ -22,6 +22,7 @@ public class HechoDTO {
   private Double longitud; //
   private LocalDateTime fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
+  private Long contribuyenteId;
 
   private List<String> multimedia;
 }

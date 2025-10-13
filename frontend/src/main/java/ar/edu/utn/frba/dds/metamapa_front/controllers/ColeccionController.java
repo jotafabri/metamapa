@@ -5,12 +5,14 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,7 +52,9 @@ public class ColeccionController {
       @PathVariable String handle,
       @ModelAttribute("filtros") HechoFiltroDTO filtros,
       Model model,
-      RedirectAttributes redirectAttributes) {
+      RedirectAttributes redirectAttributes,
+      Authentication auth
+  ) {
     try {
       // Obtener hechos paginados
       List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros);
@@ -59,6 +63,20 @@ public class ColeccionController {
       Integer page = filtros.getPage();
       Integer size = filtros.getSize();
 
+      Long currentUserId = null;
+      boolean isAdmin = false;
+
+//      if (auth != null && auth.isAuthenticated()) {
+//        // Ajustar según tu implementación de UserDetails
+//        Object principal = auth.getPrincipal();
+//        if (principal instanceof CustomUserDetails) {
+//            currentUserId = ((CustomUserDetails) principal).getId();
+//        }
+//
+//        isAdmin = auth.getAuthorities().stream()
+//            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+//    }
+
       model.addAttribute("titulo", "Colección");
       model.addAttribute("handle", handle);
       model.addAttribute("hechosPaginados", hechosPaginados);
@@ -66,6 +84,9 @@ public class ColeccionController {
       model.addAttribute("currentPage", page);
       model.addAttribute("pageSize", size);
       model.addAttribute("hasMore", hechosPaginados.size() == size);
+      model.addAttribute("currentUserId", currentUserId);
+      model.addAttribute("isAdmin", isAdmin);
+      model.addAttribute("solicitudEliminacion", new SolicitudEliminacionDTO());
 
       return "colecciones/viewer";
     } catch (NotFoundException ex) {
@@ -79,13 +100,16 @@ public class ColeccionController {
       @PathVariable String handle,
       @ModelAttribute("filtros") HechoFiltroDTO filtros,
       Model model,
-      RedirectAttributes redirectAttributes
+      RedirectAttributes redirectAttributes,
+      Authentication auth
   ) {
     return mostrarHechos(
         handle,
         filtros,
         model,
-        redirectAttributes);
+        redirectAttributes,
+        auth
+    );
   }
 
   @GetMapping("/nueva")

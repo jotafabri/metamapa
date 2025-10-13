@@ -1,4 +1,5 @@
 <div th:fragment="hechos" class="hechos-column">
+
     <div class="results-header">
         <h3 class="results-title">Resultados</h3>
         <span class="results-count">Página <span th:text="${currentPage + 1}">1</span></span>
@@ -68,7 +69,10 @@
                             </svg>
                         </button>
                         <div class="menu-dropdown" th:id="'menu-' + ${hecho.id}">
-                            <button class="menu-item" th:onclick="'solicitarEliminacion(' + ${hecho.id} + ')'">
+                            <!-- Solicitar eliminación: solo si NO es ADMIN -->
+                            <button th:if="${!isAdmin}"
+                                    class="menu-item"
+                                    th:onclick="'solicitarEliminacion(' + ${hecho.id} + ')'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"/>
@@ -77,7 +81,11 @@
                                 </svg>
                                 Solicitar eliminación
                             </button>
-                            <button class="menu-item" th:onclick="'editarHecho(' + ${hecho.id} + ')'">
+
+                            <!-- Editar: si es ADMIN o si es el contribuyente -->
+                            <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id)}"
+                                    class="menu-item"
+                                    th:onclick="'editarHecho(' + ${hecho.id} + ')'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -85,7 +93,11 @@
                                 </svg>
                                 Editar
                             </button>
-                            <button class="menu-item danger" th:onclick="'eliminarHecho(' + ${hecho.id} + ')'">
+
+                            <!-- Eliminar: solo ADMIN -->
+                            <button th:if="${isAdmin}"
+                                    class="menu-item danger"
+                                    th:onclick="'eliminarHecho(' + ${hecho.id} + ')'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"/>
