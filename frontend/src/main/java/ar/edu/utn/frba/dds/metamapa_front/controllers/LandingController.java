@@ -15,12 +15,12 @@ public class LandingController {
   @GetMapping("/404")
   public String notFound(Model model) {
     model.addAttribute("titulo", "No encontrado");
-    return "404";
+    return "error/404";
   }
 
   @GetMapping("/403")
   public String forbidden(Model model) {
     model.addAttribute("titulo", "Acceso denegado");
-    return "403";
+    return "error/403";
   }
 }

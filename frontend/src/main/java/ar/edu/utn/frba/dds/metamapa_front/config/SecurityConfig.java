@@ -30,7 +30,7 @@ public class SecurityConfig {
             .ignoringRequestMatchers("/hechos/**")
         )
         .authorizeHttpRequests(auth -> auth
-//            .requestMatchers().permitAll()
+                .requestMatchers("/admin/login").permitAll()
                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                 .anyRequest().permitAll()
         )
