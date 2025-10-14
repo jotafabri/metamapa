@@ -25,3 +25,14 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 # Subirlo al repo como "application.properties.example" con valores genericos
 # para no subir valores sensibles
+
+# Ubicación física del filesystem
+#upload.path=/var/app/uploads
+upload.path=${user.home}/uploads
+# o para desarrollo: upload.path=${user.home}/uploads
+
+# Límites de carga
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=25MB
+
+#logging.level.root=DEBUG
