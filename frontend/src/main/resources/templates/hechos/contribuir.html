@@ -20,7 +20,10 @@
                 </div>
 
                 <div class="formulario-contenido">
-                    <form th:action="@{/hechos/crear}" th:object="${hecho}" method="post" enctype="multipart/form-data"
+                    <form th:action="@{/hechos/crear}"
+                          th:object="${hecho}"
+                          method="post"
+                          enctype="multipart/form-data"
                           id="formulario-contribucion"
                           class="formulario-principal">
                         <div class="seccion-paso activa" data-paso="1">
@@ -29,7 +32,8 @@
                                 <div class="field-group">
                                     <label for="titulo" class="field-label">Título del Hecho *</label>
                                     <input type="text" id="titulo" name="titulo" class="field-input"
-                                           maxlength="100" required autofocus placeholder="Ej: Incendio en zona industrial"
+                                           maxlength="100" required autofocus
+                                           placeholder="Ej: Incendio en zona industrial"
                                            th:field="*{titulo}">
                                     <p class="ayuda-campo">Máximo 100 caracteres</p>
                                 </div>
@@ -107,9 +111,9 @@
                             <div class="campos-formulario">
 
                                 <div class="field-group">
-                                    <label for="multimedia" class="field-label">Multimedia (Opcional)</label>
-                                    <input type="file" id="multimedia" name="multimedia" class="entrada-archivo"
-                                           multiple th:field="*{multimedia}">
+                                    <label for="archivos" class="field-label">Multimedia (Opcional)</label>
+                                    <input type="file" id="archivos" name="archivos" class="entrada-archivo"
+                                           multiple accept="image/*,.mp4,.webm">
                                     <p class="ayuda-campo">Puedes subir imágenes o videos</p>
                                 </div>
 

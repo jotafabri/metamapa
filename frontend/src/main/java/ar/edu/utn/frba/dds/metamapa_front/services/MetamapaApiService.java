@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa_front.services;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +16,21 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.UsuarioDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -167,11 +178,65 @@ public class MetamapaApiService {
     return response;
   }
 
-  public HechoDTO crearHecho(HechoDTO hechoDTO) {
-    HechoDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+  public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
+    if (archivos == null || archivos.isEmpty()) {
+      return crearHechoSinArchivos(hechoDTO);
+    }
+    return crearHechoConArchivos(hechoDTO, archivos);
+  }
+
+  private HechoDTO crearHechoSinArchivos(HechoDTO hechoDTO) {
+    HechoDTO response = webApiCallerService.postPublic(
+        metamapaServiceUrl + "/hechos",
+        hechoDTO,
+        HechoDTO.class
+    );
     if (response == null) {
       throw new RuntimeException("Error al crear hecho en el servicio externo");
     }
+    return response;
+  }
+
+  private HechoDTO crearHechoConArchivos(HechoDTO hechoDTO, List<MultipartFile> archivos) {
+    MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
+
+    // Parte JSON - asegurarse que se serialice correctamente
+    HttpHeaders jsonHeaders = new HttpHeaders();
+    jsonHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      mapper.registerModule(new JavaTimeModule());
+      String hechoJson = mapper.writeValueAsString(hechoDTO);
+      body.add("hecho", new HttpEntity<>(hechoJson, jsonHeaders));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException("Error serializando HechoDTO", e);
+    }
+
+    // Archivos
+    archivos.stream()
+        .filter(archivo -> !archivo.isEmpty())
+        .forEach(archivo -> {
+          try {
+            HttpHeaders fileHeaders = new HttpHeaders();
+            fileHeaders.setContentDispositionFormData("archivos", archivo.getOriginalFilename());
+            fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            body.add("archivos", new HttpEntity<>(archivo.getBytes(), fileHeaders));
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+        });
+
+    HechoDTO response = webApiCallerService.postPublicMultipart(
+        metamapaServiceUrl + "/hechos",
+        body,
+        HechoDTO.class
+    );
+
+    if (response == null) {
+      throw new RuntimeException("Error al crear hecho en el servicio externo");
+    }
+
     return response;
   }
 

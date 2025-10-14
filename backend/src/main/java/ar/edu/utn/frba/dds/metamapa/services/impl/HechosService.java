@@ -6,6 +6,8 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class HechosService implements IHechosService {
   private final Estado estadoPorDefecto;
   private final Long limiteDiasEdicion;
+  private final FuenteDinamica fuenteDinamica;
 
   @Autowired
   private IHechosRepository hechosRepository;
@@ -27,6 +30,7 @@ public class HechosService implements IHechosService {
   ) {
     this.estadoPorDefecto = Estado.valueOf(estadoPorDefectoStr);
     this.limiteDiasEdicion = limiteDiasEdicion;
+    this.fuenteDinamica = new FuenteDinamica();
   }
 
   public Hecho crearHecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento) {
@@ -39,6 +43,8 @@ public class HechosService implements IHechosService {
         .fechaAcontecimiento(fechaAcontecimiento)
         .estado(this.estadoPorDefecto)
         .limiteDiasEdicion(this.limiteDiasEdicion)
+        .origen(Origen.CONTRIBUYENTE)
+        .fuente(fuenteDinamica)
         .build();
   }
 
@@ -60,7 +66,7 @@ public class HechosService implements IHechosService {
         hechoDTO.getCategoria(),
         hechoDTO.getLatitud(),
         hechoDTO.getLongitud(),
-        hechoDTO.getFechaAcontecimiento()
+        hechoDTO.getFechaAcontecimiento().atStartOfDay()
     );
     Hecho hechoGuardado = this.hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
@@ -83,7 +89,7 @@ public class HechosService implements IHechosService {
     hecho.setCategoria(hechoDTO.getCategoria());
     hecho.setLatitud(hechoDTO.getLatitud());
     hecho.setLongitud(hechoDTO.getLongitud());
-    hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento());
+    hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
 
     Hecho hechoActualizado = this.hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoActualizado);

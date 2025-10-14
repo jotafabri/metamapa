@@ -31,7 +31,8 @@ public class SolicitudesController {
   ) {
     try {
       solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-      return "redirect:/";
+      return "colecciones/viewer";
+      //return "redirect:/";
     } catch (Exception e) {
       log.error("Error al crear solicitud de eliminación", e);
       return "redirect:/";

@@ -1,10 +1,10 @@
 package ar.edu.utn.frba.dds.metamapa_front.controllers;
 
+import java.util.List;
+
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
-import ar.edu.utn.frba.dds.metamapa_front.services.SolicitudesService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -48,13 +50,15 @@ public class HechosController {
   }
 
   @PostMapping("/crear")
-  public String crearHecho(@ModelAttribute("hecho") HechoDTO hechoDTO,
-                           BindingResult bindingResult,
-                           Model model,
-                           RedirectAttributes redirectAttributes) {
+  public String crearHecho(
+      @ModelAttribute("hecho") HechoDTO hechoDTO,
+      @RequestParam(required = false) List<MultipartFile> archivos,
+      BindingResult bindingResult,
+      Model model,
+      RedirectAttributes redirectAttributes) {
 
     try {
-      HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO);
+      hechosService.crearHecho(hechoDTO, archivos);
       return "redirect:/colecciones/colecciones";
     } catch (Exception e) {
       log.error("Error al crear nuevo hecho", e);

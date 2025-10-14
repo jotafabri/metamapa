@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class HechoDTO {
   private String categoria; //
   private Double latitud; //
   private Double longitud; //
-  private LocalDateTime fechaAcontecimiento; //
+  private LocalDate fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
 
   private List<String> multimedia;
@@ -30,7 +31,7 @@ public class HechoDTO {
     dto.setCategoria(hecho.getCategoria());
     dto.setLatitud(hecho.getLatitud());
     dto.setLongitud(hecho.getLongitud());
-    dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+    dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento().toLocalDate());
     dto.setFechaCarga(hecho.getFechaCarga());
     dto.setMultimedia(hecho.getMultimedia());
 
@@ -48,7 +49,7 @@ public class HechoDTO {
         .categoria(this.categoria)
         .latitud(this.latitud)
         .longitud(this.longitud)
-        .fechaAcontecimiento(this.fechaAcontecimiento)
+        .fechaAcontecimiento(this.fechaAcontecimiento.atStartOfDay())
         .fechaCarga(this.fechaCarga)
         .build();
   }
