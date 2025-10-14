@@ -121,6 +121,10 @@ public class Hecho extends Persistente {
     this.multimedia.add(path);
   }
 
+  public void agregarTodaMultimedia(List<String> paths) {
+    this.multimedia.addAll(paths);
+  }
+
   public void actualizarHecho(Hecho hecho) {
     if (!esEditable()) {
       throw new IllegalStateException("El hecho no es editable.");

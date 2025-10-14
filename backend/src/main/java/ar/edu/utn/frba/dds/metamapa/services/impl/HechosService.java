@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
@@ -9,6 +10,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,27 @@ import org.springframework.stereotype.Service;
 public class HechosService implements IHechosService {
   private final Estado estadoPorDefecto;
   private final Long limiteDiasEdicion;
-  private final FuenteDinamica fuenteDinamica;
+  private FuenteDinamica fuenteDinamica;
 
   @Autowired
   private IHechosRepository hechosRepository;
+
+  @Autowired
+  private IFuentesRepository fuentesRepository;
+
+  private FuenteDinamica getFuenteDinamica() {
+    // Buscamos la fuente dinámica
+    if (this.fuenteDinamica == null) {
+      Optional<FuenteDinamica> fuente = fuentesRepository.findFirstBy();
+      if (fuente.isPresent()) {
+        this.fuenteDinamica = fuente.get();
+      } else {
+        this.fuenteDinamica = new FuenteDinamica();
+        fuentesRepository.save(this.fuenteDinamica);
+      }
+    }
+    return this.fuenteDinamica;
+  }
 
   public HechosService(
       @Value("${hecho.estado.por.defecto}") String estadoPorDefectoStr,
@@ -30,7 +49,7 @@ public class HechosService implements IHechosService {
   ) {
     this.estadoPorDefecto = Estado.valueOf(estadoPorDefectoStr);
     this.limiteDiasEdicion = limiteDiasEdicion;
-    this.fuenteDinamica = new FuenteDinamica();
+
   }
 
   public Hecho crearHecho(String titulo, String descripcion, String categoria, Double latitud, Double longitud, LocalDateTime fechaAcontecimiento) {
@@ -41,10 +60,10 @@ public class HechosService implements IHechosService {
         .latitud(latitud)
         .longitud(longitud)
         .fechaAcontecimiento(fechaAcontecimiento)
-        .estado(this.estadoPorDefecto)
-        .limiteDiasEdicion(this.limiteDiasEdicion)
+        .estado(estadoPorDefecto)
+        .limiteDiasEdicion(limiteDiasEdicion)
         .origen(Origen.CONTRIBUYENTE)
-        .fuente(fuenteDinamica)
+        .fuente(getFuenteDinamica())
         .build();
   }
 
@@ -68,6 +87,9 @@ public class HechosService implements IHechosService {
         hechoDTO.getLongitud(),
         hechoDTO.getFechaAcontecimiento().atStartOfDay()
     );
+    if (hechoDTO.getMultimedia() != null || !hechoDTO.getMultimedia().isEmpty()) {
+      hecho.agregarTodaMultimedia(hechoDTO.getMultimedia());
+    }
     Hecho hechoGuardado = this.hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
   }

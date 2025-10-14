@@ -11,6 +11,7 @@ import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ColeccionController {
   private static final Logger log = LoggerFactory.getLogger(ColeccionController.class);
   private final ColeccionService coleccionService;
+
+  @Value("${colecciones.service.url}")
+  private String backendUrl;
 
   @GetMapping
 //  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
@@ -87,6 +91,7 @@ public class ColeccionController {
       model.addAttribute("currentUserId", currentUserId);
       model.addAttribute("isAdmin", isAdmin);
       model.addAttribute("solicitudEliminacion", new SolicitudEliminacionDTO());
+      model.addAttribute("backendUrl", backendUrl);
 
       return "colecciones/viewer";
     } catch (NotFoundException ex) {
