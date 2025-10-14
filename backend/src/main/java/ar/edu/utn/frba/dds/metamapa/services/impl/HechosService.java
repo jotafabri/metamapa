@@ -87,7 +87,7 @@ public class HechosService implements IHechosService {
         hechoDTO.getLongitud(),
         hechoDTO.getFechaAcontecimiento().atStartOfDay()
     );
-    if (hechoDTO.getMultimedia() != null || !hechoDTO.getMultimedia().isEmpty()) {
+    if (hechoDTO.getMultimedia() != null && !hechoDTO.getMultimedia().isEmpty()) {
       hecho.agregarTodaMultimedia(hechoDTO.getMultimedia());
     }
     Hecho hechoGuardado = this.hechosRepository.save(hecho);

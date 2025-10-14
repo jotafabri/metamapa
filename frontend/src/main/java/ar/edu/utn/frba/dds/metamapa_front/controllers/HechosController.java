@@ -59,7 +59,7 @@ public class HechosController {
 
     try {
       hechosService.crearHecho(hechoDTO, archivos);
-      return "redirect:/colecciones/colecciones";
+      return "redirect:/colecciones";
     } catch (Exception e) {
       log.error("Error al crear nuevo hecho", e);
       model.addAttribute("titulo", "Contribuir");
