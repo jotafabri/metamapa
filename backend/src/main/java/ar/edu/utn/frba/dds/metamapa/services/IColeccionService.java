@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
@@ -17,11 +18,11 @@ public interface IColeccionService {
 
   List<String> getCategoriasByHandle(String handle);
 
-  void crearDesdeDTO(ColeccionDTO coleccionDTO);
+  ColeccionDTO crearDesdeDTO(ColeccionDTO coleccionDTO);
 
-  ColeccionDTO mostrarColeccion(String handle);
+  Optional<ColeccionDTO> mostrarColeccion(String handle);
 
-  void actualizarColeccion(String handle, ColeccionDTO nuevaColeccionDTO);
+  ColeccionDTO actualizarColeccion(String handle, ColeccionDTO nuevaColeccionDTO);
 
   void eliminarColeccion(String handle);
 

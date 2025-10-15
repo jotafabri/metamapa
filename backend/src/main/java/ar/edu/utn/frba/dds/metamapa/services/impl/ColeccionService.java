@@ -1,10 +1,13 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
@@ -33,7 +36,8 @@ public class ColeccionService implements IColeccionService {
   public List<HechoDTO> getHechosByHandle(String handle,
                                           HechoFiltroDTO filtros
   ) {
-    return this.coleccionesRepository.findColeccionByHandle(handle)
+    Coleccion coleccion = intentarRecuperarColeccion(handle);
+    return coleccionesRepository.findColeccionByHandle(coleccion.getHandle())
         .navegar(filtros.getList(), filtros.getCurado())
         .stream()
         .filter(h -> h.getEstado().equals(Estado.ACEPTADA))
@@ -45,7 +49,8 @@ public class ColeccionService implements IColeccionService {
   @Override
   public List<HechoDTO> getHechosByHandleAdmin(String handle,
                                                HechoFiltroDTO filtros) {
-    return coleccionesRepository.findColeccionByHandle(handle)
+    Coleccion coleccion = intentarRecuperarColeccion(handle);
+    return coleccionesRepository.findColeccionByHandle(coleccion.getHandle())
         .navegar(filtros.getList(), false)
         .stream()
         .map(HechoDTO::fromHecho)
@@ -53,47 +58,64 @@ public class ColeccionService implements IColeccionService {
   }
 
   public List<String> getCategoriasByHandle(String handle) {
-    return coleccionesRepository.findDistinctCategoriasByHandle(handle);
+    Coleccion coleccion = intentarRecuperarColeccion(handle);
+    return coleccionesRepository.findDistinctCategoriasByHandle(coleccion.getHandle());
   }
 
   //ADMIN:Operacion (C)RUD
   @Override
-  public void crearDesdeDTO(ColeccionDTO coleccionDTO) {
+  public ColeccionDTO crearDesdeDTO(ColeccionDTO coleccionDTO) {
     Coleccion coleccion = new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion());
     coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
     this.coleccionesRepository.save(coleccion);
+    return ColeccionDTO.fromColeccion(coleccion);
   }
 
   //ADMIN:Operacion C(R)UD
   @Override
-  public ColeccionDTO mostrarColeccion(String handle) {
-    var coleccion = this.coleccionesRepository.findColeccionByHandle(handle);
-    return ColeccionDTO.fromColeccion(coleccion);
+  public Optional<ColeccionDTO> mostrarColeccion(String handle) {
+    Coleccion coleccion = intentarRecuperarColeccion(handle);
+    return Optional.of(ColeccionDTO.fromColeccion(coleccion));
   }
 
   //ADMIN:Operacion CR(U)D
   @Override
-  public void actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    var coleccion = this.coleccionesRepository.findColeccionByHandle(handle);
+  public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
+    Coleccion coleccion = intentarRecuperarColeccion(handle);
+
     if (coleccionDTO.getTitulo() != null) {
       coleccion.setTitulo(coleccionDTO.getTitulo());
     }
+
     if (coleccionDTO.getDescripcion() != null) {
       coleccion.setDescripcion(coleccionDTO.getDescripcion());
     }
+
     if (coleccionDTO.getAlgoritmo() != null) {
-      var nombre = coleccionDTO.getAlgoritmo();
+      String nombre = coleccionDTO.getAlgoritmo();
       TipoAlgoritmo tipo = TipoAlgoritmo.valueOf(nombre.toUpperCase());
-      var algoritmo = tipo.getConsenso();
+      EstrategiaConsenso algoritmo = tipo.getConsenso();
       coleccion.setAlgoritmoDeConsenso(algoritmo);
     }
-    this.coleccionesRepository.save(coleccion);
+
+    coleccionesRepository.save(coleccion);
+
+    return ColeccionDTO.fromColeccion(coleccion);
   }
 
   //ADMIN:Operacion CRU(D)
   @Override
   public void eliminarColeccion(String handle) {
-    this.coleccionesRepository.deleteColeccionByHandle(handle);
+    Coleccion coleccion = intentarRecuperarColeccion(handle);
+    coleccionesRepository.deleteColeccionByHandle(coleccion.getHandle());
+  }
+
+  private Coleccion intentarRecuperarColeccion(String handle) {
+    Coleccion coleccion = coleccionesRepository.findColeccionByHandle(handle.trim());
+    if (coleccion == null) {
+      throw new NotFoundException("Coleccion", handle);
+    }
+    return coleccion;
   }
 
   private String generarHandleUnico(String baseTitulo) {
