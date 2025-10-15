@@ -10,10 +10,10 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.Rol;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.UsuarioDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -60,7 +60,7 @@ public class MetamapaApiService {
       // Llamamos alll nuevo endpoint /api/auth/login
       Map<String, Object> response = webClient
           .post()
-          .uri(metamapaServiceUrl + "/api/auth/login")
+          .uri(metamapaServiceUrl + "/auth/login")
           .bodyValue(Map.of(
               "email", username,  // Usamos email en lugar de username
               "password", password
@@ -98,7 +98,7 @@ public class MetamapaApiService {
       // Llamar al nuevo endpoint /api/auth/user con el email
       Map<String, Object> response = webClient
           .post()
-          .uri(metamapaServiceUrl + "/api/auth/user")
+          .uri(metamapaServiceUrl + "/auth/user")
           .bodyValue(Map.of("email", email))
           .retrieve()
           .bodyToMono(Map.class)
@@ -260,8 +260,8 @@ public class MetamapaApiService {
     webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null);
   }
 
-  public void crearUsuario(UsuarioDTO usuarioDTO) {
-    webApiCallerService.postPublic(metamapaServiceUrl + "/api/auth/usuarios", usuarioDTO, UsuarioDTO.class);
+  public void crearUsuario(RegistroRequest registroRequest) {
+    webApiCallerService.postPublic(metamapaServiceUrl + "/auth/usuarios", registroRequest, RegistroRequest.class);
   }
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {

@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +25,7 @@ import lombok.Setter;
 public class Contribuyente extends Persistente {
 
   @OneToOne
-  @JoinColumn(name = "usuario_id")
+  @JoinColumn(name = "usuario_id", nullable = false)
   private Usuario usuario;
 
   @Column(name = "nombre", nullable = false)
