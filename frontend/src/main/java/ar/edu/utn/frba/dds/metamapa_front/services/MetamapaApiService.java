@@ -10,6 +10,7 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.LoginRequest;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.Rol;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
@@ -44,11 +45,7 @@ public class MetamapaApiService {
   private final String metamapaServiceUrl;
 
   @Autowired
-  public MetamapaApiService(
-      WebApiCallerService webApiCallerService,
-      @Value("${auth.service.url}") String authServiceUrl,
-      @Value("${colecciones.service.url}") String metamapaServiceUrl
-  ) {
+  public MetamapaApiService(WebApiCallerService webApiCallerService, @Value("${auth.service.url}") String authServiceUrl, @Value("${colecciones.service.url}") String metamapaServiceUrl) {
     this.webClient = WebClient.builder().build();
     this.webApiCallerService = webApiCallerService;
     this.authServiceUrl = authServiceUrl;
@@ -58,16 +55,8 @@ public class MetamapaApiService {
   public AuthResponseDTO login(String username, String password) {
     try {
       // Llamamos alll nuevo endpoint /api/auth/login
-      Map<String, Object> response = webClient
-          .post()
-          .uri(metamapaServiceUrl + "/auth/login")
-          .bodyValue(Map.of(
-              "email", username,  // Usamos email en lugar de username
-              "password", password
-          ))
-          .retrieve()
-          .bodyToMono(Map.class)
-          .block();
+      Map<String, Object> response = webClient.post().uri(metamapaServiceUrl + "/auth/login").bodyValue(Map.of("email", username,  // Usamos email en lugar de username
+          "password", password)).retrieve().bodyToMono(Map.class).block();
 
       if (response == null) {
         return null;
@@ -96,13 +85,7 @@ public class MetamapaApiService {
   public RolesPermisosDTO getRolesPermisos(String email) {
     try {
       // Llamar al nuevo endpoint /api/auth/user con el email
-      Map<String, Object> response = webClient
-          .post()
-          .uri(metamapaServiceUrl + "/auth/user")
-          .bodyValue(Map.of("email", email))
-          .retrieve()
-          .bodyToMono(Map.class)
-          .block();
+      Map<String, Object> response = webClient.post().uri(metamapaServiceUrl + "/auth/user").bodyValue(Map.of("email", email)).retrieve().bodyToMono(Map.class).block();
 
       if (response == null) {
         throw new RuntimeException("Usuario no encontrado");
@@ -125,10 +108,7 @@ public class MetamapaApiService {
   }
 
   public List<ColeccionDTO> getAllColecciones() {
-    List<ColeccionDTO> response = webApiCallerService.getListPublic(
-        metamapaServiceUrl + "/colecciones",
-        ColeccionDTO.class
-    );
+    List<ColeccionDTO> response = webApiCallerService.getListPublic(metamapaServiceUrl + "/colecciones", ColeccionDTO.class);
     return response != null ? response : List.of();
   }
 
@@ -186,11 +166,7 @@ public class MetamapaApiService {
   }
 
   private HechoDTO crearHechoSinArchivos(HechoDTO hechoDTO) {
-    HechoDTO response = webApiCallerService.postPublic(
-        metamapaServiceUrl + "/hechos",
-        hechoDTO,
-        HechoDTO.class
-    );
+    HechoDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
     if (response == null) {
       throw new RuntimeException("Error al crear hecho en el servicio externo");
     }
@@ -214,24 +190,18 @@ public class MetamapaApiService {
     }
 
     // Archivos
-    archivos.stream()
-        .filter(archivo -> !archivo.isEmpty())
-        .forEach(archivo -> {
-          try {
-            HttpHeaders fileHeaders = new HttpHeaders();
-            fileHeaders.setContentDispositionFormData("archivos", archivo.getOriginalFilename());
-            fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            body.add("archivos", new HttpEntity<>(archivo.getBytes(), fileHeaders));
-          } catch (IOException e) {
-            throw new UncheckedIOException(e);
-          }
-        });
+    archivos.stream().filter(archivo -> !archivo.isEmpty()).forEach(archivo -> {
+      try {
+        HttpHeaders fileHeaders = new HttpHeaders();
+        fileHeaders.setContentDispositionFormData("archivos", archivo.getOriginalFilename());
+        fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        body.add("archivos", new HttpEntity<>(archivo.getBytes(), fileHeaders));
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    });
 
-    HechoDTO response = webApiCallerService.postPublicMultipart(
-        metamapaServiceUrl + "/hechos",
-        body,
-        HechoDTO.class
-    );
+    HechoDTO response = webApiCallerService.postPublicMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
 
     if (response == null) {
       throw new RuntimeException("Error al crear hecho en el servicio externo");
@@ -261,7 +231,15 @@ public class MetamapaApiService {
   }
 
   public void crearUsuario(RegistroRequest registroRequest) {
-    webApiCallerService.postPublic(metamapaServiceUrl + "/auth/usuarios", registroRequest, RegistroRequest.class);
+    webApiCallerService.postPublic(metamapaServiceUrl + "/auth/registro", registroRequest, RegistroRequest.class);
+  }
+
+  public AuthResponseDTO autenticar(LoginRequest loginRequest) {
+    AuthResponseDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/auth/login", loginRequest, AuthResponseDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al iniciar sesión en el servicio externo");
+    }
+    return response;
   }
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
