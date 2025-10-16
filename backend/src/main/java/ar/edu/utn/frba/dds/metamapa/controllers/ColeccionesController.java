@@ -103,13 +103,23 @@ public class ColeccionesController {
 
   //localhost:8080/
   @PostMapping("/{handle}/fuentes")
-  public void agregarFuenteAColeccion(@PathVariable String handle, @RequestParam Long idFuente) {
-    this.agregacionService.agregarFuenteAColeccion(handle, idFuente);
+  public ResponseEntity<Void> agregarFuenteAColeccion(@PathVariable String handle, @RequestParam Long idFuente) {
+    try {
+      this.agregacionService.agregarFuenteAColeccion(handle, idFuente);
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @DeleteMapping("/{handle}/fuentes/{idFuente}")
-  public void eliminarFuenteDeColeccion(@PathVariable String handle, @PathVariable Long idFuente) {
-    this.agregacionService.eliminarFuenteDeColeccion(handle, idFuente);
+  public ResponseEntity<Void> eliminarFuenteDeColeccion(@PathVariable String handle, @PathVariable Long idFuente) {
+    try {
+      this.agregacionService.eliminarFuenteDeColeccion(handle, idFuente);
+      return ResponseEntity.noContent().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   // localhost:8080/colecciones/AccidentesDeTransito/hechos?=...
@@ -159,8 +169,13 @@ public class ColeccionesController {
   }
 
   @GetMapping("/refrescar")
-  public void refrescarColeccion() {
-    agregacionService.refrescarColecciones();
+  public ResponseEntity<Object> refrescarColeccion() {
+    try {
+      agregacionService.refrescarColecciones();
+      return ResponseEntity.ok(java.util.Map.of("mensaje", "Colecciones refrescadas correctamente"));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   private List<HechoDTO> paginarHechos(List<HechoDTO> lista, Integer page, Integer size) {

@@ -10,7 +10,9 @@ import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederServiceDinamica;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,14 +37,19 @@ public class HechosController {
   private IFileStorageService fileStorageService;
 
   @GetMapping
-  public List<HechoDTO> getHechosWithParams(
+  public ResponseEntity<List<HechoDTO>> getHechosWithParams(
       @ModelAttribute HechoFiltroDTO filtros
   ) {
-    return this.hechosService.getHechosWithParams(filtros);
+    try {
+      List<HechoDTO> hechos = this.hechosService.getHechosWithParams(filtros);
+      return ResponseEntity.ok(hechos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public HechoDTO crearHecho(
+  public ResponseEntity<HechoDTO> crearHecho(
       @RequestPart("hecho") HechoDTO hechoDTO,
       @RequestPart(value = "archivos", required = false) List<MultipartFile> archivos
   ) {
@@ -51,26 +58,46 @@ public class HechosController {
         List<String> nombresGuardados = fileStorageService.guardarMultiples(archivos);
         hechoDTO.setMultimedia(nombresGuardados);
       }
-      return hechosService.crearHechoDesdeDTO(hechoDTO);
+      HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO);
+      return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
     } catch (IOException e) {
-      return null;
+      return ResponseEntity.badRequest().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
     }
   }
 
   @GetMapping("/{id}")
-  public HechoDTO getHechoById(@PathVariable Long id) {
-    return this.hechosService.getHechoById(id);
+  public ResponseEntity<HechoDTO> getHechoById(@PathVariable Long id) {
+    try {
+      HechoDTO hecho = this.hechosService.getHechoById(id);
+      if (hecho == null) {
+        return ResponseEntity.notFound().build();
+      }
+      return ResponseEntity.ok(hecho);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @PatchMapping("/{id}")
-  public HechoDTO actualizarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoDTO) {
-    return this.hechosService.actualizarHecho(id, hechoDTO);
+  public ResponseEntity<HechoDTO> actualizarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoDTO) {
+    try {
+      HechoDTO hechoActualizado = this.hechosService.actualizarHecho(id, hechoDTO);
+      return ResponseEntity.ok(hechoActualizado);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @GetMapping("/inicializar")
-  public boolean inicializarDatos() {
-    this.seederService.init();
-    //this.seederServiceDinamicas.initDinamicas();
-    return true;
+  public ResponseEntity<Object> inicializarDatos() {
+    try {
+      this.seederService.init();
+      //this.seederServiceDinamicas.initDinamicas();
+      return ResponseEntity.ok(java.util.Map.of("mensaje", "Datos inicializados correctamente"));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 }
