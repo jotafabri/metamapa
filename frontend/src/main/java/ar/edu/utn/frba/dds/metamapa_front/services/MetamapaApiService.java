@@ -54,28 +54,29 @@ public class MetamapaApiService {
 
   public AuthResponseDTO login(String username, String password) {
     try {
-      // Llamamos alll nuevo endpoint /api/auth/login
-      Map<String, Object> response = webClient.post().uri(metamapaServiceUrl + "/auth/login").bodyValue(Map.of("email", username,  // Usamos email en lugar de username
-          "password", password)).retrieve().bodyToMono(Map.class).block();
+      // Llamar al endpoint /api/auth/login que devuelve los JWT reales
+      AuthResponseDTO authResponse = webClient
+          .post()
+          .uri(metamapaServiceUrl + "/auth/login")
+          .bodyValue(Map.of(
+              "email", username,
+              "password", password
+          ))
+          .retrieve()
+          .bodyToMono(AuthResponseDTO.class)  // Deserializar directamente a AuthResponseDTO
+          .block();
 
-      if (response == null) {
+      if (authResponse == null) {
         return null;
       }
 
-      // Convertir la respuesta simple a AuthResponseDTO
-      // Como no usamos JWT, creamos tokens simples basados en el email
-      AuthResponseDTO authResponse = new AuthResponseDTO();
-      authResponse.setAccessToken("simple-token-" + username);
-      authResponse.setRefreshToken("refresh-token-" + username);
-
       return authResponse;
+
     } catch (WebClientResponseException e) {
       log.error(e.getMessage());
       if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.NOT_FOUND) {
-        // Login fallido - credenciales incorrectas
         return null;
       }
-      // Otros errores HTTP
       throw new RuntimeException("Error en el servicio de autenticación: " + e.getMessage(), e);
     } catch (Exception e) {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);

@@ -35,13 +35,15 @@ public class HechoDTO {
     dto.setCategoria(hecho.getCategoria());
     dto.setLatitud(hecho.getLatitud());
     dto.setLongitud(hecho.getLongitud());
-    dto.setPais(hecho.getUbicacion().getPais());
-    dto.setProvincia(hecho.getUbicacion().getProvincia());
-    dto.setLocalidad(hecho.getUbicacion().getLocalidad());
     dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento().toLocalDate());
     dto.setFechaCarga(hecho.getFechaCarga());
     dto.setMultimedia(hecho.getMultimedia());
 
+    if (hecho.getUbicacion() != null) {
+      dto.setPais(hecho.getUbicacion().getPais());
+      dto.setProvincia(hecho.getUbicacion().getProvincia());
+      dto.setLocalidad(hecho.getUbicacion().getLocalidad());
+    }
     if (hecho.getUsuario() != null) {
       dto.setUsuarioId(hecho.getUsuario().getId());
     }

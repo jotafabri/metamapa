@@ -37,6 +37,7 @@ public class WebApiCallerService {
 
   /**
    * Ejecuta una llamada al API con manejo automático de refresh token
+   *
    * @param apiCall función que ejecuta la llamada al API
    * @return resultado de la llamada al API
    */
@@ -63,7 +64,7 @@ public class WebApiCallerService {
           throw new RuntimeException("Error al refrescar token y reintentar: " + refreshError.getMessage(), refreshError);
         }
       }
-      if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+      if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new NotFoundException(e.getMessage());
       }
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
@@ -146,7 +147,8 @@ public class WebApiCallerService {
             .get()
             .uri(url)
             .retrieve()
-            .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
+            .bodyToMono(new ParameterizedTypeReference<List<String>>() {
+            })
             .block();
       }
       return webClient
@@ -304,6 +306,7 @@ public class WebApiCallerService {
 
       // Actualizar tokens en sesión
       updateTokensInSession(response.getAccessToken(), response.getRefreshToken());
+
       return response;
     } catch (Exception e) {
       throw new RuntimeException("Error al refrescar token: " + e.getMessage(), e);
@@ -316,7 +319,9 @@ public class WebApiCallerService {
   private String getAccessTokenFromSession() {
     ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     HttpServletRequest request = attributes.getRequest();
-    return (String) request.getSession().getAttribute("accessToken");
+    String token = (String) request.getSession().getAttribute("accessToken");
+
+    return token;
   }
 
   /**

@@ -10,6 +10,8 @@ public interface IHechosService {
 
   HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO);
 
+  HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO, String email);
+
   HechoDTO getHechoById(Long id);
 
   HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO);

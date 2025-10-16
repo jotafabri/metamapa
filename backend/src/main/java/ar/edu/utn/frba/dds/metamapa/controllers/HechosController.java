@@ -9,11 +9,11 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IFileStorageService;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
-import ar.edu.utn.frba.dds.metamapa.services.ISeederServiceDinamica;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -57,7 +57,7 @@ public class HechosController {
     try {
       // Extraer email del usuario logeado si existe
       String emailUsuario = null;
-      var authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
       if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
         emailUsuario = authentication.getName();
       }
@@ -67,7 +67,7 @@ public class HechosController {
         hechoDTO.setMultimedia(nombresGuardados);
       }
 
-      HechoDTO hechoCreado = ((ar.edu.utn.frba.dds.metamapa.services.impl.HechosService) hechosService).crearHechoDesdeDTO(hechoDTO, emailUsuario);
+      HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO, emailUsuario);
       return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
     } catch (IOException e) {
       return ResponseEntity.badRequest().build();
@@ -106,8 +106,8 @@ public class HechosController {
       return ResponseEntity.noContent().build();
     } catch (NotFoundException e) {
       return ResponseEntity.notFound().build();
-    }  catch (Exception e) {
-        return ResponseEntity.badRequest().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
     }
   }
 
