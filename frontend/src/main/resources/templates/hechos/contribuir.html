@@ -76,18 +76,35 @@
                                                th:field="*{fechaAcontecimiento}">
                                     </div>
 
-                                    <div class="field-group">
-                                        <label for="latitud">Latitud *</label>
-                                        <input type="text" id="latitud" name="latitud" class="field-input" required
-                                               readonly
-                                               placeholder="Haz clic en el mapa" , th:field="*{latitud}">
-                                    </div>
+                                    <div class="field-row">
+                                        <div class="field-group">
+                                            <label for="latitud">Latitud *</label>
+                                            <input type="text" id="latitud" name="latitud" class="field-input" required
+                                                   readonly
+                                                   placeholder="Haz clic en el mapa" , th:field="*{latitud}">
+                                        </div>
 
+                                        <div class="field-group">
+                                            <label for="longitud">Longitud *</label>
+                                            <input type="text" id="longitud" name="longitud" class="field-input" required
+                                                   readonly
+                                                   placeholder="Haz clic en el mapa" th:field="*{longitud}">
+                                        </div>
+                                    </div>
                                     <div class="field-group">
-                                        <label for="longitud">Longitud *</label>
-                                        <input type="text" id="longitud" name="longitud" class="field-input" required
-                                               readonly
-                                               placeholder="Haz clic en el mapa" , th:field="*{longitud}">
+                                        <label for="pais">Pais</label>
+                                        <input type="text" id="pais" name="pais" class="field-input" required
+                                               readonly th:field="*{pais}">
+                                        <div class="field-group">
+                                            <label for="provincia">Estado/Provincia</label>
+                                            <input type="text" id="provincia" name="provincia" class="field-input" required
+                                                   readonly th:field="*{provincia}">
+                                        </div>
+                                        <div class="field-group">
+                                            <label for="localidad">Localidad</label>
+                                            <input type="text" id="localidad" name="localidad" class="field-input" required
+                                                   readonly th:field="*{localidad}">
+                                        </div>
                                     </div>
 
                                 </div>

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -17,6 +18,9 @@ public class HechoDTO {
   private String categoria; //
   private Double latitud; //
   private Double longitud; //
+  private String localidad;
+  private String provincia;
+  private String pais;
   private LocalDate fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
 
@@ -31,6 +35,9 @@ public class HechoDTO {
     dto.setCategoria(hecho.getCategoria());
     dto.setLatitud(hecho.getLatitud());
     dto.setLongitud(hecho.getLongitud());
+    dto.setPais(hecho.getUbicacion().getPais());
+    dto.setProvincia(hecho.getUbicacion().getProvincia());
+    dto.setLocalidad(hecho.getUbicacion().getLocalidad());
     dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento().toLocalDate());
     dto.setFechaCarga(hecho.getFechaCarga());
     dto.setMultimedia(hecho.getMultimedia());
@@ -43,12 +50,18 @@ public class HechoDTO {
   }
 
   public Hecho toHecho() {
+    Ubicacion ubicacion = Ubicacion.builder()
+        .pais(this.pais)
+        .provincia(this.provincia)
+        .localidad(this.localidad)
+        .build();
     return Hecho.builder()
         .titulo(this.titulo)
         .descripcion(this.descripcion)
         .categoria(this.categoria)
         .latitud(this.latitud)
         .longitud(this.longitud)
+        .ubicacion(ubicacion)
         .fechaAcontecimiento(this.fechaAcontecimiento.atStartOfDay())
         .fechaCarga(this.fechaCarga)
         .build();

@@ -21,6 +21,9 @@ public class HechoDTO {
   private String categoria; //
   private Double latitud; //
   private Double longitud; //
+  private String localidad;
+  private String provincia;
+  private String pais;
   private LocalDate fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
   private Long contribuyenteId;

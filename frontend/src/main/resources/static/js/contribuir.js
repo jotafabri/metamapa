@@ -103,13 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
             shadowSize: [36, 44]
         });
 
-        mapa.on('click', async function(e) {
-            const { lat, lng } = e.latlng;
+        mapa.on('click', async function (e) {
+            const {lat, lng} = e.latlng;
 
             if (marcador) {
                 marcador.setLatLng([lat, lng]);
             } else {
-                marcador = L.marker([lat, lng], { icon: customIcon }).addTo(mapa);
+                marcador = L.marker([lat, lng], {icon: customIcon}).addTo(mapa);
             }
 
             const latInput = document.getElementById('latitud');
@@ -118,21 +118,30 @@ document.addEventListener('DOMContentLoaded', () => {
             latInput.value = lat.toFixed(6);
             lngInput.value = lng.toFixed(6);
 
-            latInput.dispatchEvent(new Event('input', { bubbles: true }));
-            lngInput.dispatchEvent(new Event('input', { bubbles: true }));
+            latInput.dispatchEvent(new Event('input', {bubbles: true}));
+            lngInput.dispatchEvent(new Event('input', {bubbles: true}));
+
+            const paisInput = document.getElementById('pais');
+            const provinciaInput = document.getElementById('provincia');
+            const localidadInput = document.getElementById('localidad');
+
+            paisInput.value = '';
+            provinciaInput.value = '';
+            localidadInput.value = '';
+
+            paisInput.dispatchEvent(new Event('input', {bubbles: true}));
+            provinciaInput.dispatchEvent(new Event('input', {bubbles: true}));
+            localidadInput.dispatchEvent(new Event('input', {bubbles: true}));
 
             const address = await reverseGeocode(lat, lng);
             if (address) {
-                if (address.country_code) {
-                    const paisSelect = document.getElementById('pais');
-                    const code = address.country_code.toLowerCase();
-                    if (Array.from(paisSelect.options).some(o => o.value === code)) {
-                        paisSelect.value = code;
-                    }
-                }
-                const regionInput = document.getElementById('region');
-                regionInput.value = address.state || address.region || '';
-                regionInput.dispatchEvent(new Event('input', { bubbles: true }));
+                paisInput.value = address.country || '';
+                provinciaInput.value = address.state || address.province || '';
+                localidadInput.value = address.city || address.town || address.village || address.municipality || '';
+
+                paisInput.dispatchEvent(new Event('input', {bubbles: true}));
+                provinciaInput.dispatchEvent(new Event('input', {bubbles: true}));
+                localidadInput.dispatchEvent(new Event('input', {bubbles: true}));
             }
 
             actualizarBotonSiguiente();

@@ -11,6 +11,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
@@ -87,6 +88,14 @@ public class HechosService implements IHechosService {
         hechoDTO.getLongitud(),
         hechoDTO.getFechaAcontecimiento().atStartOfDay()
     );
+
+    Ubicacion ubicacion = Ubicacion.builder()
+        .pais(hechoDTO.getPais())
+        .provincia(hechoDTO.getProvincia())
+        .localidad(hechoDTO.getLocalidad())
+        .build();
+    hecho.setUbicacion(ubicacion);
+
     if (hechoDTO.getMultimedia() != null && !hechoDTO.getMultimedia().isEmpty()) {
       hecho.agregarTodaMultimedia(hechoDTO.getMultimedia());
     }
