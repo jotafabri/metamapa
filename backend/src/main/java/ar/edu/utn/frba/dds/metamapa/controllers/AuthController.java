@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.controllers;
 
 import java.util.Map;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.DuplicateEmailException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.LoginRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RefreshRequest;
@@ -15,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +38,8 @@ public class AuthController {
     try {
       UserDTO user = usuarioService.register(registroRequest);
       return ResponseEntity.ok(user);
+    } catch (DuplicateEmailException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
     } catch (RuntimeException e) {
       return ResponseEntity.badRequest().build();
     }

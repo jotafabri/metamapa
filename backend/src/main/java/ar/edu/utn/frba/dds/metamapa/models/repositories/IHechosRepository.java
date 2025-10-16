@@ -9,6 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
+  // Lista solo los hechos que fueron aceptados
+  @Query("SELECT h FROM Hecho h WHERE h.eliminado = FALSE AND LOWER(h.estado) = 'aceptada' ")
+  List<Hecho> findAllAceptados();
+
   // Lista solo los hechos que no fueron eliminados
   List<Hecho> findAllByEliminadoFalse();
 

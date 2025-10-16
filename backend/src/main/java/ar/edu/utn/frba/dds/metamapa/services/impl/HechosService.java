@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
@@ -69,9 +70,8 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoDTO> getHechosWithParams(HechoFiltroDTO filtros) {
-    return this.hechosRepository.findAll()
+    return this.hechosRepository.findAllAceptados()
         .stream()
-        .filter(h -> h.getEstado() == Estado.ACEPTADA) // Solo los aseptados se van a exponer
         .filter(h -> filtros.getList().stream().allMatch(c -> c.cumple(h)))
         .map(HechoDTO::fromHecho)
         .toList();
@@ -90,21 +90,19 @@ public class HechosService implements IHechosService {
     if (hechoDTO.getMultimedia() != null && !hechoDTO.getMultimedia().isEmpty()) {
       hecho.agregarTodaMultimedia(hechoDTO.getMultimedia());
     }
-    Hecho hechoGuardado = this.hechosRepository.save(hecho);
+    Hecho hechoGuardado = hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
   }
 
   @Override
   public HechoDTO getHechoById(Long id) {
-    Hecho hecho = this.hechosRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + id));
+    Hecho hecho = intentarRecuperarHecho(id);
     return HechoDTO.fromHecho(hecho);
   }
 
   @Override
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
-    Hecho hecho = this.hechosRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + id));
+    Hecho hecho = intentarRecuperarHecho(id);
 
     hecho.setTitulo(hechoDTO.getTitulo());
     hecho.setDescripcion(hechoDTO.getDescripcion());
@@ -113,40 +111,18 @@ public class HechosService implements IHechosService {
     hecho.setLongitud(hechoDTO.getLongitud());
     hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
 
-    Hecho hechoActualizado = this.hechosRepository.save(hecho);
+    Hecho hechoActualizado = hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoActualizado);
   }
 
-/*
-//dinamicos
-
   @Override
-  public List<HechoOutputDTO> buscarTodos(String categoria,
-                                                   String fecha_reporte_desde,
-                                                   String fecha_reporte_hasta,
-                                                   String fecha_acontecimiento_desde,
-                                                   String fecha_acontecimiento_hasta,
-                                                   String ubicacion
-                                             ) {
-      var criterios = new ListaDeFiltros().getListFromParams(
-              categoria,
-              fecha_reporte_desde,
-              fecha_reporte_hasta,
-              fecha_acontecimiento_desde,
-              fecha_acontecimiento_hasta,
-              ubicacion,
-              null,
-              null
-      );
-
-      return hechosRepository.findAll().stream()
-              .filter(h -> h.getEstado() == Estado.ACEPTADA) // Solo los aseptados se van a exponer
-              .filter(h -> criterios.stream().allMatch(c -> c.cumple(h)))
-              .map(HechoOutputDTO::fromHechoDinamico)
-              .toList();
+  public void marcarEliminado(Long id) {
+    Hecho hecho = intentarRecuperarHecho(id);
+    hecho.eliminar();
+    hechosRepository.save(hecho);
   }
 
-*/
-
-
+  private Hecho intentarRecuperarHecho(Long id) {
+    return hechosRepository.findById(id).orElseThrow(() -> new NotFoundException("Hecho", id.toString()));
+  }
 }

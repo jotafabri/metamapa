@@ -14,6 +14,8 @@ public interface IHechosService {
 
   HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO);
 
+  void marcarEliminado(Long id);
+
   /*public List<HechoOutputDTO> buscarTodos(
           String categoria,
           String fecha_reporte_desde,

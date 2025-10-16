@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.DuplicateEmailException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.UserDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
@@ -33,7 +34,7 @@ public class UsuarioService implements IUsuarioService {
   @Override
   public UserDTO register(RegistroRequest registroRequest) {
     if (usuarioRepository.existsByEmail(registroRequest.getEmail())) {
-      throw new RuntimeException("El email ya está registrado");
+      throw new DuplicateEmailException(registroRequest.getEmail());
     }
 
     Usuario usuario = Usuario.builder()
