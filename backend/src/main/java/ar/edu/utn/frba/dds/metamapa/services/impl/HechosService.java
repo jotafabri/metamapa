@@ -7,6 +7,7 @@ import java.util.Optional;
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
@@ -14,6 +15,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,9 @@ public class HechosService implements IHechosService {
 
   @Autowired
   private IFuentesRepository fuentesRepository;
+
+  @Autowired
+  private IUsuarioRepository usuarioRepository;
 
   private FuenteDinamica getFuenteDinamica() {
     // Buscamos la fuente dinámica
@@ -80,6 +85,10 @@ public class HechosService implements IHechosService {
 
   @Override
   public HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO) {
+    return crearHechoDesdeDTO(hechoDTO, null);
+  }
+
+  public HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO, String emailUsuario) {
     Hecho hecho = this.crearHecho(
         hechoDTO.getTitulo(),
         hechoDTO.getDescripcion(),
@@ -99,6 +108,13 @@ public class HechosService implements IHechosService {
     if (hechoDTO.getMultimedia() != null && !hechoDTO.getMultimedia().isEmpty()) {
       hecho.agregarTodaMultimedia(hechoDTO.getMultimedia());
     }
+
+    // Buscar y asignar usuario si está logeado
+    if (emailUsuario != null && !emailUsuario.isEmpty()) {
+      Optional<Usuario> usuario = usuarioRepository.findByEmail(emailUsuario);
+      usuario.ifPresent(hecho::setUsuario);
+    }
+
     Hecho hechoGuardado = hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
   }

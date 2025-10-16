@@ -166,7 +166,20 @@ public class MetamapaApiService {
   }
 
   private HechoDTO crearHechoSinArchivos(HechoDTO hechoDTO) {
-    HechoDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+    // Verificar si hay sesión activa (usuario logeado)
+    HechoDTO response;
+    try {
+      // Intentar con autenticación (sesión activa)
+      response = webApiCallerService.post(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+    } catch (RuntimeException e) {
+      // Si falla porque no hay token, usar versión pública (anónimo)
+      if (e.getMessage().contains("No hay token de acceso")) {
+        response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+      } else {
+        throw e;
+      }
+    }
+
     if (response == null) {
       throw new RuntimeException("Error al crear hecho en el servicio externo");
     }
@@ -201,7 +214,19 @@ public class MetamapaApiService {
       }
     });
 
-    HechoDTO response = webApiCallerService.postPublicMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
+    // Verificar si hay sesión activa (usuario logeado)
+    HechoDTO response;
+    try {
+      // Intentar con autenticación (sesión activa)
+      response = webApiCallerService.postMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
+    } catch (RuntimeException e) {
+      // Si falla porque no hay token, usar versión pública (anónimo)
+      if (e.getMessage().contains("No hay token de acceso")) {
+        response = webApiCallerService.postPublicMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
+      } else {
+        throw e;
+      }
+    }
 
     if (response == null) {
       throw new RuntimeException("Error al crear hecho en el servicio externo");

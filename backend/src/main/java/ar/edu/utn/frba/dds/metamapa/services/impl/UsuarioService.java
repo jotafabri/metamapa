@@ -5,8 +5,6 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.UserDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Rol;
-import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
-import ar.edu.utn.frba.dds.metamapa.models.repositories.IContribuyenteRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IUsuarioService;
 import ar.edu.utn.frba.dds.metamapa.utils.JwtUtil;
@@ -21,9 +19,6 @@ public class UsuarioService implements IUsuarioService {
 
   @Autowired
   private IUsuarioRepository usuarioRepository;
-
-  @Autowired
-  private IContribuyenteRepository contribuyenteRepository;
 
   private final BCryptPasswordEncoder passwordEncoder;
 
@@ -41,16 +36,11 @@ public class UsuarioService implements IUsuarioService {
         .email(registroRequest.getEmail())
         .password(passwordEncoder.encode(registroRequest.getPassword()))
         .rol(Rol.USER)
+        .nombre(registroRequest.getNombre())
+        .apellido(registroRequest.getApellido())
+        .fechaNacimiento(registroRequest.getFechaNacimiento())
         .build();
     usuarioRepository.save(usuario);
-
-    Contribuyente contribuyente = new Contribuyente(
-        registroRequest.getNombre(),
-        registroRequest.getApellido(),
-        registroRequest.getFechaNacimiento(),
-        false);
-    contribuyente.setUsuario(usuario);
-    contribuyenteRepository.save(contribuyente);
 
     return UserDTO.fromUsuario(usuario);
   }

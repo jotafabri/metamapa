@@ -55,11 +55,19 @@ public class HechosController {
       @RequestPart(value = "archivos", required = false) List<MultipartFile> archivos
   ) {
     try {
+      // Extraer email del usuario logeado si existe
+      String emailUsuario = null;
+      var authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+        emailUsuario = authentication.getName();
+      }
+
       if (archivos != null && !archivos.isEmpty()) {
         List<String> nombresGuardados = fileStorageService.guardarMultiples(archivos);
         hechoDTO.setMultimedia(nombresGuardados);
       }
-      HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO);
+
+      HechoDTO hechoCreado = ((ar.edu.utn.frba.dds.metamapa.services.impl.HechosService) hechosService).crearHechoDesdeDTO(hechoDTO, emailUsuario);
       return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
     } catch (IOException e) {
       return ResponseEntity.badRequest().build();

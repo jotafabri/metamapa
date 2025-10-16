@@ -194,6 +194,30 @@ public class WebApiCallerService {
     }
   }
 
+  /**
+   * Ejecuta una llamada HTTP POST multipart con autenticación
+   */
+  public <T> T postMultipart(String url, MultiValueMap<String, HttpEntity<?>> body, Class<T> responseType) {
+    return executeWithTokenRetry(accessToken ->
+        webClient
+            .post()
+            .uri(url)
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(body))
+            .retrieve()
+            .onStatus(HttpStatusCode::is4xxClientError, response ->
+                response.bodyToMono(String.class)
+                    .flatMap(errorBody -> Mono.error(new RuntimeException("Error 4xx: " + errorBody)))
+            )
+            .bodyToMono(responseType)
+            .block()
+    );
+  }
+
+  /**
+   * Ejecuta una llamada HTTP POST multipart pública (sin autenticación)
+   */
   public <T> T postPublicMultipart(String url, MultiValueMap<String, HttpEntity<?>> body, Class<T> responseType) {
     try {
       return webClient

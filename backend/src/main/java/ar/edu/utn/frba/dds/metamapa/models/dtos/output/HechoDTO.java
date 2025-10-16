@@ -25,7 +25,7 @@ public class HechoDTO {
   private LocalDateTime fechaCarga; //
 
   private List<String> multimedia;
-  private Long contribuyenteId;
+  private Long usuarioId;
 
   public static HechoDTO fromHecho(Hecho hecho) {
     var dto = new HechoDTO();
@@ -42,8 +42,8 @@ public class HechoDTO {
     dto.setFechaCarga(hecho.getFechaCarga());
     dto.setMultimedia(hecho.getMultimedia());
 
-    if (hecho.getContribuyente() != null) {
-      dto.setContribuyenteId(hecho.getContribuyente().getId());
+    if (hecho.getUsuario() != null) {
+      dto.setUsuarioId(hecho.getUsuario().getId());
     }
 
     return dto;

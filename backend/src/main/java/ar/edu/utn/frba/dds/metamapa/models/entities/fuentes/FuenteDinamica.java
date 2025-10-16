@@ -2,16 +2,11 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Contribuyente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 
 @Getter
