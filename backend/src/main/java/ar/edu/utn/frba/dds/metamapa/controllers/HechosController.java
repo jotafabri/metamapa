@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IFileStorageService;
@@ -90,6 +91,18 @@ public class HechosController {
     }
   }
 
+  @PatchMapping("/{id}/eliminar")
+  public ResponseEntity<Void> marcarEliminado(@PathVariable Long id) {
+    try {
+      this.hechosService.marcarEliminado(id);
+      return ResponseEntity.noContent().build();
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }  catch (Exception e) {
+        return ResponseEntity.badRequest().build();
+    }
+  }
+
   @GetMapping("/inicializar")
   public ResponseEntity<Object> inicializarDatos() {
     try {
@@ -100,4 +113,6 @@ public class HechosController {
       return ResponseEntity.badRequest().build();
     }
   }
+
+
 }
