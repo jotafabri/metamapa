@@ -1,8 +1,12 @@
 // Funcinn para mostrar contraseña
-function togglePassword() {
-    const passwordInput = document.getElementById('password');
-    const eyeOpen = document.getElementById('eye-open');
-    const eyeClosed = document.getElementById('eye-closed');
+function togglePassword(input) {
+    const passwordInput = document.getElementById(input);
+
+    const eyeOpenElement = (input === 'password') ? 'eye-open' : 'eye-open-confirm'
+    const eyeClosedElement = (input === 'password') ? 'eye-closed' : 'eye-closed-confirm'
+    const eyeOpen = document.getElementById(eyeOpenElement);
+    const eyeClosed = document.getElementById(eyeClosedElement);
+
     const toggleBtn = document.getElementById('toggle-btn');
 
     if (passwordInput.type === 'password') {

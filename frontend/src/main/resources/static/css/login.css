@@ -26,7 +26,7 @@
 
 .register-wrapper {
     width: 100%;
-    max-width: 420px;
+    max-width: 630px;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -113,8 +113,29 @@
     gap: 1.25rem;
 }
 
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.field-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
 .register-form .field-group {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    /*margin-bottom: 1rem;*/
+}
+
+@media (max-width: 768px) {
+    .field-row,
+    .field-row-2 {
+        grid-template-columns: 1fr;
+    }
 }
 
 .field-input:focus {
