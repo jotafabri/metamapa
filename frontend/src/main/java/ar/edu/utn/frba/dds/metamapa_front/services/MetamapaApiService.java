@@ -223,4 +223,14 @@ public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO
     }
     return url.toString();
   }
+
+  // Métodos auxiliares simples para JSON libre
+  public Map<String, Object> getPublicJson(String path) {
+    return webApiCallerService.getPublic(metamapaServiceUrl + path, Map.class);
+  }
+
+  public void postPublicJson(String path, Object body) {
+    webApiCallerService.postPublic(metamapaServiceUrl + path, body, Void.class);
+  }
+
 }

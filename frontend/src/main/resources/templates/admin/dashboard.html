@@ -1,79 +1,88 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración | MetaMapa</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>MetaMapa - Panel de Administración</title>
+
+    <!-- Enlaces a estilos -->
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/botones.css}">
+
+    <!-- Script -->
+    <script th:src="@{/js/admin.js}" defer></script>
 </head>
 
 <body>
-<header class="main-header">
-    <div class="header-content">
-        <img th:src="@{/img/logo.png}" alt="MetaMapa" class="logo">
-        <nav>
-            <a href="/admin/dashboard" class="nav-link active">Dashboard</a>
-            <a href="/admin/colecciones" class="nav-link">Colecciones</a>
-            <a href="/admin/fuentes" class="nav-link">Fuentes</a>
-            <a href="/admin/hechos" class="nav-link">Hechos</a>
-            <a href="/logout" class="nav-link">Salir</a>
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <a th:href="@{/landing}" class="logo-section">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+                <span class="logo-text">MetaMapa</span>
+            </a>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Hechos</a>
+                <a href="#" class="nav-link">Colecciones</a>
+                <a href="#" class="nav-link">Usuarios</a>
+                <a href="#" class="nav-link">Solicitudes</a>
+            </div>
+            <div class="button-section">
+                <span class="role-badge">Administrador</span>
+            </div>
         </nav>
     </div>
 </header>
 
-<main class="admin-dashboard">
-    <h1>Panel de Control</h1>
+<main class="admin-section">
+    <div class="admin-container">
+        <h1 class="admin-title">Panel de Administración</h1>
 
-    <section class="dashboard-summary">
-        <div class="dashboard-card">
-            <h2 th:text="${totalHechos}">0</h2>
-            <p>Hechos registrados</p>
-        </div>
-        <div class="dashboard-card">
-            <h2 th:text="${totalFuentes}">0</h2>
-            <p>Fuentes configuradas</p>
-        </div>
-        <div class="dashboard-card">
-            <h2 th:text="${totalSolicitudes}">0</h2>
-            <p>Solicitudes de eliminación</p>
-        </div>
-        <div class="dashboard-card">
-            <h2 th:text="${totalColecciones}">0</h2>
-            <p>Colecciones totales</p>
-        </div>
-    </section>
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h2 class="card-value" id="totalHechos">Cargando...</h2>
+                <p class="card-sub">+12% desde el mes pasado</p>
+                <span class="card-label">Total de Hechos</span>
+            </div>
 
-    <section class="dashboard-stats">
-        <h2>Estadísticas del Sistema</h2>
-        <div class="stat-row">
-            <p><strong>Categoría con más hechos:</strong></p>
-            <p th:text="${categoriaTop != null ? categoriaTop : 'Sin datos'}"></p>
-        </div>
-        <div class="stat-row">
-            <p><strong>Solicitudes marcadas como spam:</strong></p>
-            <p th:text="${solicitudesSpam != null ? solicitudesSpam : '0'}"></p>
+            <div class="dashboard-card alert">
+                <h2 class="card-value" id="pendientesRevision">Cargando...</h2>
+                <p class="card-sub">Requieren atención inmediata</p>
+                <span class="card-label">Pendientes de Revisión</span>
+            </div>
+
+            <div class="dashboard-card">
+                <h2 class="card-value" id="usuariosActivos">Cargando...</h2>
+                <p class="card-sub">+5% desde el mes pasado</p>
+                <span class="card-label">Usuarios Activos</span>
+            </div>
+
+            <div class="dashboard-card alert">
+                <h2 class="card-value" id="solicitudesSpam">Cargando...</h2>
+                <p class="card-sub">Detectadas como spam</p>
+                <span class="card-label">Solicitudes de Eliminación</span>
+            </div>
         </div>
 
-        <div class="dashboard-actions">
-            <a class="button" th:href="@{/admin/dashboard/actualizar}">🔁 Actualizar estadísticas</a>
-            <a class="button" th:href="@{/admin/dashboard/exportar}">📥 Exportar CSV</a>
+        <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn btn-primary" id="btnActualizar">Actualizar estadísticas</button>
         </div>
-    </section>
-
-    <section class="dashboard-actions">
-        <h2>Gestión</h2>
-        <div class="action-buttons">
-            <a href="/admin/colecciones" class="button"> Gestionar Colecciones</a>
-            <a href="/admin/fuentes" class="button"> Configurar Fuentes</a>
-            <a href="/admin/hechos" class="button"> Revisar Hechos</a>
-            <a href="/admin/solicitudes" class="button"> Revisar Solicitudes</a>
-            <a href="/admin/importar" class="button"> Importar CSV</a>
-        </div>
-    </section>
+    </div>
 </main>
 
-<footer class="main-footer">
-    <p>&copy; 2025 MetaMapa — Panel de Administración</p>
+<footer style="text-align:center; margin-top:2rem; color:#95959F;">
+    <hr style="border-color:#2e2f31; margin:1.5rem 0;">
+    <p>MetaMapa © 2025 — Panel de administrador</p>
 </footer>
+
 </body>
 </html>

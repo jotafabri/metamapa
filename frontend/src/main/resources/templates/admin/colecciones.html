@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMapa - Colecciones</title>
+
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/botones.css}">
+    <script th:src="@{/js/admin-colecciones.js}" defer></script>
+</head>
+
+<body>
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <a th:href="@{/landing}" class="logo-section">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+                <span class="logo-text">MetaMapa</span>
+            </a>
+            <div class="nav-menu">
+                <a th:href="@{/admin/dashboard}" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">Hechos</a>
+                <a th:href="@{/admin/colecciones}" class="nav-link active">Colecciones</a>
+                <a href="#" class="nav-link">Usuarios</a>
+                <a href="#" class="nav-link">Solicitudes</a>
+            </div>
+            <div class="button-section">
+                <span class="role-badge">Administrador</span>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-section">
+    <div class="admin-container">
+        <h1 class="admin-title">Gestión de Colecciones</h1>
+
+        <div class="coleccion-actions">
+            <button id="btnNuevaColeccion" class="btn btn-primary">➕ Nueva Colección</button>
+        </div>
+
+        <table class="coleccion-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Algoritmo de Consenso</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tablaColecciones">
+            <!-- Se carga dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalColeccion" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalTitulo">Nueva Colección</h2>
+            <form id="formColeccion">
+                <input type="hidden" id="coleccionHandle">
+                <label>Título:</label>
+                <input type="text" id="titulo" required>
+
+                <label>Descripción:</label>
+                <textarea id="descripcion"></textarea>
+
+                <label>Algoritmo de consenso:</label>
+                <select id="algoritmo">
+                    <option value="MAYORIA_SIMPLE">Mayoría simple</option>
+                    <option value="MAYORIA_ABSOLUTA">Mayoría absoluta</option>
+                    <option value="MULTIPLES_MENCIONES">Múltiples menciones</option>
+                </select>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" id="btnCancelar" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer style="text-align:center; margin-top:2rem; color:#95959F;">
+    <hr style="border-color:#2e2f31; margin:1.5rem 0;">
+    <p>MetaMapa © 2025 — Panel de administrador</p>
+</footer>
+
+</body>
+</html>

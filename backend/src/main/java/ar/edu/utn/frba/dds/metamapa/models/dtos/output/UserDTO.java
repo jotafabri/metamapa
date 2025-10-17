@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class UserDTO {
-    private String nombre;
+  private String nombre;
   private Long id;
   private String email;
   private Rol rol;
@@ -18,4 +18,9 @@ public class UserDTO {
     dto.setRol(usuario.getRol());
     return dto;
   }
+
+  public boolean esAdmin() {
+    return this.rol == Rol.ADMIN;
+  }
+
 }

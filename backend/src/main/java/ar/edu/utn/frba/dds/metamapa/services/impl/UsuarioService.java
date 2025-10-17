@@ -74,4 +74,9 @@ public class UsuarioService implements IUsuarioService {
     usuario.setPassword(passwordEncoder.encode(nuevaPassword));
     usuarioRepository.save(usuario);
   }
+
+  public UserDTO autenticar(UsuarioDTO usuarioDTO) {
+    return this.login(usuarioDTO);
+  }
+
 }

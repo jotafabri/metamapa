@@ -2,9 +2,9 @@
 <html lang="es">
 
 <head>
-    <link rel="stylesheet" href="../../static/css/header.css">
-    <link rel="stylesheet" href="../../static/css/login.css">
-    <link rel="stylesheet" href="../../static/css/botones.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/botones.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MetaMapa - Login Administrador</title>
@@ -14,7 +14,7 @@
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <a href="../landing/landing.html" class="logo-section">
+                <a href="/" class="logo-section">
                     <div class="logo-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -31,7 +31,7 @@
                     <a href="#" class="nav-link">Ayuda</a>
                 </div>
                 <div class="button-section">
-                    <a href="register-admin.html" class="btn btn-secondary">Registrarse</a>
+                    <a href="/admin/register">Registrarse</a>
                 </div>
             </nav>
         </div>
@@ -42,8 +42,8 @@
             <div class="login-wrapper">
 
                 <div class="navigate-back">
-                    <a href="../landing/landing.html" class="navigate-back-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <a href="/" class="navigate-back-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
                         <span>Volver al inicio</span>
@@ -64,8 +64,7 @@
 
                                 <div class="field-group">
                                     <label for="admin-email" class="field-label">Correo electrónico</label>
-                                    <input type="email" id="admin-email" name="email" class="field-input"
-                                           placeholder="Correo Electrónico" required aria-describedby="email-help">
+                                    <input type="text" id="admin-email" name="username" placeholder="Correo electrónico" required>
                                     <p id="email-help" class="field-help">
                                         Ingresa el correo de administrador
                                     </p>
@@ -73,8 +72,7 @@
 
                                 <div class="field-group">
                                     <label for="admin-password" class="field-label">Contraseña</label>
-                                    <input type="password" id="admin-password" name="password" class="field-input"
-                                           placeholder="Contraseña" required aria-describedby="password-help">
+                                    <input type="password" id="admin-password" name="password" placeholder="Contraseña" required>
                                     <p id="password-help" class="field-help">
                                         Mínimo 8 caracteres con al menos una mayúscula
                                     </p>
@@ -91,7 +89,7 @@
                                 </a>
                             </div>
 
-<button type="button" class="btn btn-primary btn-login" onclick="location.href='admin.html'">
+<button type="submit" class="btn btn-primary btn-login">
     Iniciar Sesión
 </button>
 
@@ -100,7 +98,7 @@
                         <div class="register-link">
                             <p>
                                 ¿No tienes cuenta de administrador?
-                                <a href="register-admin.html">Regístrate aquí</a>
+                                <a href="/admin/register">Regístrate aquí</a>Regístrate aquí</a>
                             </p>
                         </div>
                     </div>
