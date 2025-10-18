@@ -25,4 +25,8 @@ public interface IColeccionService {
 
   void eliminarColeccion(String handle);
 
+  void agregarFuente(Long idColeccion, Long idFuente);
+
+  void quitarFuente(Long idColeccion, Long idFuente);
+
 }

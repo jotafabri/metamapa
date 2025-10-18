@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuentes de la Colección</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+<header>
+    <h1>Fuentes de la Colección</h1>
+    <button id="btnNuevaFuente" class="btn btn-primary">+ Nueva Fuente</button>
+    <button id="btnVolver" class="btn btn-secondary">← Volver</button>
+</header>
+
+<main>
+    <table class="tabla" id="tablaFuentes">
+        <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Nombre</th>
+            <th>URL o Ruta</th>
+            <th>Última actualización</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Filas generadas dinámicamente -->
+        </tbody>
+    </table>
+</main>
+
+<!-- Modal -->
+<div id="modalFuente" class="modal hidden">
+    <div class="modal-contenido">
+        <h2 id="modalTituloFuente">Nueva Fuente</h2>
+        <form id="formFuente">
+            <input type="hidden" id="fuenteId">
+
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" required>
+                <option value="ESTATICA">Estática</option>
+                <option value="DINAMICA">Dinámica</option>
+                <option value="PROXY">Proxy</option>
+            </select>
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" required>
+
+            <label for="url">URL o Ruta:</label>
+            <input type="text" id="url" required>
+
+            <div class="modal-botones">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" id="btnCancelarFuente" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/static/js/admin-coleccion-fuentes.js"></script>
+</body>
+</html>

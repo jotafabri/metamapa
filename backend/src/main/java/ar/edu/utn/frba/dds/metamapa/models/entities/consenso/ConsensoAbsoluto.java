@@ -10,4 +10,9 @@ public class ConsensoAbsoluto implements EstrategiaConsenso {
   public boolean cumple(Hecho hecho, List<Fuente> fuentes) {
     return fuentes.stream().allMatch(f -> f.getHechos().contains(hecho)); // TODO revisar que el hecho sea parecido
   }
+
+  @Override
+  public String getNombre() {
+    return "MAYORIA_ABSOLUTA";
+  }
 }

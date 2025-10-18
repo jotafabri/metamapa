@@ -31,4 +31,10 @@ public class ConsensoPorMultiplesMenciones implements EstrategiaConsenso {
     if (Double.compare(h1.getLongitud(), h2.getLongitud()) != 0) return false;
     return h1.getFechaAcontecimiento().equals(h2.getFechaAcontecimiento());
   }
+
+  @Override
+  public String getNombre() {
+    return "MULTIPLES_MENCIONES";
+  }
+
 }

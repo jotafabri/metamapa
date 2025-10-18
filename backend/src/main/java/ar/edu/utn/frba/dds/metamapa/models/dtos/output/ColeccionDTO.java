@@ -17,6 +17,11 @@ public class ColeccionDTO {
     dto.setHandle(coleccion.getHandle());
     dto.setTitulo(coleccion.getTitulo());
     dto.setDescripcion(coleccion.getDescripcion());
+    dto.setAlgoritmo(
+            coleccion.getAlgoritmoDeConsenso() != null
+                    ? coleccion.getAlgoritmoDeConsenso().getNombre().toUpperCase()
+                    : "-"
+    );
     dto.setCantHechos(coleccion.getHechos().size());
     return dto;
   }

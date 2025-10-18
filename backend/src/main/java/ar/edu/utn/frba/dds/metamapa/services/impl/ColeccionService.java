@@ -5,11 +5,13 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
+import ar.edu.utn.frba.dds.metamapa.services.IFuenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class ColeccionService implements IColeccionService {
 
   @Autowired
   private IColeccionesRepository coleccionesRepository;
+
+  @Autowired
+  private IFuenteService fuenteService;
 
   //ADMIN:Operacion C(R)UD
   @Override
@@ -59,8 +64,24 @@ public class ColeccionService implements IColeccionService {
   //ADMIN:Operacion (C)RUD
   @Override
   public void crearDesdeDTO(ColeccionDTO coleccionDTO) {
-    Coleccion coleccion = new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion());
-    coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
+    Coleccion coleccion = new Coleccion(
+            coleccionDTO.getTitulo(),
+            coleccionDTO.getDescripcion()
+    );
+
+    // Si no viene algoritmo, usar el default
+    if (coleccionDTO.getAlgoritmo() != null) {
+      var nombre = coleccionDTO.getAlgoritmo();
+      TipoAlgoritmo tipo = TipoAlgoritmo.valueOf(nombre.toUpperCase());
+      coleccion.setAlgoritmoDeConsenso(tipo.getConsenso());
+    }
+
+    // Generar handle automáticamente si no viene uno
+    String handleBase = (coleccionDTO.getHandle() != null && !coleccionDTO.getHandle().isBlank())
+            ? coleccionDTO.getHandle()
+            : generarHandleUnico(coleccionDTO.getTitulo());
+    coleccion.setHandle(handleBase);
+
     this.coleccionesRepository.save(coleccion);
   }
 
@@ -104,4 +125,24 @@ public class ColeccionService implements IColeccionService {
     }
     return candidato;
   }
+
+  public void agregarFuente(Long idColeccion, Long idFuente) {
+    Coleccion coleccion = coleccionesRepository.findById(idColeccion)
+            .orElseThrow(() -> new IllegalArgumentException("Colección no encontrada"));
+    Fuente fuente = fuenteService.mostrarFuente(idFuente);
+
+    if (!coleccion.getFuentes().contains(fuente)) {
+      coleccion.getFuentes().add(fuente);
+      coleccionesRepository.save(coleccion);
+    }
+  }
+
+  public void quitarFuente(Long idColeccion, Long idFuente) {
+    Coleccion coleccion = coleccionesRepository.findById(idColeccion)
+            .orElseThrow(() -> new IllegalArgumentException("Colección no encontrada"));
+    coleccion.getFuentes().removeIf(f -> f.getId().equals(idFuente));
+    coleccionesRepository.save(coleccion);
+  }
+
+
 }

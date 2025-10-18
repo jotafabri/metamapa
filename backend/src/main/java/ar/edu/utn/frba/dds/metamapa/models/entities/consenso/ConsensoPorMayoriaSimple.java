@@ -15,4 +15,10 @@ public class ConsensoPorMayoriaSimple implements EstrategiaConsenso {
         .count();
     return cantidad >= (Math.ceil(fuentes.size() / 2.0));
   }
+
+  @Override
+  public String getNombre() {
+    return "MAYORIA_SIMPLE";
+  }
+
 }

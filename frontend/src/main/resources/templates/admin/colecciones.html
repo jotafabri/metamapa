@@ -58,8 +58,27 @@
                 <th>Acciones</th>
             </tr>
             </thead>
-            <tbody id="tablaColecciones">
-            <!-- Se carga dinámicamente -->
+            <tbody>
+            <tr th:each="c : ${colecciones}">
+                <td th:text="${c.handle}">handle</td>
+                <td th:text="${c.titulo}">titulo</td>
+                <td th:text="${c.descripcion}">descripcion</td>
+                <td th:text="${c.algoritmo}">algoritmo</td>
+                <td>
+                    <button class="btn btn-secondary"
+                            th:onclick="|editarColeccion('${c.handle}', '${c.titulo}', '${c.descripcion}', '${c.algoritmo}')|">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger"
+                            th:onclick="|eliminarColeccion('${c.handle}')|">
+                        Eliminar
+                    </button>
+                    <button class="btn btn-info"
+                            th:onclick="|verFuentes('${c.handle}')|">
+                        Fuentes
+                    </button>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

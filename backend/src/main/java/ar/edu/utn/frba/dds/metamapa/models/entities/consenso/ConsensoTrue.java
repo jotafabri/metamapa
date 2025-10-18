@@ -11,4 +11,10 @@ public class ConsensoTrue implements EstrategiaConsenso {
   public boolean cumple(Hecho hecho, List<Fuente> fuentes) {
     return true;
   }
+
+  @Override
+  public String getNombre() {
+    return "TRUE";
+  }
+
 }

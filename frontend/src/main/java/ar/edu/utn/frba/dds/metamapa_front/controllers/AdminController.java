@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa_front.controllers;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.UsuarioDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.UserDTO;
 import ar.edu.utn.frba.dds.metamapa_front.services.UsuarioService;
+import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class AdminController {
 
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final UsuarioService usuarioService;
+    private final ColeccionService coleccionService;
 
     // --- LOGIN ADMIN ---
 
@@ -59,7 +61,8 @@ public class AdminController {
     }
 
     @GetMapping("/colecciones")
-    public String mostrarColecciones() {
+    public String mostrarColecciones(Model model) {
+        model.addAttribute("colecciones", coleccionService.getAllColecciones());
         return "admin/colecciones";
     }
 
