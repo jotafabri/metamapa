@@ -14,7 +14,7 @@
 </head>
 <body>
 <!-- Fragmento de header -->
-<header th:replace="~{fragments/header :: header}"></header>
+<header th:replace="~{fragments/header :: header}" th:unless="${noHeader}"></header>
 
 <!-- Contenido principal -->
 <main>

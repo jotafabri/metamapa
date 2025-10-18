@@ -81,6 +81,53 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <label class="form-label" style="margin: 0;">
+                        <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <path fill="currentColor"
+                                  d="M0 188.6C0 84.4 86 0 192 0S384 84.4 384 188.6c0 119.3-120.2 262.3-170.4 316.8-11.8 12.8-31.5 12.8-43.3 0-50.2-54.5-170.4-197.5-170.4-316.8zM192 256a64 64 0 1 0 0-128 64 64 0 1 0 0 128z"/>
+                        </svg>
+                        Ubicacion
+                    </label>
+                    <select id="tipo-ubicacion" class="form-input" style="width: auto;">
+                        <option value="pais">País</option>
+                        <option value="provincia">Provincia</option>
+                        <option value="localidad">Localidad</option>
+                    </select>
+                </div>
+
+                <div id="container-pais">
+                    <select id="pais" class="form-input" th:field="*{pais}">
+                        <option value="" selected>Todos los paises</option>
+                        <option th:each="item : ${listaPaises}"
+                                th:value="${item}"
+                                th:text="${item}">
+                        </option>
+                    </select>
+                </div>
+
+                <div id="container-provincia" style="display: none;">
+                    <select id="provincia" class="form-input" th:field="*{provincia}">
+                        <option value="" selected>Todas las provincias</option>
+                        <option th:each="item : ${listaProvincias}"
+                                th:value="${item}"
+                                th:text="${item}">
+                        </option>
+                    </select>
+                </div>
+
+                <div id="container-localidad" style="display: none;">
+                    <select id="localidad" class="form-input" th:field="*{localidad}">
+                        <option value="" selected>Todas las localidades</option>
+                        <option th:each="item : ${listaLocalidades}"
+                                th:value="${item}"
+                                th:text="${item}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Date Range -->
             <div class="form-group">
                 <label class="form-label">
@@ -127,11 +174,11 @@
             <button class="btn-primary w-full" type="submit">
                 Aplicar Filtros
             </button>
-            <a th:href="@{/colecciones/{handle}(handle=${handle})}" class="btn btn-secondary w-full" style="margin-top: 0.5rem;">
+            <a th:href="@{/colecciones/{handle}(handle=${handle})}" class="btn btn-secondary w-full"
+               style="margin-top: 0.5rem;">
                 Limpiar Filtros
             </a>
 
+        </form>
     </div>
-    </form>
-</div>
 </div>

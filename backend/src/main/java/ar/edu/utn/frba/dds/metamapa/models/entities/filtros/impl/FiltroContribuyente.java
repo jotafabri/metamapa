@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.filtros.impl;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.FiltroBoolean;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.AttributeOverride;
@@ -21,6 +22,6 @@ public class FiltroContribuyente extends FiltroBoolean {
 
   @Override
   protected Boolean cumpleExtra(Hecho hecho) {
-    return hecho.getContribuyente() != null;
+    return hecho.getOrigen().equals(Origen.CONTRIBUYENTE);
   }
 }

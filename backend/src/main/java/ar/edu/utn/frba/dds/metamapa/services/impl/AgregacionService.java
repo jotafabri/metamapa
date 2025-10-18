@@ -2,11 +2,13 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.SolicitudEliminacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
@@ -14,6 +16,7 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
+import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,19 +54,17 @@ public class AgregacionService implements IAgregacionService {
   }
 
   @Override
-  public void crearSolicitud(SolicitudEliminacionInputDTO solicitudDto) {
-    this.hechosRepository.findById(solicitudDto.getIdHecho()).ifPresent(
-        hecho -> {
+  public SolicitudEliminacionOutputDTO crearSolicitud(SolicitudEliminacionInputDTO solicitudDto) {
+    Hecho hecho = hechosRepository.findById(solicitudDto.getIdHecho()).orElseThrow(()->new NotFoundException("Hecho", solicitudDto.getIdHecho().toString()));
           var solicitud = new SolicitudEliminacion(
-              hecho,
-              solicitudDto.getRazon());
+                  hecho,
+                  solicitudDto.getRazon());
           if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
-            solicitud.rechazarSolicitud();
-            solicitud.marcarSpam();
+              solicitud.rechazarSolicitud();
+              solicitud.marcarSpam();
           }
           this.solicitudesRepository.save(solicitud);
-        }
-    );
+          return SolicitudEliminacionOutputDTO.fromSolicitud(solicitud);
   }
 
   public void refrescarColecciones() {

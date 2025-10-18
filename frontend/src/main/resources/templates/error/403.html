@@ -1,8 +1,11 @@
 <html th:replace="~{layout/base :: html}">
-    <div th:fragment="contenido">
-        <div class="forbidden-container">
-                <img th:src="@{/images/403.png}" alt="Imagen 403" class="forbidden-image">
-                <h1 th:text="${mensaje} ?: 'Lo sentimos, usted no posee permisos para ingresar a esta página'" class="forbidden-image"></h1>
-        </div>
+<div th:fragment="contenido">
+    <link rel="stylesheet" th:href="@{/css/errors.css}">
+    <div class="error-container">
+        <h1 class="error-header">403</h1>
+        <p th:text="${mensaje} ?: 'Lo sentimos, usted no posee permisos para ingresar a esta página'"
+           class="error-message"></p>
+        <div th:replace="~{fragments/go-back :: go-back}"></div>
     </div>
+</div>
 </html>

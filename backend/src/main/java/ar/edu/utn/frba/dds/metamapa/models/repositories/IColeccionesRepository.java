@@ -18,4 +18,10 @@ public interface IColeccionesRepository extends JpaRepository<Coleccion, Long> {
       "JOIN col.hechos h " +
       "WHERE col.handle = :handle")
   List<String> findDistinctCategoriasByHandle(@Param("handle") String handle);
+
+  @Query("SELECT h.categoria, h.ubicacion.pais, h.ubicacion.provincia, h.ubicacion.localidad " +
+      "FROM Coleccion col " +
+      "JOIN col.hechos h " +
+      "WHERE col.handle = :handle")
+  List<Object[]> findDatosRawByHandle(@Param("handle") String handle);
 }
