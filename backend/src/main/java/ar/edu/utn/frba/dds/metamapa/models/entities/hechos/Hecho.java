@@ -7,6 +7,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.converters.LocalDateTimeConverter;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Persistente;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
@@ -88,8 +89,8 @@ public class Hecho extends Persistente {
   private List<String> multimedia =  new ArrayList<>();
 
   @ManyToOne
-  @JoinColumn(name = "contribuyente_id")
-  private Contribuyente contribuyente;
+  @JoinColumn(name = "usuario_id")
+  private Usuario usuario;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "estado")
@@ -106,7 +107,7 @@ public class Hecho extends Persistente {
   private Fuente fuente;
 
   public boolean esEditable() {
-    if (this.contribuyente == null || this.contribuyente.isEsAnonimo()) {
+    if (this.usuario == null) {
       return false;
     }
     long diasDesdeCarga = ChronoUnit.DAYS.between(this.fechaCarga, LocalDateTime.now());
@@ -119,6 +120,10 @@ public class Hecho extends Persistente {
 
   public void agregarMultimedia(String path) {
     this.multimedia.add(path);
+  }
+
+  public void agregarTodaMultimedia(List<String> paths) {
+    this.multimedia.addAll(paths);
   }
 
   public void actualizarHecho(Hecho hecho) {

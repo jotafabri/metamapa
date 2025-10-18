@@ -22,7 +22,9 @@ public class HechoFiltroDTO {
   private String fechaReporteHasta;
   private String fechaAcontecimientoDesde;
   private String fechaAcontecimientoHasta;
-  private String ubicacion;
+  private String pais;
+  private String provincia;
+  private String localidad;
   private Boolean soloConMultimedia;
   private Boolean soloConContribuyente;
   private Boolean curado = false;
@@ -51,8 +53,10 @@ public class HechoFiltroDTO {
       criterios.add(new FiltroFechaCarga(fCargaDesde, fCargaHasta));
     }
 
-    if (ubicacion != null) {
-      criterios.add(FiltroUbicacion.fromString(ubicacion));
+    if ((pais != null && !pais.isEmpty())
+        || (provincia != null && !provincia.isEmpty())
+        || (localidad != null && !localidad.isEmpty())) {
+      criterios.add(new FiltroUbicacion(pais, provincia, localidad));
     }
 
     if (soloConMultimedia != null && soloConMultimedia) {

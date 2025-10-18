@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.services;
 
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.controllers.SolicitudesController;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
@@ -18,7 +19,7 @@ public interface IAgregacionService {
 
   //Solicitudes de eliminacion
 
-  void crearSolicitud(SolicitudEliminacionInputDTO solicitud);
+  SolicitudEliminacionOutputDTO crearSolicitud(SolicitudEliminacionInputDTO solicitud);
 
   List<SolicitudEliminacionOutputDTO> findAllSolicitudes();
 

@@ -8,12 +8,18 @@ import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 /**
  * Servicio genérico para hacer llamadas HTTP con manejo automático de tokens
@@ -31,6 +37,7 @@ public class WebApiCallerService {
 
   /**
    * Ejecuta una llamada al API con manejo automático de refresh token
+   *
    * @param apiCall función que ejecuta la llamada al API
    * @return resultado de la llamada al API
    */
@@ -57,7 +64,7 @@ public class WebApiCallerService {
           throw new RuntimeException("Error al refrescar token y reintentar: " + refreshError.getMessage(), refreshError);
         }
       }
-      if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+      if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new NotFoundException(e.getMessage());
       }
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
@@ -140,7 +147,8 @@ public class WebApiCallerService {
             .get()
             .uri(url)
             .retrieve()
-            .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
+            .bodyToMono(new ParameterizedTypeReference<List<String>>() {
+            })
             .block();
       }
       return webClient
@@ -181,6 +189,49 @@ public class WebApiCallerService {
           .uri(url)
           .bodyValue(body)
           .retrieve()
+          .bodyToMono(responseType)
+          .block();
+    } catch (Exception e) {
+      throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Ejecuta una llamada HTTP POST multipart con autenticación
+   */
+  public <T> T postMultipart(String url, MultiValueMap<String, HttpEntity<?>> body, Class<T> responseType) {
+    return executeWithTokenRetry(accessToken ->
+        webClient
+            .post()
+            .uri(url)
+            .header("Authorization", "Bearer " + accessToken)
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(body))
+            .retrieve()
+            .onStatus(HttpStatusCode::is4xxClientError, response ->
+                response.bodyToMono(String.class)
+                    .flatMap(errorBody -> Mono.error(new RuntimeException("Error 4xx: " + errorBody)))
+            )
+            .bodyToMono(responseType)
+            .block()
+    );
+  }
+
+  /**
+   * Ejecuta una llamada HTTP POST multipart pública (sin autenticación)
+   */
+  public <T> T postPublicMultipart(String url, MultiValueMap<String, HttpEntity<?>> body, Class<T> responseType) {
+    try {
+      return webClient
+          .post()
+          .uri(url)
+          .contentType(MediaType.MULTIPART_FORM_DATA)
+          .body(BodyInserters.fromMultipartData(body))
+          .retrieve()
+          .onStatus(HttpStatusCode::is4xxClientError, response ->
+              response.bodyToMono(String.class)
+                  .flatMap(errorBody -> Mono.error(new RuntimeException("Error 4xx: " + errorBody)))
+          )
           .bodyToMono(responseType)
           .block();
     } catch (Exception e) {
@@ -255,6 +306,7 @@ public class WebApiCallerService {
 
       // Actualizar tokens en sesión
       updateTokensInSession(response.getAccessToken(), response.getRefreshToken());
+
       return response;
     } catch (Exception e) {
       throw new RuntimeException("Error al refrescar token: " + e.getMessage(), e);
@@ -267,7 +319,9 @@ public class WebApiCallerService {
   private String getAccessTokenFromSession() {
     ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     HttpServletRequest request = attributes.getRequest();
-    return (String) request.getSession().getAttribute("accessToken");
+    String token = (String) request.getSession().getAttribute("accessToken");
+
+    return token;
   }
 
   /**

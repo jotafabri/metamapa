@@ -1,11 +1,13 @@
 package ar.edu.utn.frba.dds.metamapa_front.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class HechosService {
@@ -21,8 +23,8 @@ public class HechosService {
     }
   }
 
-  public HechoDTO crearHecho(HechoDTO hechoDTO) {
-    return metamapaApiService.crearHecho(hechoDTO);
+  public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
+    return metamapaApiService.crearHecho(hechoDTO, archivos);
   }
 
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {

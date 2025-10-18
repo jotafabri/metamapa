@@ -24,7 +24,7 @@ public class SolicitudEliminacion extends Persistente {
   @JoinColumn(name = "hecho_id")
   private Hecho hecho;
 
-  @Column(name = "causa")
+  @Column(name = "causa", columnDefinition = "TEXT")
   private String causa;
 
   @Enumerated(EnumType.STRING)

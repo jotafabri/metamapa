@@ -27,27 +27,19 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf
-            .ignoringRequestMatchers("/hechos/crear")
+            .ignoringRequestMatchers("/hechos/**", "/register")
         )
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/videos/**", "/colecciones", "/colecciones/**", "/hechos/**", "/404").permitAll()
-            //.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-            .anyRequest().authenticated()
+                .requestMatchers("/admin/login").permitAll()
+                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                .anyRequest().permitAll()
         )
         .formLogin(form -> form
             .loginPage("/login")
+            .defaultSuccessUrl("/", true)
             .usernameParameter("email")
             .passwordParameter("password")
             .permitAll()
-                .successHandler(((request, response, authentication) -> {
-                  var auth = authentication.getAuthorities();
-                  if (auth.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                    response.sendRedirect("/admin");
-                  } else {
-                    response.sendRedirect("/colecciones");
-                  }
-                }))
-//            .defaultSuccessUrl("/colecciones", true) // redirigir tras login exitoso
         )
         .logout(logout -> logout
             .logoutUrl("/logout")
@@ -56,8 +48,13 @@ public class SecurityConfig {
         )
         .exceptionHandling(ex -> ex
             // Usuario no autenticado → redirigir a login
-            .authenticationEntryPoint((request, response, authException) ->
-                response.sendRedirect("/login?unauthorized")
+            .authenticationEntryPoint((request, response, authException) -> {
+                  if (request.getRequestURI().startsWith("/admin")) {
+                    response.sendRedirect("/admin/login?unauthorized");
+                  } else {
+                    response.sendRedirect("/login?unauthorized");
+                  }
+                }
             )
             // Usuario autenticado pero sin permisos → redirigir a página de error
             .accessDeniedHandler((request, response, accessDeniedException) ->

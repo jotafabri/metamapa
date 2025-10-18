@@ -1,9 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
+import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -16,11 +18,14 @@ public class HechoDTO {
   private String categoria; //
   private Double latitud; //
   private Double longitud; //
-  private LocalDateTime fechaAcontecimiento; //
+  private String localidad;
+  private String provincia;
+  private String pais;
+  private LocalDate fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
 
   private List<String> multimedia;
-  private Long contribuyenteId;
+  private Long usuarioId;
 
   public static HechoDTO fromHecho(Hecho hecho) {
     var dto = new HechoDTO();
@@ -30,25 +35,36 @@ public class HechoDTO {
     dto.setCategoria(hecho.getCategoria());
     dto.setLatitud(hecho.getLatitud());
     dto.setLongitud(hecho.getLongitud());
-    dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+    dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento().toLocalDate());
     dto.setFechaCarga(hecho.getFechaCarga());
     dto.setMultimedia(hecho.getMultimedia());
 
-    if (hecho.getContribuyente() != null) {
-      dto.setContribuyenteId(hecho.getContribuyente().getId());
+    if (hecho.getUbicacion() != null) {
+      dto.setPais(hecho.getUbicacion().getPais());
+      dto.setProvincia(hecho.getUbicacion().getProvincia());
+      dto.setLocalidad(hecho.getUbicacion().getLocalidad());
+    }
+    if (hecho.getUsuario() != null) {
+      dto.setUsuarioId(hecho.getUsuario().getId());
     }
 
     return dto;
   }
 
   public Hecho toHecho() {
+    Ubicacion ubicacion = Ubicacion.builder()
+        .pais(this.pais)
+        .provincia(this.provincia)
+        .localidad(this.localidad)
+        .build();
     return Hecho.builder()
         .titulo(this.titulo)
         .descripcion(this.descripcion)
         .categoria(this.categoria)
         .latitud(this.latitud)
         .longitud(this.longitud)
-        .fechaAcontecimiento(this.fechaAcontecimiento)
+        .ubicacion(ubicacion)
+        .fechaAcontecimiento(this.fechaAcontecimiento.atStartOfDay())
         .fechaCarga(this.fechaCarga)
         .build();
   }

@@ -13,8 +13,8 @@ public class SolicitudesService {
   @Autowired
   private MetamapaApiService metamapaApiService;
 
-  public SolicitudEliminacionDTO crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
-    return metamapaApiService.crearSolicitudEliminacion(solicitudDTO);
+  public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
+    metamapaApiService.crearSolicitudEliminacion(solicitudDTO);
   }
 
   public void aceptarSolicitud(Long id) {

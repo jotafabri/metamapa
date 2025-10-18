@@ -1,14 +1,17 @@
 package ar.edu.utn.frba.dds.metamapa_front.controllers;
 
+import java.util.List;
+
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
-import ar.edu.utn.frba.dds.metamapa_front.services.SolicitudesService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -25,7 +30,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class HechosController {
   private static final Logger log = LoggerFactory.getLogger(HechosController.class);
   private final HechosService hechosService;
-  private final SolicitudesService solicitudesService;
 
   @GetMapping("/{id}")
   public String verDetalleHecho(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -49,18 +53,20 @@ public class HechosController {
   }
 
   @PostMapping("/crear")
-  public String crearHecho(@ModelAttribute("hecho") HechoDTO hechoDTO,
-                           BindingResult bindingResult,
-                           Model model,
-                           RedirectAttributes redirectAttributes) {
+  public String crearHecho(
+      @ModelAttribute("hecho") HechoDTO hechoDTO,
+      @RequestParam(required = false) List<MultipartFile> archivos,
+      BindingResult bindingResult,
+      Model model,
+      RedirectAttributes redirectAttributes) {
 
     try {
-      HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO);
-      return "redirect:/colecciones/colecciones";
+      hechosService.crearHecho(hechoDTO, archivos);
+      return "redirect:/colecciones";
     } catch (Exception e) {
       log.error("Error al crear nuevo hecho", e);
-      model.addAttribute("titulo", "Contribuir");
-      return "redirect:/hechos/nuevo";
+      model.addAttribute("error", "Ocurrió un error al crear nuevo hecho");
+      return mostrarFormularioCrear(model);
     }
   }
 
@@ -100,17 +106,4 @@ public class HechosController {
     }
   }
 
-  @PostMapping("/{id}/solicitar-eliminacion")
-  public void crearSolicitudEliminacion(@PathVariable Long id,
-                                          @ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
-                                          BindingResult bindingResult,
-                                          Model model,
-                                          RedirectAttributes redirectAttributes
-  ) {
-    try {
-      solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-    } catch (Exception e) {
-      log.error("Error al crear solicitud de eliminación", e);
-    }
-  }
 }

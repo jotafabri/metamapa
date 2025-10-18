@@ -23,7 +23,7 @@
                             <video th:if="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
                                        #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
                                        #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                                   th:src="${ruta}"
+                                   th:src="@{${backendUrl} + '/files/' + ${ruta}}"
                                    class="carousel-media"
                                    controls
                                    playsinline>
@@ -32,7 +32,7 @@
                             <img th:unless="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
                                          #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
                                          #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                                 th:src="${ruta}"
+                                 th:src="@{${backendUrl} + '/files/' + ${ruta}}"
                                  th:alt="'Imagen ' + ${iterStat.count}"
                                  class="carousel-media">
                         </div>
@@ -95,7 +95,7 @@
                             </button>
 
                             <!-- Eliminar: solo ADMIN -->
-                            <button th:if="${isAdmin}"
+                            <button sec:authorize="hasRole('ADMIN')"
                                     class="menu-item danger"
                                     th:onclick="'eliminarHecho(' + ${hecho.id} + ')'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"

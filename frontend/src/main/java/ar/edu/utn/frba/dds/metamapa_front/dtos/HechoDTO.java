@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa_front.dtos;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Builder
@@ -20,7 +21,10 @@ public class HechoDTO {
   private String categoria; //
   private Double latitud; //
   private Double longitud; //
-  private LocalDateTime fechaAcontecimiento; //
+  private String localidad;
+  private String provincia;
+  private String pais;
+  private LocalDate fechaAcontecimiento; //
   private LocalDateTime fechaCarga; //
   private Long contribuyenteId;
 

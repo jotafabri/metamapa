@@ -2,10 +2,13 @@ package ar.edu.utn.frba.dds.metamapa.controllers;
 
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,23 +24,45 @@ public class SolicitudesController {
   private IAgregacionService agregacionService;
 
   @PostMapping
-  public void crearSolicitud(@RequestBody SolicitudEliminacionInputDTO solicitud) {
-    this.agregacionService.crearSolicitud(solicitud);
+  public ResponseEntity<SolicitudEliminacionOutputDTO> crearSolicitud(@RequestBody SolicitudEliminacionInputDTO solicitud) {
+    try {
+      SolicitudEliminacionOutputDTO solicitudCreada = this.agregacionService.crearSolicitud(solicitud);
+      return ResponseEntity.status(HttpStatus.CREATED).body(solicitudCreada);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }catch (Exception e) {
+        return ResponseEntity.badRequest().build();
+    }
   }
 
   @GetMapping
-  public List<SolicitudEliminacionOutputDTO> getSolicitudes() {
-    return this.agregacionService.findAllSolicitudes();
+  public ResponseEntity<List<SolicitudEliminacionOutputDTO>> getSolicitudes() {
+    try {
+      List<SolicitudEliminacionOutputDTO> solicitudes = this.agregacionService.findAllSolicitudes();
+      return ResponseEntity.ok(solicitudes);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @PatchMapping("{id}/aceptar")
-  public void aceptarSolicitud(@PathVariable Long id) {
-    this.agregacionService.aprobarSolicitudById(id);
+  public ResponseEntity<Void> aceptarSolicitud(@PathVariable Long id) {
+    try {
+      this.agregacionService.aprobarSolicitudById(id);
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @PatchMapping("{id}/rechazar")
-  public void rechazarSolicitud(@PathVariable Long id) {
-    this.agregacionService.rechazarSolicitudById(id);
+  public ResponseEntity<Void> rechazarSolicitud(@PathVariable Long id) {
+    try {
+      this.agregacionService.rechazarSolicitudById(id);
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 }
 
