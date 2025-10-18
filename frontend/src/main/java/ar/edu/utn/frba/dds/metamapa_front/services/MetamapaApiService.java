@@ -8,6 +8,7 @@ import java.util.Map;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.DatosGeograficosDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.LoginRequest;
@@ -118,9 +119,12 @@ public class MetamapaApiService {
     return response != null ? response : List.of();
   }
 
-  public List<String> getCategoriasByHandle(String handle) {
-    List<String> response = webApiCallerService.getListPublic(metamapaServiceUrl + "/colecciones/" + handle + "/categorias", String.class);
-    return response != null ? response : List.of();
+  public DatosGeograficosDTO getDatosUbicacionByHandle(String handle) {
+    DatosGeograficosDTO response = webApiCallerService.getPublic(metamapaServiceUrl + "/colecciones/" + handle + "/ubicaciones", DatosGeograficosDTO.class);
+    if (response == null) {
+      throw new NotFoundException("DatosGeograficos", handle);
+    }
+    return response;
   }
 
   public ColeccionDTO getColeccionByHandle(String handle) {

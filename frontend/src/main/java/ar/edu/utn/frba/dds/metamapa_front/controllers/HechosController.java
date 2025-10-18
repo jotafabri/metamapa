@@ -65,8 +65,8 @@ public class HechosController {
       return "redirect:/colecciones";
     } catch (Exception e) {
       log.error("Error al crear nuevo hecho", e);
-      model.addAttribute("titulo", "Contribuir");
-      return "redirect:/hechos/nuevo";
+      model.addAttribute("error", "Ocurrió un error al crear nuevo hecho");
+      return mostrarFormularioCrear(model);
     }
   }
 

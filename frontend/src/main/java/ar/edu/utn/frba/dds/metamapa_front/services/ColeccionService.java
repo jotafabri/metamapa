@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.DatosGeograficosDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
@@ -23,8 +24,8 @@ public class ColeccionService {
     return metamapaApiService.getHechosByHandle(handle, filtros);
   }
 
-  public List<String> getCategoriasByHandle(String handle) {
-    return metamapaApiService.getCategoriasByHandle(handle);
+  public DatosGeograficosDTO getCategoriasByHandle(String handle) {
+    return metamapaApiService.getDatosUbicacionByHandle(handle);
   }
 
   public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {

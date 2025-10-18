@@ -13,6 +13,7 @@
             <div class="formulario-tarjeta">
 
                 <div class="formulario-encabezado">
+
                     <h1 class="formulario-titulo">Reportar Información Crítica</h1>
                     <p class="formulario-subtitulo">
                         Contribuye con información que puede ayudar a resolver problemas sociales críticos
@@ -20,6 +21,10 @@
                 </div>
 
                 <div class="formulario-contenido">
+
+                    <div th:if="${error}" class="alert alert-danger">
+                        <p th:text="${error}">Ocurrió un error</p>
+                    </div>
                     <form th:action="@{/hechos/crear}"
                           th:object="${hecho}"
                           method="post"
@@ -86,7 +91,8 @@
 
                                         <div class="field-group">
                                             <label for="longitud">Longitud *</label>
-                                            <input type="text" id="longitud" name="longitud" class="field-input" required
+                                            <input type="text" id="longitud" name="longitud" class="field-input"
+                                                   required
                                                    readonly
                                                    placeholder="Haz clic en el mapa" th:field="*{longitud}">
                                         </div>
@@ -97,12 +103,14 @@
                                                readonly th:field="*{pais}">
                                         <div class="field-group">
                                             <label for="provincia">Estado/Provincia</label>
-                                            <input type="text" id="provincia" name="provincia" class="field-input" required
+                                            <input type="text" id="provincia" name="provincia" class="field-input"
+                                                   required
                                                    readonly th:field="*{provincia}">
                                         </div>
                                         <div class="field-group">
                                             <label for="localidad">Localidad</label>
-                                            <input type="text" id="localidad" name="localidad" class="field-input" required
+                                            <input type="text" id="localidad" name="localidad" class="field-input"
+                                                   required
                                                    readonly th:field="*{localidad}">
                                         </div>
                                     </div>

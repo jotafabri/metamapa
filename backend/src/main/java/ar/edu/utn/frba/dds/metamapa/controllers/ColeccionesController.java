@@ -5,6 +5,7 @@ import java.util.List;
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.DatosGeograficosDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
@@ -138,11 +139,11 @@ public class ColeccionesController {
     }
   }
 
-  @GetMapping("/{handle}/categorias")
-  public ResponseEntity<List<String>> getCategoriasByHandle(@PathVariable String handle) {
+  @GetMapping("/{handle}/ubicaciones")
+  public ResponseEntity<DatosGeograficosDTO> getDatosGeograficosByHandle(@PathVariable String handle) {
     try {
-      List<String> categorias = coleccionService.getCategoriasByHandle(handle);
-      return ResponseEntity.ok(categorias);
+      DatosGeograficosDTO ubicaciones = coleccionService.obtenerDatosGeograficos(handle);
+      return ResponseEntity.ok(ubicaciones);
     } catch (NotFoundException e) {
       log.error(e.getMessage());
       return ResponseEntity.notFound().build();

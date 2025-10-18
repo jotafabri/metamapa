@@ -15,7 +15,9 @@ public class HechoFiltroDTO {
   private String fechaReporteHasta;
   private String fechaAcontecimientoDesde;
   private String fechaAcontecimientoHasta;
-  private String ubicacion;
+  private String pais;
+  private String provincia;
+  private String localidad;
   private Boolean soloConMultimedia;
   private Boolean soloConContribuyente;
   private Boolean curado = false;

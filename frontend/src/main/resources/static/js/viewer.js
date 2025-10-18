@@ -130,3 +130,20 @@ document.addEventListener('click', function(e) {
         cerrarModal();
     }
 });
+
+document.getElementById('tipo-ubicacion').addEventListener('change', function() {
+    const tipo = this.value;
+
+    // Ocultar todos
+    document.getElementById('container-pais').style.display = 'none';
+    document.getElementById('container-provincia').style.display = 'none';
+    document.getElementById('container-localidad').style.display = 'none';
+
+    // Limpiar solo los que NO son el tipo seleccionado
+    if (tipo !== 'pais') document.getElementById('pais').value = '';
+    if (tipo !== 'provincia') document.getElementById('provincia').value = '';
+    if (tipo !== 'localidad') document.getElementById('localidad').value = '';
+
+    // Mostrar el seleccionado
+    document.getElementById('container-' + tipo).style.display = 'block';
+});

@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa_front.controllers;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.DatosGeograficosDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
@@ -62,7 +63,7 @@ public class ColeccionController {
     try {
       // Obtener hechos paginados
       List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros);
-      List<String> listaCategorias = coleccionService.getCategoriasByHandle(handle);
+      DatosGeograficosDTO datosGeograficos = coleccionService.getCategoriasByHandle(handle);
 
       Integer page = filtros.getPage();
       Integer size = filtros.getSize();
@@ -70,21 +71,13 @@ public class ColeccionController {
       Long currentUserId = null;
       boolean isAdmin = false;
 
-//      if (auth != null && auth.isAuthenticated()) {
-//        // Ajustar según tu implementación de UserDetails
-//        Object principal = auth.getPrincipal();
-//        if (principal instanceof CustomUserDetails) {
-//            currentUserId = ((CustomUserDetails) principal).getId();
-//        }
-//
-//        isAdmin = auth.getAuthorities().stream()
-//            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-//    }
-
       model.addAttribute("titulo", "Colección");
       model.addAttribute("handle", handle);
       model.addAttribute("hechosPaginados", hechosPaginados);
-      model.addAttribute("listaCategorias", listaCategorias);
+      model.addAttribute("listaCategorias", datosGeograficos.getCategorias());
+      model.addAttribute("listaPaises", datosGeograficos.getPaises());
+      model.addAttribute("listaProvincias", datosGeograficos.getProvincias());
+      model.addAttribute("listaLocalidades", datosGeograficos.getLocalidades());
       model.addAttribute("currentPage", page);
       model.addAttribute("pageSize", size);
       model.addAttribute("hasMore", hechosPaginados.size() == size);

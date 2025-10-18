@@ -1,11 +1,17 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.DatosGeograficosDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
@@ -37,7 +43,7 @@ public class ColeccionService implements IColeccionService {
                                           HechoFiltroDTO filtros
   ) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
-    return coleccionesRepository.findColeccionByHandle(coleccion.getHandle())
+    return coleccion
         .navegar(filtros.getList(), filtros.getCurado())
         .stream()
         .filter(h -> h.getEstado().equals(Estado.ACEPTADA))
@@ -57,9 +63,36 @@ public class ColeccionService implements IColeccionService {
         .toList();
   }
 
-  public List<String> getCategoriasByHandle(String handle) {
+  public DatosGeograficosDTO obtenerDatosGeograficos(String handle) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
-    return coleccionesRepository.findDistinctCategoriasByHandle(coleccion.getHandle());
+    List<Object[]> raw = coleccionesRepository.findDatosRawByHandle(coleccion.getHandle());
+
+    return new DatosGeograficosDTO(
+        raw.stream()
+            .map(r -> (String) r[0])
+            .filter(Objects::nonNull)
+            .filter(s -> !s.trim().isEmpty())
+            .distinct()
+            .collect(Collectors.toList()),
+        raw.stream()
+            .map(r -> (String) r[1])
+            .filter(Objects::nonNull)
+            .filter(s -> !s.trim().isEmpty())
+            .distinct()
+            .collect(Collectors.toList()),
+        raw.stream()
+            .map(r -> (String) r[2])
+            .filter(Objects::nonNull)
+            .filter(s -> !s.trim().isEmpty())
+            .distinct()
+            .collect(Collectors.toList()),
+        raw.stream()
+            .map(r -> (String) r[3])
+            .filter(Objects::nonNull)
+            .filter(s -> !s.trim().isEmpty())
+            .distinct()
+            .collect(Collectors.toList())
+    );
   }
 
   //ADMIN:Operacion (C)RUD

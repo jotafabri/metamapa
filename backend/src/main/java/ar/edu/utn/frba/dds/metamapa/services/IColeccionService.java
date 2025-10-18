@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.DatosGeograficosDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 
 public interface IColeccionService {
@@ -16,7 +17,7 @@ public interface IColeccionService {
   List<HechoDTO> getHechosByHandleAdmin(String handle,
                                         HechoFiltroDTO filtros);
 
-  List<String> getCategoriasByHandle(String handle);
+  DatosGeograficosDTO obtenerDatosGeograficos(String handle);
 
   ColeccionDTO crearDesdeDTO(ColeccionDTO coleccionDTO);
 

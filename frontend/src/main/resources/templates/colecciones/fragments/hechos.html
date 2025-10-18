@@ -95,7 +95,7 @@
                             </button>
 
                             <!-- Eliminar: solo ADMIN -->
-                            <button th:if="${isAdmin}"
+                            <button sec:authorize="hasRole('ADMIN')"
                                     class="menu-item danger"
                                     th:onclick="'eliminarHecho(' + ${hecho.id} + ')'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
