@@ -161,3 +161,76 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+function mostrarToast(mensaje, tipo = 'success', duracion = 5000) {
+    const contenedor = document.getElementById('toast-container');
+    if (!contenedor) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.innerHTML = `<span>${mensaje}</span><button>&times;</button>`;
+
+    const btnCerrar = toast.querySelector('button');
+    btnCerrar.addEventListener('click', () => {
+        contenedor.removeChild(toast);
+    });
+
+    contenedor.appendChild(toast);
+
+    // Animación de aparición
+    setTimeout(() => toast.classList.add('show'), 100);
+
+    // Desaparecer automáticamente
+    setTimeout(() => {
+        if (contenedor.contains(toast)) {
+            contenedor.removeChild(toast);
+        }
+    }, duracion);
+}
+
+// Manejo del envío de formulario
+// Manejo del envío de formulario
+const formulario = document.getElementById('formulario-contribucion');
+formulario.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(formulario);
+    let exitoMostrado = false; // flag para evitar mostrar error si ya hubo éxito
+
+    try {
+        const respuesta = await fetch(formulario.action, {
+            method: 'POST',
+            body: formData
+        });
+
+        // Siempre intentamos leer JSON
+        const data = await respuesta.json();
+
+        if (respuesta.ok) {
+            // Mostrar toast de éxito
+            mostrarToast(data.mensaje || 'El hecho se envió correctamente', 'success');
+            exitoMostrado = true;
+
+            formulario.reset();
+            pasoActual = 1;
+            mostrarPaso(pasoActual);
+
+            // Redirigir según el JSON del backend
+            if (data.redirect) {
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 2000);
+            }
+        } else {
+            // Mostrar toast de error según el JSON
+            if (!exitoMostrado) {
+                mostrarToast(data.error || data.mensaje || 'No se pudo reportar el hecho', 'error');
+            }
+        }
+
+    } catch (err) {
+        console.error('Error al enviar el hecho:', err);
+        if (!exitoMostrado) {
+            mostrarToast('Error al enviar el hecho', 'error');
+        }
+    }
+});

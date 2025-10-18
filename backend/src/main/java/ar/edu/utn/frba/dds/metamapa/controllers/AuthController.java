@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RefreshRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.TokenResponse;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.UserDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.services.IUsuarioService;
 import ar.edu.utn.frba.dds.metamapa.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -19,16 +20,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
   private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
 
   @Autowired
   private IUsuarioService usuarioService;
@@ -46,29 +47,35 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<AuthResponseDTO> loginApi(@RequestBody Map<String, String> credentials) {
     try {
-      String email = loginRequest.getEmail();
-      String password = loginRequest.getPassword();
+      String username = credentials.get("email");
+      String password = credentials.get("password");
+
+      log.info("Intento de login recibido - email: '{}', password: '{}'", username, password != null ? "****" : null);
 
       // Validación básica de credenciales
-      if (email == null || email.trim().isEmpty() ||
+      if (username == null || username.trim().isEmpty() ||
           password == null || password.trim().isEmpty()) {
+        log.warn("Credenciales vacías recibidas");
         return ResponseEntity.badRequest().build();
       }
-
-      usuarioService.autenticar(email, password);
+      //Autenticar el usuario usando el LoginService
+      Usuario usuario = usuarioService.autenticar(username, password);
+      log.info("Usuario autenticado: email='{}', rol='{}'", usuario.getEmail(), usuario.getRol());
 
       // Generar tokens
-      String accessToken = usuarioService.generarAccessToken(email);
-      String refreshToken = usuarioService.generarRefreshToken(email);
+      String accessToken = usuarioService.generarAccessToken(username);
+      String refreshToken = usuarioService.generarRefreshToken(username);
 
       AuthResponseDTO response = AuthResponseDTO.builder()
           .accessToken(accessToken)
           .refreshToken(refreshToken)
+              .rol(usuario.getRol())                  // <-- agregamos rol
+              .permisos(usuario.getPermisos())        // <-- agregamos permisos
           .build();
 
-      log.info("El usuario {} está logueado. El token generado es {}", email, accessToken);
+      log.info("El usuario {} está logueado. El token generado es {}", username, accessToken);
 
       return ResponseEntity.ok(response);
     } catch (BadCredentialsException e) {
@@ -113,4 +120,24 @@ public class AuthController {
       return ResponseEntity.status(404).build();
     }
   }
+
+  @GetMapping("/user/roles-permisos")
+  public ResponseEntity<AuthResponseDTO> getRolesPermisos(Authentication authentication) {
+    if (authentication == null || !authentication.isAuthenticated()) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    String email = authentication.getName(); // llenado por JwtAuthenticationFilter
+    UserDTO usuario = usuarioService.getUserByEmail(email);
+
+    AuthResponseDTO dto = AuthResponseDTO.builder()
+            .rol(usuario.getRol())
+            .permisos(usuario.getPermisos())
+            .accessToken("") // no hace falta devolverlo aquí
+            .refreshToken("")
+            .build();
+
+    return ResponseEntity.ok(dto);
+  }
+
 }

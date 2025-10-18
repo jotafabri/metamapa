@@ -1,13 +1,12 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Permiso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Rol;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,12 +41,33 @@ public class Usuario extends Persistente {
   @Column(name = "fecha_nacimiento")
   private LocalDate fechaNacimiento;
 
+  @ElementCollection(targetClass = Permiso.class, fetch = FetchType.EAGER)
+  @Enumerated(EnumType.STRING)
+  @CollectionTable(
+          name = "usuario_permisos",
+          joinColumns = @JoinColumn(name = "usuario_id")
+  )
+  @Column(name = "permiso")
+  private List<Permiso> permisos;
+
+  public Usuario(String email, String password, Rol rol, String nombre, String apellido, List<Permiso> permisos) {
+    super();
+    this.email = email;
+    this.password = password;
+    this.rol = rol;
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.permisos = permisos;
+  }
+
   public Usuario(String email, String password, Rol rol) {
     super();
     this.email = email;
     this.password = password;
     this.rol = rol;
+    this.permisos = new ArrayList<>();
   }
+
 
   @Override
   public String toString() {

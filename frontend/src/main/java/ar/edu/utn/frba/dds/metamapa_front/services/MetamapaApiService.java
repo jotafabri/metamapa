@@ -6,16 +6,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.DatosGeograficosDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.LoginRequest;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RegistroRequest;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.Rol;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,7 +49,7 @@ public class MetamapaApiService {
       // Llamar al endpoint /api/auth/login que devuelve los JWT reales
       AuthResponseDTO authResponse = webClient
           .post()
-          .uri(metamapaServiceUrl + "/auth/login")
+          .uri(authServiceUrl + "/auth/login")
           .bodyValue(Map.of(
               "email", username,
               "password", password
@@ -84,30 +75,57 @@ public class MetamapaApiService {
     }
   }
 
-  public RolesPermisosDTO getRolesPermisos(String email) {
+  public RolesPermisosDTO getRolesPermisos(String accessToken) {
     try {
-      // Llamar al nuevo endpoint /api/auth/user con el email
-      Map<String, Object> response = webClient.post().uri(metamapaServiceUrl + "/auth/user").bodyValue(Map.of("email", email)).retrieve().bodyToMono(Map.class).block();
+      // Hacemos un GET al endpoint protegido /auth/user/roles-permisos
+      Map<String, Object> response = webClient
+              .get()
+              .uri(metamapaServiceUrl + "/auth/user/roles-permisos")
+              .header("Authorization", "Bearer " + accessToken)
+              .retrieve()
+              .bodyToMono(Map.class)
+              .block();
 
       if (response == null) {
-        throw new RuntimeException("Usuario no encontrado");
+        throw new RuntimeException("No se pudo obtener la información del usuario.");
       }
 
-      // Convertir la respuesta a RolesPermisosDTO
       RolesPermisosDTO rolesPermisos = new RolesPermisosDTO();
-      // El rol viene como string del backend (ej: "ADMIN" o "USER")
-      String rolStr = (String) response.get("rol");
-      // Aquí asumimos que RolesPermisosDTO tiene un método setRol que acepta un enum
-      // Por ahora devolvemos un DTO simple sin permisos
-      rolesPermisos.setRol(Rol.valueOf(rolStr));
-      rolesPermisos.setPermisos(List.of()); // Sin permisos por ahora
+      rolesPermisos.setUsername((String) response.get("email"));
+
+      // Convertir rol de String a enum
+      Object rolObj = response.get("rol");
+      if (rolObj != null) {
+        rolesPermisos.setRol(Rol.valueOf(rolObj.toString()));
+      }
+
+      // Convertir lista de permisos de String a enum
+      Object permisosObj = response.get("permisos");
+      if (permisosObj instanceof List<?>) {
+        List<Permiso> permisos = ((List<?>) permisosObj)
+                .stream()
+                .map(Object::toString)
+                .map(Permiso::valueOf)
+                .toList();
+        rolesPermisos.setPermisos(permisos);
+      }
 
       return rolesPermisos;
+
+    } catch (WebClientResponseException e) {
+      log.error("Error HTTP al obtener roles y permisos: {}", e.getMessage());
+      if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+        throw new RuntimeException("Token inválido o expirado. Por favor, inicie sesión nuevamente.");
+      }
+      throw new RuntimeException("Error al comunicarse con el backend: " + e.getMessage(), e);
     } catch (Exception e) {
-      log.error(e.getMessage());
-      throw new RuntimeException("Error al obtener roles y permisos: " + e.getMessage(), e);
+      log.error("Error general al obtener roles y permisos", e);
+      throw new RuntimeException("Error inesperado: " + e.getMessage(), e);
     }
   }
+
+
+
 
   public List<ColeccionDTO> getAllColecciones() {
     List<ColeccionDTO> response = webApiCallerService.getListPublic(metamapaServiceUrl + "/colecciones", ColeccionDTO.class);
@@ -179,7 +197,7 @@ public class MetamapaApiService {
     } catch (RuntimeException e) {
       // Si falla porque no hay token, usar versión pública (anónimo)
       if (e.getMessage().contains("No hay token de acceso")) {
-        response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
+        response = webApiCallerService.postPublic(authServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
       } else {
         throw e;
       }

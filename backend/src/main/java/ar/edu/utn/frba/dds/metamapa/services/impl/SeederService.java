@@ -6,7 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Permiso;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Rol;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteDinamica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.FuenteEstatica;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
@@ -14,6 +17,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
 import ar.edu.utn.frba.dds.metamapa.services.ISeederService;
 import ar.edu.utn.frba.dds.metamapa.services.normalizador.MapeadorTexto;
 import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorFuerte;
@@ -22,6 +26,8 @@ import ar.edu.utn.frba.dds.metamapa.services.normalizador.ValidadorFechas;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +45,17 @@ public class SeederService implements ISeederService {
   @Autowired
   private HechosService hechosService;
 
+  @Autowired
+  private IUsuarioRepository usuarioRepository;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
+
   @Value("${app.base-url}")
   private String baseUrl;
 
-//  @PostConstruct
+  @PostConstruct
   @Override
   @Transactional // ← Agregar transaccional para manejar todo en una transacción
   public void init() {
@@ -50,6 +63,38 @@ public class SeederService implements ISeederService {
     coleccionesRepository.deleteAll();
     fuentesRepository.deleteAll();
     hechosRepository.deleteAll();
+    usuarioRepository.deleteAll();
+
+
+    // === CREAR USUARIOS DE PRUEBA ===
+
+    Usuario admin = new Usuario();
+    admin.setNombre("Tomas");
+    admin.setEmail("admin@hotmail.com");
+    admin.setPassword(passwordEncoder.encode("1234"));
+    admin.setRol(Rol.ADMIN);
+    admin.setPermisos(List.of(Permiso.EDITAR_HECHOS, Permiso.CREAR_HECHOS, Permiso.ELIMINAR_HECHOS, Permiso.ADMINISTRAR_COLECCIONES));
+
+    Usuario contribuyente = new Usuario();
+    contribuyente.setNombre("Marcos");
+    contribuyente.setEmail("contribuyente@hotmail.com");
+    contribuyente.setPassword(passwordEncoder.encode("1234"));
+    contribuyente.setRol(Rol.USER);
+    contribuyente.setPermisos(List.of(Permiso.CREAR_HECHOS));
+
+    usuarioRepository.save(admin);
+    usuarioRepository.save(contribuyente);
+
+    System.out.println("=== USUARIOS DE PRUEBA CREADOS ===");
+    usuarioRepository.findAll().forEach(u ->
+            System.out.println("- " + u.getEmail() + " [" + u.getRol() + "]")
+    );
+
+
+
+
+
+
 
     //Inicializo Mappeadores
     MapeadorTexto mapeadorUbicaciones;
@@ -154,6 +199,7 @@ public class SeederService implements ISeederService {
     // 3. GUARDAR TODOS LOS HECHOS DINAMICOS
     hechosRepository.saveAll(hechosDinamicos);
 
+    /*
     // 6. CREAR Y GUARDAR FUENTES ESTÁTICAS
     var rutas = List.of(
         "static/csv/desastres_naturales_argentina.csv",
@@ -181,7 +227,7 @@ public class SeederService implements ISeederService {
 
 
     }
-
+*/
 
     // 7. CREAR COLECCIONES
     Coleccion coleccionPrueba = new Coleccion("Coleccion prueba", "Esto es una prueba");
@@ -207,6 +253,8 @@ public class SeederService implements ISeederService {
     coleccionPrueba3.agregarFuente(fuenteDinamica3);
     coleccionPrueba3.agregarFuente(fuenteDinamica4);
 
+
+    /*
     // Agregar fuentes estáticas (ya guardadas)
     for (FuenteEstatica fuente : fuentesEstaticasCreadas) {
       coleccionPrueba3.agregarFuente(fuente);
@@ -215,5 +263,8 @@ public class SeederService implements ISeederService {
     coleccionPrueba3.actualizarColeccion();
     coleccionPrueba3.actualizarCurados();
     coleccionesRepository.save(coleccionPrueba3);
+*/
+
   }
+
 }
