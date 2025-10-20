@@ -293,6 +293,51 @@ public class MetamapaApiService {
     return response;
   }
 
+  public void actualizarEstadisticas() {
+    webApiCallerService.get(metamapaServiceUrl + "/estadisticas/actualizar", null);
+  }
+
+  public String obtenerProvinciaConMasHechosEnColeccion(String coleccionHandle) {
+    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-coleccion?coleccionHandle=" + coleccionHandle, String.class);
+    if (response == null) {
+      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
+    }
+    return response;
+  }
+
+  public String obtenerCategoriaConMasHechos() {
+    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/categoria-mas-hechos", String.class);
+    if (response == null) {
+      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
+    }
+    return response;
+  }
+
+  public String obtenerProvinciaConMasHechosDeCategoria(String categoria) {
+    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-categoria?categoria=" + categoria, String.class);
+    if (response == null) {
+      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
+    }
+    return response;
+  }
+
+  public Integer obtenerHoraConMasHechosDeCategoria(String categoria) {
+    Integer response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/hora-mas-hechos-categoria?categoria=" + categoria, Integer.class);
+    if (response == null) {
+      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
+    }
+    return response;
+  }
+
+  public Long obtenerCantidadSolicitudesSpam() {
+    Long response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/solicitudes-spam", Long.class);
+    if (response == null) {
+      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
+    }
+    return response;
+  }
+
+
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
     Boolean curado = filtros.getCurado();
     Integer page = filtros.getPage();
@@ -330,5 +375,4 @@ public class MetamapaApiService {
   public void postPublicJson(String path, Object body) {
     webApiCallerService.postPublic(metamapaServiceUrl + path, body, Void.class);
   }
-
 }

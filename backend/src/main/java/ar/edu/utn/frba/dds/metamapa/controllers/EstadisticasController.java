@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/estadisticas")
-@CrossOrigin(origins = "http://localhost:8082") // permite que el frontend acceda
 public class EstadisticasController {
 
   @Autowired
