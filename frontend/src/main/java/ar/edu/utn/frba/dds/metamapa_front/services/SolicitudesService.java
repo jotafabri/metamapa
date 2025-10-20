@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa_front.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
@@ -12,6 +13,10 @@ import org.springframework.stereotype.Service;
 public class SolicitudesService {
   @Autowired
   private MetamapaApiService metamapaApiService;
+
+  public List<SolicitudEliminacionDTO> obtenerSolicitudes() {
+    return metamapaApiService.obtenerSolicitudes();
+  }
 
   public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
     metamapaApiService.crearSolicitudEliminacion(solicitudDTO);

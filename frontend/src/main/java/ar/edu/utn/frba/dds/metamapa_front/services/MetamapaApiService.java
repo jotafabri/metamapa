@@ -248,6 +248,11 @@ public class MetamapaApiService {
     return response;
   }
 
+  public List<SolicitudEliminacionDTO> obtenerSolicitudes() {
+    List<SolicitudEliminacionDTO> response = webApiCallerService.getList(metamapaServiceUrl + "/solicitudes", SolicitudEliminacionDTO.class);
+    return response != null ? response : List.of();
+  }
+
   public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
     webApiCallerService.postPublic(metamapaServiceUrl + "/solicitudes", solicitudDTO, SolicitudEliminacionDTO.class);
   }
