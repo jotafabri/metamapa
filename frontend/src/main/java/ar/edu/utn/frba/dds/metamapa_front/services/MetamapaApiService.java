@@ -248,6 +248,22 @@ public class MetamapaApiService {
     return response;
   }
 
+  public HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado) {
+    HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString() + "/aprobar", hechoActualizado, HechoDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al aprobar hecho en el servicio externo");
+    }
+    return response;
+  }
+
+  public HechoDTO rechazarHecho(Long id) {
+    HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString() + "/rechazar", null, HechoDTO.class);
+    if (response == null) {
+      throw new RuntimeException("Error al rechazar hecho en el servicio externo");
+    }
+    return response;
+  }
+
   public List<SolicitudEliminacionDTO> obtenerSolicitudes() {
     List<SolicitudEliminacionDTO> response = webApiCallerService.getList(metamapaServiceUrl + "/solicitudes", SolicitudEliminacionDTO.class);
     return response != null ? response : List.of();

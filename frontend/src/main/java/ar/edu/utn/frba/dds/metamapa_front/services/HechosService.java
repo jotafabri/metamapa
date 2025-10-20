@@ -30,4 +30,14 @@ public class HechosService {
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
     return metamapaApiService.actualizarHecho(id, hechoDTO);
   }
+
+  public void aprobarHecho(Long id, HechoDTO hechoActualizado) {
+    metamapaApiService.aprobarHecho(id, hechoActualizado);
+  }
+
+  public void rechazarHecho(Long id) {
+    metamapaApiService.rechazarHecho(id);
+  }
+
+
 }

@@ -127,17 +127,9 @@ public class HechosService implements IHechosService {
 
   @Override
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
-    Hecho hecho = intentarRecuperarHecho(id);
-
-    hecho.setTitulo(hechoDTO.getTitulo());
-    hecho.setDescripcion(hechoDTO.getDescripcion());
-    hecho.setCategoria(hechoDTO.getCategoria());
-    hecho.setLatitud(hechoDTO.getLatitud());
-    hecho.setLongitud(hechoDTO.getLongitud());
-    hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
-
-    Hecho hechoActualizado = hechosRepository.save(hecho);
-    return HechoDTO.fromHecho(hechoActualizado);
+    Hecho hecho = realizarActualizacion(id, hechoDTO);
+    hechosRepository.save(hecho);
+    return HechoDTO.fromHecho(hecho);
   }
 
   @Override
@@ -147,7 +139,37 @@ public class HechosService implements IHechosService {
     hechosRepository.save(hecho);
   }
 
+  @Override
+  public HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado) {
+    Hecho hecho = realizarActualizacion(id, hechoActualizado);
+    hecho.aceptar();
+    hechosRepository.save(hecho);
+    return HechoDTO.fromHecho(hecho);
+  }
+
+  @Override
+  public HechoDTO rechazarHecho(Long id) {
+    Hecho hecho = intentarRecuperarHecho(id);
+    hecho.rechazar();
+    hechosRepository.save(hecho);
+    return HechoDTO.fromHecho(hecho);
+  }
+
   private Hecho intentarRecuperarHecho(Long id) {
     return hechosRepository.findById(id).orElseThrow(() -> new NotFoundException("Hecho", id.toString()));
   }
+
+  private Hecho realizarActualizacion(Long id, HechoDTO hechoDTO) {
+    Hecho hecho = intentarRecuperarHecho(id);
+
+    hecho.setTitulo(hechoDTO.getTitulo());
+    hecho.setDescripcion(hechoDTO.getDescripcion());
+    hecho.setCategoria(hechoDTO.getCategoria());
+    hecho.setLatitud(hechoDTO.getLatitud());
+    hecho.setLongitud(hechoDTO.getLongitud());
+    hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
+
+    return hecho;
+  }
+
 }

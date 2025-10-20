@@ -18,6 +18,10 @@ public interface IHechosService {
 
   void marcarEliminado(Long id);
 
+  HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado);
+
+  HechoDTO rechazarHecho(Long id);
+
   /*public List<HechoOutputDTO> buscarTodos(
           String categoria,
           String fecha_reporte_desde,

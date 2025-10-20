@@ -111,6 +111,30 @@ public class HechosController {
     }
   }
 
+  @PatchMapping("/{id}/aprobar")
+  public ResponseEntity<HechoDTO> aprobarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoActualizado) {
+    try {
+      HechoDTO hecho = hechosService.aprobarHecho(id, hechoActualizado);
+      return ResponseEntity.ok(hecho);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+  @PatchMapping("/{id}/rechazar")
+  public ResponseEntity<HechoDTO> rechazarHecho(@PathVariable Long id) {
+    try {
+      HechoDTO hecho = hechosService.rechazarHecho(id);
+      return ResponseEntity.ok(hecho);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
   @GetMapping("/inicializar")
   public ResponseEntity<Object> inicializarDatos() {
     try {
