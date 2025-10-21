@@ -16,7 +16,7 @@ public class UsuarioService {
         metamapaApiService.crearUsuario(registroRequest);
     }
 
-    public AuthResponseDTO autenticar(LoginRequest loginRequest) {
-      return metamapaApiService.autenticar(loginRequest);
-    }
+    //public AuthResponseDTO autenticar(LoginRequest loginRequest) {
+      //return metamapaApiService.autenticar(loginRequest);
+    //}
 }

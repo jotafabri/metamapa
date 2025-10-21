@@ -43,7 +43,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth ->  {
 
           // Permitir acceso público a endpoints de autenticación
-            auth.requestMatchers("/auth/login","/auth/registro","/auth/refresh").permitAll(); //PERMITE HACER EL LOGIN Y REFRESHTOKEN
+            auth.requestMatchers("/auth/login","/auth/registro","/auth/refresh","/hechos","/colecciones").permitAll(); //PERMITE HACER EL LOGIN Y REFRESHTOKEN
             auth.requestMatchers("/auth/user/roles-permisos").authenticated(); //EXIJO QUE ESTE AUTENTICADO
             auth.anyRequest().authenticated();
         })

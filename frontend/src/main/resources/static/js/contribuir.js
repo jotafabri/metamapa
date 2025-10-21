@@ -64,6 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pasoActual < pasos.length) {
                 pasoActual++;
                 mostrarPaso(pasoActual);
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
             }
         });
     });
@@ -73,6 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pasoActual > 1) {
                 pasoActual--;
                 mostrarPaso(pasoActual);
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
             }
         });
     });

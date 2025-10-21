@@ -57,14 +57,16 @@ public class SeederService implements ISeederService {
 
   @PostConstruct
   @Override
-  @Transactional // ← Agregar transaccional para manejar todo en una transacción
+  @Transactional // Trata de hacer la totalidad en una transaccion.
   public void init() {
     // Limpiar base de datos
+    // Para pruebas mejor poner en el application.properties : spring.jpa.hibernate.ddl-auto=create-drop
+   /*
     coleccionesRepository.deleteAll();
     fuentesRepository.deleteAll();
     hechosRepository.deleteAll();
     usuarioRepository.deleteAll();
-
+    */
 
     // === CREAR USUARIOS DE PRUEBA ===
 
@@ -116,12 +118,9 @@ public class SeederService implements ISeederService {
     );
     // 1. CREAR Y GUARDAR FUENTES DINÁMICAS PRIMERO
     FuenteDinamica fuenteDinamica = new FuenteDinamica();
-    FuenteDinamica fuenteDinamica2 = new FuenteDinamica();
-    FuenteDinamica fuenteDinamica3 = new FuenteDinamica();
-    FuenteDinamica fuenteDinamica4 = new FuenteDinamica();
-    FuenteDinamica fuenteDinamica5 = new FuenteDinamica();
 
-    fuentesRepository.saveAll(List.of(fuenteDinamica, fuenteDinamica2, fuenteDinamica3, fuenteDinamica4, fuenteDinamica5));
+    // GUARDAR FUENTES DINÁMICAS ACTUALIZADAS
+    fuentesRepository.save(fuenteDinamica);
 
     // 2. CREAR HECHOS
     Hecho hecho1 = hechosService.crearHecho(
@@ -177,8 +176,7 @@ public class SeederService implements ISeederService {
       h.setOrigen(Origen.CONTRIBUYENTE);
     });
 
-    // 5. GUARDAR FUENTES DINÁMICAS ACTUALIZADAS
-//    fuentesRepository.saveAll(List.of(fuenteDinamica, fuenteDinamica2, fuenteDinamica3, fuenteDinamica4));
+
 
     // 4. AHORA AGREGAR HECHOS A LAS FUENTES DINAMICAS
     hecho1.setFuente(fuenteDinamica);
@@ -186,18 +184,19 @@ public class SeederService implements ISeederService {
     fuenteDinamica.agregarHecho(hecho1);
     fuenteDinamica.agregarHecho(hecho3);
 
-    hecho2.setFuente(fuenteDinamica2);
-    fuenteDinamica2.agregarHecho(hecho2);
+    hecho2.setFuente(fuenteDinamica);
+    fuenteDinamica.agregarHecho(hecho2);
 
-    hecho4.setFuente(fuenteDinamica3);
-    fuenteDinamica3.agregarHecho(hecho4);
+    hecho4.setFuente(fuenteDinamica);
+    fuenteDinamica.agregarHecho(hecho4);
 
-    hecho5.setFuente(fuenteDinamica4);
-    fuenteDinamica4.agregarHecho(hecho5);
+    hecho5.setFuente(fuenteDinamica);
+    fuenteDinamica.agregarHecho(hecho5);
 
 
     // 3. GUARDAR TODOS LOS HECHOS DINAMICOS
     hechosRepository.saveAll(hechosDinamicos);
+    fuentesRepository.save(fuenteDinamica);
 
     /*
     // 6. CREAR Y GUARDAR FUENTES ESTÁTICAS
@@ -232,26 +231,61 @@ public class SeederService implements ISeederService {
     // 7. CREAR COLECCIONES
     Coleccion coleccionPrueba = new Coleccion("Coleccion prueba", "Esto es una prueba");
     coleccionPrueba.agregarFuente(fuenteDinamica);
-    coleccionPrueba.agregarFuente(fuenteDinamica2);
-    coleccionPrueba.agregarFuente(fuenteDinamica3);
     coleccionPrueba.actualizarColeccion();
     coleccionPrueba.actualizarCurados();
     this.coleccionesRepository.save(coleccionPrueba);
 
     Coleccion coleccionPrueba2 = new Coleccion("Coleccion prueba2", "Esto es una prueba2");
     coleccionPrueba2.agregarFuente(fuenteDinamica);
-    coleccionPrueba2.agregarFuente(fuenteDinamica2);
-    coleccionPrueba2.agregarFuente(fuenteDinamica3);
-    coleccionPrueba2.agregarFuente(fuenteDinamica4); // con fuente del hecho aislado
     coleccionPrueba2.actualizarColeccion();
     coleccionPrueba2.actualizarCurados();
     this.coleccionesRepository.save(coleccionPrueba2);
 
     Coleccion coleccionPrueba3 = new Coleccion("Coleccion prueba3", "Esto es una prueba3");
     coleccionPrueba3.agregarFuente(fuenteDinamica);
-    coleccionPrueba3.agregarFuente(fuenteDinamica2);
-    coleccionPrueba3.agregarFuente(fuenteDinamica3);
-    coleccionPrueba3.agregarFuente(fuenteDinamica4);
+    this.coleccionesRepository.save(coleccionPrueba3);
+
+    Coleccion coleccionPrueba4 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba4);
+
+    Coleccion coleccionPrueba5 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba5);
+
+
+    Coleccion coleccionPrueba6 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba6);
+
+    Coleccion coleccionPrueba7 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba7);
+
+
+    Coleccion coleccionPrueba8 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba8);
+
+    Coleccion coleccionPrueba9 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba9);
+
+    Coleccion coleccionPrueba10 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba10);
+
+    Coleccion coleccionPrueba11 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba11);
+
+    Coleccion coleccionPrueba12 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba12);
+
+    Coleccion coleccionPrueba13 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba13);
+
+    Coleccion coleccionPrueba14 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba14);
+
+    Coleccion coleccionPrueba15 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    this.coleccionesRepository.save(coleccionPrueba15);
+
+    Coleccion coleccionPrueba16 = new Coleccion("Coleccion prueba", "Esto es una prueba");
+    coleccionPrueba16.agregarFuente(fuenteDinamica);
+    this.coleccionesRepository.save(coleccionPrueba16);
 
 
     /*

@@ -61,14 +61,15 @@ public class MetamapaApiService {
       if (authResponse == null) {
         return null;
       }
-
       return authResponse;
 
     } catch (WebClientResponseException e) {
       log.error(e.getMessage());
       if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.NOT_FOUND) {
+        // Login fallido - credenciales incorrectas
         return null;
       }
+        // Otros errores HTTP
       throw new RuntimeException("Error en el servicio de autenticación: " + e.getMessage(), e);
     } catch (Exception e) {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);
@@ -282,6 +283,7 @@ public class MetamapaApiService {
     webApiCallerService.postPublic(metamapaServiceUrl + "/auth/registro", registroRequest, RegistroRequest.class);
   }
 
+  /*
   public AuthResponseDTO autenticar(LoginRequest loginRequest) {
     AuthResponseDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/auth/login", loginRequest, AuthResponseDTO.class);
     if (response == null) {
@@ -289,6 +291,7 @@ public class MetamapaApiService {
     }
     return response;
   }
+*/
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
     Boolean curado = filtros.getCurado();

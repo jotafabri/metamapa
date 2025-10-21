@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa.filters;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
@@ -48,11 +49,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 🔹 Recuperamos el rol real
         String rol = usuario.getRol().name(); // Ej: "ADMIN" o "USER"
 
-        // 🔹 Creamos el objeto de autenticación con su rol
+        // 🔹 Creamos el objeto autorities con su rol y permisos
+
+        var authorities = usuario.getPermisos().stream()
+                .map(p -> new SimpleGrantedAuthority(p.name()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + rol));
+
+
         var auth = new UsernamePasswordAuthenticationToken(
                 username,
                 null,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
+                authorities
         );
 
         SecurityContextHolder.getContext().setAuthentication(auth);

@@ -43,6 +43,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
       }
 
       log.info("Usuario logeado! Configurando variables de sesión");
+
       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
       HttpServletRequest request = attributes.getRequest();
 
