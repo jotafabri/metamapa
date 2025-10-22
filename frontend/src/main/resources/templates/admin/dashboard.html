@@ -1,49 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMapa - Panel de Administración</title>
-
-    <!-- Enlaces a estilos -->
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" th:href="@{/css/botones.css}">
-
-    <!-- Script -->
-    <script th:src="@{/js/admin.js}" defer></script>
-</head>
-
-<body>
-<header class="header">
-    <div class="container">
-        <nav class="navbar">
-            <a th:href="@{/landing}" class="logo-section">
-                <div class="logo-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                </div>
-                <span class="logo-text">MetaMapa</span>
-            </a>
-            <div class="nav-menu">
-                <a href="#" class="nav-link active">Dashboard</a>
-                <a href="#" class="nav-link">Hechos</a>
-                <a href="#" class="nav-link">Colecciones</a>
-                <a href="#" class="nav-link">Usuarios</a>
-                <a href="#" class="nav-link">Solicitudes</a>
-            </div>
-            <div class="button-section">
-                <span class="role-badge">Administrador</span>
-            </div>
-        </nav>
-    </div>
-</header>
-
-<main class="admin-section">
+<html th:replace="~{layout/base :: html}">
+<div th:fragment="contenido" class="admin-section">
     <div class="admin-container">
         <h1 class="admin-title">Panel de Administración</h1>
 
@@ -77,12 +33,4 @@
             <button class="btn btn-primary" id="btnActualizar">Actualizar estadísticas</button>
         </div>
     </div>
-</main>
-
-<footer style="text-align:center; margin-top:2rem; color:#95959F;">
-    <hr style="border-color:#2e2f31; margin:1.5rem 0;">
-    <p>MetaMapa © 2025 — Panel de administrador</p>
-</footer>
-
-</body>
-</html>
+</div>

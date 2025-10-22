@@ -159,4 +159,16 @@ public class ColeccionService implements IColeccionService {
     }
     return candidato;
   }
+
+  @Override
+  public void agregarFuente(Long idColeccion, Long idFuente) {
+
+  }
+
+  @Override
+  public void quitarFuente(Long idColeccion, Long idFuente) {
+
+  }
+
+
 }

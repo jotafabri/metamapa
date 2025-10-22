@@ -68,7 +68,7 @@ public class AdminController {
 
     // --- DASHBOARD ---
 
-    @GetMapping("/dashboard")
+    @GetMapping
     public String mostrarDashboard(Model model) {
         model.addAttribute("titulo", "Panel de administración");
         return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html

@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title>MetaMapa Admin - Solicitudes de Eliminación</title>
-    <th:insert th:replace="fragments/common :: head"></th:insert>
-</head>
-<body>
-<header th:replace="fragments/navbar :: navbar"></header>
-
-<div class="container">
+<html th:replace="~{layout/base :: html}">
+<div th:fragment="contenido" class="container">
     <h1>Solicitudes de Eliminación de Hechos</h1>
     <table class="table">
         <thead>
@@ -21,19 +12,19 @@
         <tr th:each="sol : ${solicitudesEliminacion}">
             <!-- Columna con detalles de la solicitud -->
             <td>
-                Hecho: <span th:text="${sol.hechoTexto}">Descripción del hecho</span><br />
-                Motivo: <span th:text="${sol.motivo}">Motivo de eliminación</span><br />
+                Hecho: <span th:text="${sol.hechoTexto}">Descripción del hecho</span><br/>
+                Motivo: <span th:text="${sol.motivo}">Motivo de eliminación</span><br/>
                 Solicitado por <span th:text="${sol.usuario}">Usuario</span>
                 el <span th:text="${#dates.format(sol.fecha, 'dd/MM/yyyy')}">01/01/2025</span>
             </td>
             <!-- Columna con botones de aprobar/rechazar -->
             <td>
                 <form th:action="@{/admin/solicitudes/aprobar}" th:method="post" style="display:inline;">
-                    <input type="hidden" name="solicitudId" th:value="${sol.id}" />
+                    <input type="hidden" name="solicitudId" th:value="${sol.id}"/>
                     <button type="submit" class="btn btn-success">Aprobar eliminación</button>
                 </form>
                 <form th:action="@{/admin/solicitudes/rechazar}" th:method="post" style="display:inline;">
-                    <input type="hidden" name="solicitudId" th:value="${sol.id}" />
+                    <input type="hidden" name="solicitudId" th:value="${sol.id}"/>
                     <button type="submit" class="btn btn-danger">Rechazar</button>
                 </form>
             </td>
@@ -41,5 +32,4 @@
         </tbody>
     </table>
 </div>
-</body>
 </html>

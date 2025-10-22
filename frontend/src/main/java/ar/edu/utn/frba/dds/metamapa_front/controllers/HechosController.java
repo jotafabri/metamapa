@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,13 +32,22 @@ public class HechosController {
   private static final Logger log = LoggerFactory.getLogger(HechosController.class);
   private final HechosService hechosService;
 
+  @Value("${colecciones.service.url}")
+  private String backendUrl;
+
   @GetMapping("/{id}")
   public String verDetalleHecho(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
     try {
       HechoDTO hecho = hechosService.getHechoById(id).get();
 
+      Long currentUserId = null;
+      boolean isAdmin = false;
+
       model.addAttribute("hecho", hecho);
       model.addAttribute("titulo", "Detalle del hecho");
+      model.addAttribute("backendUrl", backendUrl);
+      model.addAttribute("currentUserId", currentUserId);
+      model.addAttribute("isAdmin", isAdmin);
 
       return "hechos/detalle";
     } catch (NotFoundException e) {

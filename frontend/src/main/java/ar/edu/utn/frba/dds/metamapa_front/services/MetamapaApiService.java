@@ -156,7 +156,7 @@ public class MetamapaApiService {
   }
 
   public HechoDTO getHechoById(Long id) {
-    HechoDTO response = webApiCallerService.get(metamapaServiceUrl + "/hechos/" + id.toString(), HechoDTO.class);
+    HechoDTO response = webApiCallerService.getPublic(metamapaServiceUrl + "/hechos/" + id.toString(), HechoDTO.class);
     if (response == null) {
       throw new NotFoundException("Hecho", id.toString());
     }
