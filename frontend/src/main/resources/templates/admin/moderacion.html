@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>MetaMapa Admin - Moderación de Hechos</title>
+    <th:insert th:replace="fragments/common :: head"></th:insert>
+</head>
+<body>
+<header th:replace="fragments/navbar :: navbar"></header>
+
+<div class="container">
+    <h1>Moderación de Hechos Pendientes</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Hecho</th>
+            <th>Detalles</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="hecho : ${hechosPendientes}">
+            <!-- Columna con el contenido del hecho -->
+            <td th:text="${hecho.texto}">Contenido del hecho</td>
+            <!-- Columna con detalles: contribuyente y fecha -->
+            <td>
+                Subido por <span th:text="${hecho.contribuyente}">Usuario</span>
+                el <span th:text="${#dates.format(hecho.fecha, 'dd/MM/yyyy')}">01/01/2025</span>
+            </td>
+            <!-- Columna con acciones de moderación -->
+            <td>
+                <!-- Formulario de Aprobación -->
+                <form th:action="@{/admin/hechos/aprobar}" th:method="post" style="display:inline;">
+                    <input type="hidden" name="hechoId" th:value="${hecho.id}" />
+                    <button type="submit" class="btn btn-success">Aprobar</button>
+                </form>
+                <!-- Formulario de Rechazo -->
+                <form th:action="@{/admin/hechos/rechazar}" th:method="post" style="display:inline;">
+                    <input type="hidden" name="hechoId" th:value="${hecho.id}" />
+                    <button type="submit" class="btn btn-danger">Rechazar</button>
+                </form>
+                <!-- Formulario de Aceptar con Modificaciones -->
+                <form th:action="@{/admin/hechos/modificar}" th:method="post" class="mt-2">
+                    <input type="hidden" name="hechoId" th:value="${hecho.id}" />
+                    <label>Editar antes de aprobar:</label>
+                    <textarea name="contenidoModificado" rows="3" cols="40"
+                              th:text="${hecho.texto}">Texto editable</textarea>
+                    <button type="submit" class="btn btn-warning">Aceptar con modificaciones</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
