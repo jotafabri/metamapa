@@ -1,6 +1,5 @@
 <html th:replace="~{layout/base :: html}">
-<div th:fragment="contenido" class="detalle-container">
-
+<div th:fragment="contenido" class="detalle">
     <link rel="stylesheet" th:href="@{/css/mapa.css}">
     <link rel="stylesheet" th:href="@{/css/viewer.css}">
     <link rel="stylesheet" th:href="@{/css/detalle.css}">
@@ -9,128 +8,88 @@
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
 
-    <!-- Carrusel de fotos -->
-    <div class="hecho-carousel" th:if="${hecho.multimedia != null and !hecho.multimedia.isEmpty()}">
-        <div class="carousel-container"
-             th:classappend="${#lists.size(hecho.multimedia) > 1} ? 'multiple-images' : ''">
-            <button class="carousel-btn prev"
-                    th:if="${#lists.size(hecho.multimedia) > 1}"
-                    th:onclick="'prevSlide(\'carousel-' + ${hecho.id} + '\')'">‹
-            </button>
-            <div class="carousel-track" th:id="'carousel-' + ${hecho.id}">
-                <div th:each="ruta, iterStat : ${hecho.multimedia}"
-                     class="carousel-item"
-                     th:classappend="${iterStat.first} ? 'active' : ''">
-                    <!-- Video si es MP4, WebM, OGG -->
-                    <video th:if="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
-                                       #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
-                                       #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                           th:src="@{${backendUrl} + '/files/' + ${ruta}}"
-                           class="carousel-media"
-                           controls
-                           playsinline>
-                    </video>
-                    <!-- Imagen para otros formatos -->
-                    <img th:unless="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
-                                         #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
-                                         #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                         th:src="@{${backendUrl} + '/files/' + ${ruta}}"
-                         th:alt="'Imagen ' + ${iterStat.count}"
-                         class="carousel-media">
+    <div th:replace="~{fragments/modal :: modal-eliminacion}"></div>
+    <!-- Botón para volver -->
+    <div th:replace="~{fragments/go-back :: go-back}"></div>
+
+    <div class="detalle-container">
+        <div th:replace="~{fragments/carousel :: carousel(hecho=${hecho})}"></div>
+        <div class="detalle-content">
+            <div class="detalle-header">
+                <h1 class="detalle-titulo" th:text="${hecho.titulo}">Titulo</h1>
+                <span th:text="${hecho.categoria}" class="detalle-categoria">Categoría</span>
+            </div>
+
+            <p class="detalle-descripcion" th:text="${hecho.descripcion}">
+                Un evento inolvidable que reunió a miles de personas para disfrutar de música en vivo,
+                arte urbano y gastronomía local. El festival contó con artistas internacionales y
+                actividades para toda la familia en un ambiente natural excepcional.
+            </p>
+
+            <div class="detalle-map-container">
+                <div class="detalle-map-header">
+                    <div class="detalle-map-title">Ubicación del Hecho</div>
+                    <div class="detalle-map-info"
+                         th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}"></div>
                 </div>
+                <div id="map" class="detalle-map"></div>
             </div>
-            <button class="carousel-btn next"
-                    th:if="${#lists.size(hecho.multimedia) > 1}"
-                    th:onclick="'nextSlide(\'carousel-' + ${hecho.id} + '\')'">›
-            </button>
 
-            <div class="carousel-indicators"
-                 th:if="${#lists.size(hecho.multimedia) > 1}"
-                 th:id="'indicators-' + ${hecho.id}">
-                <span th:each="ruta, iterStat : ${hecho.multimedia}"
-                      class="indicator"
-                      th:classappend="${iterStat.first} ? 'active' : ''"
-                      th:onclick="'goToSlide(\'carousel-' + ${hecho.id} + '\', ' + ${iterStat.index} + ')'"></span>
+            <div class="detalle-actions">
+                <!-- Solicitar eliminación: solo si NO es ADMIN -->
+                <button th:if="${!isAdmin}"
+                        class="btn btn-primary"
+                        th:onclick="'solicitarEliminacion(' + ${hecho.id} + ')'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Solicitar eliminación
+                </button>
+
+                <!-- Editar: si es ADMIN o si es el contribuyente -->
+                <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id)}"
+                        class="btn btn-primary"
+                        th:onclick="'editarHecho(' + ${hecho.id} + ')'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Editar
+                </button>
+
+                <!-- Eliminar: solo ADMIN -->
+                <button sec:authorize="hasRole('ADMIN')"
+                        class="btn btn-quaternary"
+                        th:onclick="'eliminarHecho(' + ${hecho.id} + ')'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        <line x1="10" y1="11" x2="10" y2="17"/>
+                        <line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                    Eliminar
+                </button>
             </div>
         </div>
+
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const hecho = /*[[${hecho}]]*/ null;
+            window.hechosData = [hecho];
+            /*]]>*/
+        </script>
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                crossorigin=""></script>
 
     </div>
-    <div class="detalle-content">
-        <div class="detalle-header">
-            <h1 class="detalle-titulo" th:text="${hecho.titulo}">Titulo</h1>
-            <span th:text="${hecho.categoria}" class="detalle-categoria">Categoría</span>
-        </div>
-
-        <p class="detalle-descripcion" th:text="${hecho.descripcion}">
-            Un evento inolvidable que reunió a miles de personas para disfrutar de música en vivo,
-            arte urbano y gastronomía local. El festival contó con artistas internacionales y
-            actividades para toda la familia en un ambiente natural excepcional.
-        </p>
-
-        <div class="detalle-map-container">
-            <div class="detalle-map-header">
-                <div class="detalle-map-title">Ubicación del Hecho</div>
-                <div class="detalle-map-info"
-                     th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}"></div>
-            </div>
-            <div id="map" class="detalle-map"></div>
-        </div>
-
-        <div class="detalle-actions">
-            <!-- Solicitar eliminación: solo si NO es ADMIN -->
-            <button th:if="${!isAdmin}"
-                    class="btn btn-primary"
-                    th:onclick="'solicitarEliminacion(' + ${hecho.id} + ')'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-                Solicitar eliminación
-            </button>
-
-            <!-- Editar: si es ADMIN o si es el contribuyente -->
-            <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id)}"
-                    class="btn btn-primary"
-                    th:onclick="'editarHecho(' + ${hecho.id} + ')'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-                Editar
-            </button>
-
-            <!-- Eliminar: solo ADMIN -->
-            <button sec:authorize="hasRole('ADMIN')"
-                    class="btn btn-primary"
-                    th:onclick="'eliminarHecho(' + ${hecho.id} + ')'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    <line x1="10" y1="11" x2="10" y2="17"/>
-                    <line x1="14" y1="11" x2="14" y2="17"/>
-                </svg>
-                Eliminar
-            </button>
-        </div>
-    </div>
-
-    <script th:src="@{/js/carrousel.js}"></script>
-
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        const hecho = /*[[${hecho}]]*/ null;
-        window.hechosData = [hecho];
-        /*]]>*/
-    </script>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
-
     <script th:src="@{/js/mapa.js}"></script>
     <script th:src="@{/js/viewer.js}"></script>
 </div>

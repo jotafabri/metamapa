@@ -6,59 +6,14 @@
     </div>
 
     <div class="hechos-list">
-        <div th:each="hecho : ${hechosPaginados}" class="hecho-card">
-            <!-- Carrusel de fotos -->
-            <div class="hecho-carousel" th:if="${hecho.multimedia != null and !hecho.multimedia.isEmpty()}">
-                <div class="carousel-container"
-                     th:classappend="${#lists.size(hecho.multimedia) > 1} ? 'multiple-images' : ''">
-                    <button class="carousel-btn prev"
-                            th:if="${#lists.size(hecho.multimedia) > 1}"
-                            th:onclick="'prevSlide(\'carousel-' + ${hecho.id} + '\')'">‹
-                    </button>
-                    <div class="carousel-track" th:id="'carousel-' + ${hecho.id}">
-                        <div th:each="ruta, iterStat : ${hecho.multimedia}"
-                             class="carousel-item"
-                             th:classappend="${iterStat.first} ? 'active' : ''">
-                            <!-- Video si es MP4, WebM, OGG -->
-                            <video th:if="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
-                                       #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
-                                       #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                                   th:src="@{${backendUrl} + '/files/' + ${ruta}}"
-                                   class="carousel-media"
-                                   controls
-                                   playsinline>
-                            </video>
-                            <!-- Imagen para otros formatos -->
-                            <img th:unless="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
-                                         #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
-                                         #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                                 th:src="@{${backendUrl} + '/files/' + ${ruta}}"
-                                 th:alt="'Imagen ' + ${iterStat.count}"
-                                 class="carousel-media">
-                        </div>
-                    </div>
-                    <button class="carousel-btn next"
-                            th:if="${#lists.size(hecho.multimedia) > 1}"
-                            th:onclick="'nextSlide(\'carousel-' + ${hecho.id} + '\')'">›
-                    </button>
-
-                    <div class="carousel-indicators"
-                         th:if="${#lists.size(hecho.multimedia) > 1}"
-                         th:id="'indicators-' + ${hecho.id}">
-                <span th:each="ruta, iterStat : ${hecho.multimedia}"
-                      class="indicator"
-                      th:classappend="${iterStat.first} ? 'active' : ''"
-                      th:onclick="'goToSlide(\'carousel-' + ${hecho.id} + '\', ' + ${iterStat.index} + ')'"></span>
-                    </div>
-                </div>
-            </div>
-
+        <div th:each="hecho : ${hechosPaginados}" class="hecho-card" th:onclick="'window.location.href=\'/hechos/' + ${hecho.id} + '\''" style="cursor: pointer;">
+            <div th:replace="~{fragments/carousel :: carousel(hecho=${hecho})}"></div>
             <div class="hecho-header">
                 <h4 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h4>
                 <div class="hecho-header-right">
                 <span class="hecho-fecha" th:if="${hecho.fechaAcontecimiento != null}"
                       th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">2024-01-01</span>
-                    <div class="hecho-menu">
+                    <div class="hecho-menu" onclick="event.stopPropagation()">
                         <button class="menu-btn" th:onclick="'toggleMenu(\'menu-' + ${hecho.id} + '\')'"
                                 th:aria-label="'Opciones para ' + ${hecho.titulo}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -155,5 +110,4 @@
         </button>
     </div>
     <script th:src="@{/js/viewer.js}"></script>
-    <script th:src="@{/js/carrousel.js}"></script>
 </div>

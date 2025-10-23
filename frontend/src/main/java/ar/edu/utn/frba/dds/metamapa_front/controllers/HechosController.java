@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.metamapa_front.controllers;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
 import jakarta.servlet.http.HttpSession;
@@ -48,6 +49,7 @@ public class HechosController {
       model.addAttribute("backendUrl", backendUrl);
       model.addAttribute("currentUserId", currentUserId);
       model.addAttribute("isAdmin", isAdmin);
+      model.addAttribute("solicitudEliminacion", new SolicitudEliminacionDTO());
 
       return "hechos/detalle";
     } catch (NotFoundException e) {

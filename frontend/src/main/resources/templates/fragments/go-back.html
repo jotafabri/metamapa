@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+
 <!-- Botón para volver -->
 <div th:fragment="go-back" class="volver-atras">
-    <a th:href="@{/}" class="volver-link">
+    <div th:onclick="history.back()" class="volver-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
-        <span>Volver al inicio</span>
-    </a>
+        <span>Volver atrás</span>
+    </div>
 </div>
-
-</html>

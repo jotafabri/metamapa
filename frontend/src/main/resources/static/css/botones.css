@@ -266,6 +266,7 @@
     font-size: 0.875rem;
     font-weight: 500;
     transition: color 0.3s;
+    cursor: pointer;
 }
 
 .volver-link:hover {
