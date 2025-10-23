@@ -39,5 +39,8 @@ public class HechosService {
     metamapaApiService.rechazarHecho(id);
   }
 
+  public List<HechoDTO> obtenerHechosPendientes() {
+    return metamapaApiService.obtenerHechosPendientes();
+  }
 
 }

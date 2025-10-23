@@ -22,6 +22,8 @@ public interface IHechosService {
 
   HechoDTO rechazarHecho(Long id);
 
+  List<HechoDTO> obtenerHechosPendientes();
+
   /*public List<HechoOutputDTO> buscarTodos(
           String categoria,
           String fecha_reporte_desde,

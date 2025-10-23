@@ -7,10 +7,10 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.LoginRequest;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
+import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
 import ar.edu.utn.frba.dds.metamapa_front.services.SolicitudesService;
 import ar.edu.utn.frba.dds.metamapa_front.services.UsuarioService;
-import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,63 +30,56 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-    private final UsuarioService usuarioService;
-    private final ColeccionService coleccionService;
+  private static final Logger log = LoggerFactory.getLogger(AdminController.class);
+  private final UsuarioService usuarioService;
+  private final ColeccionService coleccionService;
   private final SolicitudesService solicitudesService;
   private final HechosService hechosService;
 
   // --- LOGIN ADMIN ---
 
-    @GetMapping("/login")
-    public String mostrarLogin(Model model) {
-        model.addAttribute("titulo", "Iniciar sesión como administrador");
-        model.addAttribute("usuario", new LoginRequest());
-        return "admin/login"; // Template: src/main/resources/templates/admin/login.html
+  @GetMapping("/login")
+  public String mostrarLogin(Model model) {
+    model.addAttribute("titulo", "Iniciar sesión como administrador");
+    model.addAttribute("usuario", new LoginRequest());
+    return "admin/login"; // Template: src/main/resources/templates/admin/login.html
+  }
+
+  @PostMapping("/login")
+  public String procesarLogin(@ModelAttribute("usuario") LoginRequest usuarioDTO, Model model) {
+    try {
+      var authResponse = usuarioService.autenticar(usuarioDTO);
+
+      if (authResponse != null) {
+        return "redirect:/admin/dashboard";
+      } else {
+        model.addAttribute("error", "Credenciales inválidas o sin permisos de administrador.");
+        return "admin/login";
+      }
+
+    } catch (Exception e) {
+      log.error("Error al iniciar sesión como admin", e);
+      model.addAttribute("titulo", "Iniciar sesión como administrador");
+      model.addAttribute("error", "Ocurrió un error al procesar el inicio de sesión.");
+      return "admin/login";
     }
+  }
 
-    @PostMapping("/login")
-    public String procesarLogin(@ModelAttribute("usuario") LoginRequest usuarioDTO, Model model) {
-        try {
-            var authResponse = usuarioService.autenticar(usuarioDTO);
+  // --- DASHBOARD ---
 
-            if (authResponse != null) {
-                return "redirect:/admin/dashboard";
-            } else {
-                model.addAttribute("error", "Credenciales inválidas o sin permisos de administrador.");
-                return "admin/login";
-            }
-
-        } catch (Exception e) {
-            log.error("Error al iniciar sesión como admin", e);
-            model.addAttribute("titulo", "Iniciar sesión como administrador");
-            model.addAttribute("error", "Ocurrió un error al procesar el inicio de sesión.");
-            return "admin/login";
-        }
-    }
-
-    // --- DASHBOARD ---
-
-    @GetMapping
-    public String mostrarDashboard(Model model) {
-        model.addAttribute("titulo", "Panel de administración");
-        return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html
-    }
-    // TODO hacer llamada a cada una de las estadisticas
+  @GetMapping
+  public String mostrarDashboard(Model model) {
+    model.addAttribute("titulo", "Panel de administración");
+    return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html
+  }
+  // TODO hacer llamada a cada una de las estadisticas
 
   @GetMapping("/colecciones")
   public String mostrarColecciones(Model model) {
     model.addAttribute("colecciones", coleccionService.getAllColecciones());
+    model.addAttribute("coleccion", new ColeccionDTO());
     model.addAttribute("titulo", "Administrar colecciones");
     return "admin/colecciones";
-  }
-
-  @GetMapping("/colecciones/nueva")
-  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
-  public String mostrarFormularioCrear(Model model) {
-    model.addAttribute("coleccion", new ColeccionDTO());
-    model.addAttribute("titulo", "Crear colección");
-    return "admin/colecciones/crear";
   }
 
   @PostMapping("/colecciones/crear")
@@ -161,8 +153,10 @@ public class AdminController {
 
   @GetMapping("/hechos")
   public String mostrarHechos(Model model) {
+    List<HechoDTO> hechosPendientes = hechosService.obtenerHechosPendientes();
+    model.addAttribute("hechosPendientes", hechosPendientes);
     model.addAttribute("titulo", "Hechos pendientes");
-    return "admin/hechos";
+    return "admin/moderacion";
   }
   // TODO: POST importar archivo CSV
 

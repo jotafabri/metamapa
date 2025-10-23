@@ -142,6 +142,9 @@ public class HechosService implements IHechosService {
   @Override
   public HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado) {
     Hecho hecho = realizarActualizacion(id, hechoActualizado);
+    if (hecho.getEstado() != Estado.PENDIENTE) {
+      throw new IllegalStateException("El hecho no se encuentra en estado PENDIENTE");
+    }
     hecho.aceptar();
     hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hecho);
@@ -150,9 +153,20 @@ public class HechosService implements IHechosService {
   @Override
   public HechoDTO rechazarHecho(Long id) {
     Hecho hecho = intentarRecuperarHecho(id);
+    if (hecho.getEstado() != Estado.PENDIENTE) {
+      throw new IllegalStateException("El hecho no se encuentra en estado PENDIENTE");
+    }
     hecho.rechazar();
     hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hecho);
+  }
+
+  @Override
+  public List<HechoDTO> obtenerHechosPendientes() {
+    return hechosRepository.findAllPendientes()
+        .stream()
+        .map(HechoDTO::fromHecho)
+        .toList();
   }
 
   private Hecho intentarRecuperarHecho(Long id) {

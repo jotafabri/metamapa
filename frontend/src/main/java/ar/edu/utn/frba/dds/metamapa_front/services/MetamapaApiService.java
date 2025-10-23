@@ -264,6 +264,11 @@ public class MetamapaApiService {
     return response;
   }
 
+  public List<HechoDTO> obtenerHechosPendientes() {
+    List<HechoDTO> response = webApiCallerService.getList(metamapaServiceUrl + "/hechos/pendientes", HechoDTO.class);
+    return response != null ? response : List.of();
+  }
+
   public List<SolicitudEliminacionDTO> obtenerSolicitudes() {
     List<SolicitudEliminacionDTO> response = webApiCallerService.getList(metamapaServiceUrl + "/solicitudes", SolicitudEliminacionDTO.class);
     return response != null ? response : List.of();

@@ -9,6 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
+  // Lista solo los hechos pendientes
+  @Query("SELECT h FROM Hecho h WHERE h.eliminado = FALSE AND LOWER(h.estado) = 'pendiente' ")
+  List<Hecho> findAllPendientes();
+
   // Lista solo los hechos que fueron aceptados
   @Query("SELECT h FROM Hecho h WHERE h.eliminado = FALSE AND LOWER(h.estado) = 'aceptada' ")
   List<Hecho> findAllAceptados();

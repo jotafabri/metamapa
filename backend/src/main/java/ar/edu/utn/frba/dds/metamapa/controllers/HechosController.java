@@ -118,6 +118,8 @@ public class HechosController {
       return ResponseEntity.ok(hecho);
     } catch (NotFoundException e) {
       return ResponseEntity.notFound().build();
+    } catch (IllegalStateException ex) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
@@ -130,6 +132,8 @@ public class HechosController {
       return ResponseEntity.ok(hecho);
     } catch (NotFoundException e) {
       return ResponseEntity.notFound().build();
+    } catch (IllegalStateException ex) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
@@ -146,5 +150,13 @@ public class HechosController {
     }
   }
 
-
+  @GetMapping("/pendientes")
+  public ResponseEntity<List<HechoDTO>> obtenerHechosPendientes() {
+    try {
+      List<HechoDTO> hechos = hechosService.obtenerHechosPendientes();
+      return ResponseEntity.ok(hechos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
 }
