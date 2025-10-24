@@ -19,7 +19,7 @@ public class HechosService {
       HechoDTO hecho = metamapaApiService.getHechoById(id);
       return Optional.of(hecho);
     } catch (NotFoundException e) {
-      return Optional.empty();
+      throw new NotFoundException("Hecho", id.toString());
     }
   }
 

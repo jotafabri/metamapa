@@ -132,9 +132,15 @@ public class WebApiCallerService {
           .retrieve()
           .bodyToMono(responseType)
           .block();
-    } catch (Exception e) {
+    } catch (WebClientResponseException e) {
+       if (e.getStatusCode().value() == 404) {
+         return null;
+       }
+    }
+    catch (Exception e) {
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
     }
+    return null;
   }
 
   /**
