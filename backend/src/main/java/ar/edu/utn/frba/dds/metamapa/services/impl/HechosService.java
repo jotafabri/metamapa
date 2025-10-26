@@ -84,6 +84,12 @@ public class HechosService implements IHechosService {
   }
 
   @Override
+  public List<HechoDTO> getHechosByEmail(String email) {
+    List<Hecho> hechos = hechosRepository.findAllByEmail(email);
+    return hechos.stream().map(HechoDTO::fromHecho).toList();
+  }
+
+  @Override
   public HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO) {
     return crearHechoDesdeDTO(hechoDTO, null);
   }

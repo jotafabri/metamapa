@@ -37,6 +37,21 @@ public class HechosController {
   @Autowired
   private IFileStorageService fileStorageService;
 
+  @GetMapping("/me")
+  public ResponseEntity<List<HechoDTO>> getMisHechos() {
+    try {
+      String emailUsuario = null;
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+        emailUsuario = authentication.getName();
+      }
+      List<HechoDTO> hechos = hechosService.getHechosByEmail(emailUsuario);
+      return ResponseEntity.ok(hechos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
   @GetMapping
   public ResponseEntity<List<HechoDTO>> getHechosWithParams(
       @ModelAttribute HechoFiltroDTO filtros

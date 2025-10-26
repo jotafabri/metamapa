@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolicitudEliminacionDTO {
+  private Long id;
   private Long idHecho;
   private String razon;
+  private String estado;
 }

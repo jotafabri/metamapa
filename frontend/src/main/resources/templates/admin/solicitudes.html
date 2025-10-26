@@ -9,13 +9,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="sol : ${solicitudesEliminacion}">
+        <tr th:each="sol : ${listaSolicitudes}">
             <!-- Columna con detalles de la solicitud -->
             <td>
-                Hecho: <span th:text="${sol.hechoTexto}">Descripción del hecho</span><br/>
-                Motivo: <span th:text="${sol.motivo}">Motivo de eliminación</span><br/>
-                Solicitado por <span th:text="${sol.usuario}">Usuario</span>
-                el <span th:text="${#dates.format(sol.fecha, 'dd/MM/yyyy')}">01/01/2025</span>
+                Hecho: <span th:text="${sol.idHecho}">Descripción del hecho</span><br/>
+                Motivo: <span th:text="${sol.razon}">Motivo de eliminación</span><br/>
             </td>
             <!-- Columna con botones de aprobar/rechazar -->
             <td>

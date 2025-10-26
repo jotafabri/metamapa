@@ -36,6 +36,27 @@ public class HechosController {
   @Value("${colecciones.service.url}")
   private String backendUrl;
 
+  @GetMapping("/me")
+  public String verHechosDeUsuario(Model model) {
+    try {
+      List<HechoDTO> hecho = hechosService.getMisHechos();
+
+      Long currentUserId = null;
+      Boolean isAdmin = false;
+
+      model.addAttribute("hechos", hecho);
+      model.addAttribute("titulo", "Mis hechos");
+      model.addAttribute("backendUrl", backendUrl);
+      model.addAttribute("currentUserId", currentUserId);
+      model.addAttribute("isAdmin", isAdmin);
+      model.addAttribute("solicitudEliminacion", new SolicitudEliminacionDTO());
+
+      return "hechos/hechos";
+    } catch (NotFoundException e) {
+      return "redirect:/404";
+    }
+  }
+
   @GetMapping("/{id}")
   public String verDetalleHecho(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
     try {

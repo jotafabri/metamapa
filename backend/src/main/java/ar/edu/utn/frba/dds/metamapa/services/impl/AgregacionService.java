@@ -105,8 +105,8 @@ public class AgregacionService implements IAgregacionService {
   }
 
   public List<SolicitudEliminacionOutputDTO> findAllSolicitudes() {
-    return this.solicitudesRepository.findAll().stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
+    List<SolicitudEliminacion> solicitudes = solicitudesRepository.findAllPendientes();
+    return solicitudes.stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
   }
-
 }
 

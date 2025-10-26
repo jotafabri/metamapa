@@ -8,6 +8,8 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 public interface IHechosService {
   List<HechoDTO> getHechosWithParams(HechoFiltroDTO filtros);
 
+  List<HechoDTO> getHechosByEmail(String email);
+
   HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO);
 
   HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO, String email);

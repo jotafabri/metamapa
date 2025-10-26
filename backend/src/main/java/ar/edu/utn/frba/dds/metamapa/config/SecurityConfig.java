@@ -32,6 +32,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             // Permitir acceso público a endpoints de autenticación
             .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/hechos/me").authenticated()
             // Permitir acceso a otros endpoints (temporal para desarrollo)
             .anyRequest().permitAll())
         .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

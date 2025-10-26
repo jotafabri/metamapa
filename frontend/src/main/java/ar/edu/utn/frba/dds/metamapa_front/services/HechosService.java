@@ -43,4 +43,8 @@ public class HechosService {
     return metamapaApiService.obtenerHechosPendientes();
   }
 
+  public List<HechoDTO> getMisHechos() {
+    return metamapaApiService.getMisHechos();
+  }
+
 }

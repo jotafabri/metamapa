@@ -9,6 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
+  @Query("SELECT h FROM Hecho h WHERE h.usuario.email = :email")
+  List<Hecho> findAllByEmail(@Param("email") String email);
+
   // Lista solo los hechos pendientes
   @Query("SELECT h FROM Hecho h WHERE h.eliminado = FALSE AND LOWER(h.estado) = 'pendiente' ")
   List<Hecho> findAllPendientes();

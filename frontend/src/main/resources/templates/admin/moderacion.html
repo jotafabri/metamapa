@@ -12,11 +12,12 @@
         <tbody>
         <tr th:each="hecho : ${hechosPendientes}">
             <!-- Columna con el contenido del hecho -->
-            <td th:text="${hecho.texto}">Contenido del hecho</td>
+            <td th:text="${hecho.titulo}">Titulo del hecho</td>
+            <td th:text="${hecho.descripcion}">Contenido del hecho</td>
             <!-- Columna con detalles: contribuyente y fecha -->
             <td>
-                Subido por <span th:text="${hecho.contribuyente}">Usuario</span>
-                el <span th:text="${#dates.format(hecho.fecha, 'dd/MM/yyyy')}">01/01/2025</span>
+                Subido por <span th:text="${hecho.contribuyenteId}">Usuario</span>
+                el <span th:text="${#temporals.format(hecho.fechaCarga, 'dd/MM/yyyy')}"></span>
             </td>
             <!-- Columna con acciones de moderación -->
             <td>
@@ -35,7 +36,7 @@
                     <input type="hidden" name="hechoId" th:value="${hecho.id}" />
                     <label>Editar antes de aprobar:</label>
                     <textarea name="contenidoModificado" rows="3" cols="40"
-                              th:text="${hecho.texto}">Texto editable</textarea>
+                              th:text="${hecho.descripcion}">Texto editable</textarea>
                     <button type="submit" class="btn btn-warning">Aceptar con modificaciones</button>
                 </form>
             </td>

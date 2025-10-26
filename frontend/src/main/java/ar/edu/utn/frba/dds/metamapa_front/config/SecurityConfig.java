@@ -27,12 +27,13 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf
-            .ignoringRequestMatchers("/hechos/**", "/register")
+            .ignoringRequestMatchers("/hechos/crear", "/register")
         )
         .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/login").permitAll()
-                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-                .anyRequest().permitAll()
+            .requestMatchers("/admin/login").permitAll()
+            .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+            .requestMatchers("/hechos/me").authenticated()
+            .anyRequest().permitAll()
         )
         .formLogin(form -> form
             .loginPage("/login")
@@ -66,7 +67,7 @@ public class SecurityConfig {
   }
 
   @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }
