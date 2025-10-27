@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" th:replace="~{layout/base :: html}">
+<div th:fragment="contenido" class="terms-page">
+    <link rel="stylesheet" th:href="@{/css/terms.css}">
+  <div class="container">
+    <div th:replace="~{fragments/go-back :: go-back}"></div>
+    <h1>Información Legal — MetaMapa</h1>
+    <p class="main-description">
+      <strong>MetaMapa</strong> es un sistema de código abierto desarrollado con fines sociales y académicos,
+      destinado a la recopilación, visibilización y mapeo colaborativo de información. Su implementación y uso
+      por parte de organizaciones no gubernamentales, universidades u organismos estatales está sujeta al
+      cumplimiento de las leyes locales e internacionales sobre acceso a la información, derechos digitales y
+      protección de datos.
+    </p>
+    <p class="main-description">
+      El software <strong>no tiene fines de lucro</strong> y su código fuente puede ser utilizado, modificado y
+      distribuido conforme a su licencia abierta. Cada instancia de MetaMapa es independiente, y su
+      administración queda bajo la responsabilidad de la organización o entidad que la instale en sus propios
+      servidores.
+    </p>
+    <p class="main-description">
+      El equipo desarrollador de MetaMapa <strong>no se responsabiliza</strong> por el uso que terceros hagan del
+      sistema ni por el contenido que se publique en las distintas instancias. Cada instancia deberá establecer
+      sus propios mecanismos de moderación, control de acceso y validación de información.
+    </p>
+    <p class="main-description">
+      El uso de MetaMapa implica la <strong>aceptación plena de estas condiciones</strong>, así como el compromiso
+      de contribuir al bien común y al uso ético y responsable de la información publicada.
+    </p>
+  </div>
+</div>
+</html>
