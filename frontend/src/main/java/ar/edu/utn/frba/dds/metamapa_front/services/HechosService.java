@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa_front.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,10 @@ public class HechosService {
   }
 
   public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
+    if (hechoDTO.getFechaAcontecimiento() != null && hechoDTO.getFechaAcontecimiento().isAfter(LocalDate.now())) {
+      throw new IllegalArgumentException("FECHA_FUTURA");
+    }
+
     return metamapaApiService.crearHecho(hechoDTO, archivos);
   }
 

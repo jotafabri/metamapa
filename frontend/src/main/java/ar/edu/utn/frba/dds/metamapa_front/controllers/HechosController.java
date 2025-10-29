@@ -95,12 +95,25 @@ public class HechosController {
 
     try {
       hechosService.crearHecho(hechoDTO, archivos);
+
+      redirectAttributes.addFlashAttribute("toastMessage", "Hecho creado con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
       return "redirect:/colecciones";
-    } catch (Exception e) {
-      log.error("Error al crear nuevo hecho", e);
-      model.addAttribute("error", "Ocurrió un error al crear nuevo hecho");
-      return mostrarFormularioCrear(model);
+    } catch (IllegalArgumentException ex) {
+      if ("FECHA_FUTURA".equals(ex.getMessage())) {
+        redirectAttributes.addFlashAttribute("toastMessage",
+                "No se pudo crear el hecho: la fecha es inválida (futura) ❌");
+        redirectAttributes.addFlashAttribute("toastType", "error");
+        return "redirect:/hechos/nuevo";
+      }
+
+      redirectAttributes.addFlashAttribute("toastMessage",
+              "No se pudo crear el hecho ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/hechos/nuevo";
     }
+
+
   }
 
   @GetMapping("/{id}/editar")

@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/botones.css}">
+    <link rel="stylesheet" th:href="@{/css/toasts.css}">
+
 
     <!-- Meta tags para CSRF -->
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -21,5 +23,26 @@
     <!-- Aca se inyecta el contenido específico -->
     <div th:replace="~{:: contenido}"></div>
 </main>
+
+
+<!-- Contenedor de toasts -->
+<div class="toast-container" id="toast-container"></div>
+
+<script th:src="@{/js/toasts.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Mostrar toast desde Thymeleaf
+    const toastData = {
+        mensaje: /*[[${toastMessage}]]*/ null,
+        tipo: /*[[${toastType}]]*/ null // "success" o "error"
+    };
+
+    if (toastData.mensaje) {
+        mostrarToast(toastData.mensaje, toastData.tipo);
+    }
+    /*]]>*/
+</script>
+
 </body>
 </html>
