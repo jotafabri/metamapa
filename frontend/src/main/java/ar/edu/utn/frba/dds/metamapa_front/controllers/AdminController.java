@@ -70,9 +70,28 @@ public class AdminController {
   @GetMapping
   public String mostrarDashboard(Model model) {
     model.addAttribute("titulo", "Panel de administración");
+
+    // Cargar estadísticas para el dashboard
+    List<HechoDTO> hechosPendientes = hechosService.obtenerHechosPendientes();
+    List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
+    List<SolicitudEliminacionDTO> solicitudes = solicitudesService.obtenerSolicitudes();
+
+    // Pasar datos al modelo
+    model.addAttribute("hechosPendientes", hechosPendientes);
+    model.addAttribute("totalHechosPendientes", hechosPendientes.size());
+    model.addAttribute("colecciones", colecciones);
+    model.addAttribute("totalColecciones", colecciones.size());
+    model.addAttribute("solicitudes", solicitudes);
+    model.addAttribute("totalSolicitudes", solicitudes.size());
+
     return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html
   }
-  // TODO hacer llamada a cada una de las estadisticas
+
+  @GetMapping("/panel")
+  public String mostrarPanelCompleto(Model model) {
+    model.addAttribute("titulo", "Panel de Administración");
+    return "admin/panel"; // Template: src/main/resources/templates/admin/panel.html
+  }
 
   @GetMapping("/colecciones")
   public String mostrarColecciones(Model model) {
@@ -82,15 +101,21 @@ public class AdminController {
     return "admin/colecciones";
   }
 
+  @GetMapping("/colecciones/crear")
+  public String mostrarFormularioCrear(Model model) {
+    model.addAttribute("coleccion", new ColeccionDTO());
+    model.addAttribute("titulo", "Crear nueva colección");
+    return "admin/colecciones/crear";
+  }
+
   @PostMapping("/colecciones/crear")
-  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
   public String crearColeccion(@ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
                                BindingResult bindingResult,
                                Model model,
                                RedirectAttributes redirectAttributes) {
     try {
       ColeccionDTO coleccionCreada = coleccionService.crearColeccion(coleccionDTO);
-      return "redirect:/admin/colecciones";
+      return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al crear nueva colección", e);
       model.addAttribute("titulo", "Crear colección");
@@ -99,7 +124,6 @@ public class AdminController {
   }
 
   @GetMapping("/colecciones/{handle}/editar")
-  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
   public String mostrarFormularioEditar(
       @PathVariable String handle,
       Model model) {
@@ -115,7 +139,6 @@ public class AdminController {
   }
 
   @PostMapping("/colecciones/{handle}/actualizar")
-  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
   public String actualizarColeccion(@PathVariable String handle,
                                     @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
                                     BindingResult bindingResult,
@@ -124,30 +147,26 @@ public class AdminController {
     try {
       ColeccionDTO coleccionActualizada = coleccionService.actualizarColeccion(handle, coleccionDTO);
 
-      return "redirect:/admin/colecciones";
+      return "redirect:/admin";
     } catch (NotFoundException e) {
       return "redirect:/404";
     } catch (Exception e) {
       log.error("Error al editar colección {}", handle, e);
       model.addAttribute("titulo", "Editar colección");
-      return "admin/colecciones";
+      return "admin/colecciones/editar";
     }
   }
 
   @PostMapping("/colecciones/{handle}/eliminar")
-  @PreAuthorize("hasRole('ADMIN') and hasAnyAuthority('ADMINISTRAR_COLECCIONES')")
-  public String eliminarColeccion(@PathVariable String handle,
-                                  @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
-                                  BindingResult bindingResult,
-                                  Model model,
-                                  RedirectAttributes redirectAttributes) {
+  public String eliminarColeccion(@PathVariable String handle) {
     try {
       coleccionService.eliminarColeccion(handle);
-      return "redirect:/admin/colecciones";
+      return "redirect:/admin";
     } catch (NotFoundException e) {
       return "redirect:/404";
     } catch (Exception e) {
-      return "admin/colecciones";
+      log.error("Error al eliminar colección {}", handle, e);
+      return "redirect:/admin";
     }
   }
 
@@ -164,11 +183,11 @@ public class AdminController {
   public String aprobarHecho(@PathVariable Long id, Model model, @ModelAttribute("hechoActualizado") HechoDTO hechoActualizado) {
     try {
       hechosService.aprobarHecho(id, hechoActualizado);
-      return "redirect:/admin/hechos";
+      return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al aprobar hecho", e);
       model.addAttribute("titulo", "Hechos pendientes");
-      return "/admin/hechos";
+      return "redirect:/admin";
     }
   }
 
@@ -176,11 +195,11 @@ public class AdminController {
   public String rechazarHecho(@PathVariable Long id, Model model) {
     try {
       hechosService.rechazarHecho(id);
-      return "redirect:/admin/hechos";
+      return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al rechazar hecho", e);
       model.addAttribute("titulo", "Hechos pendientes");
-      return "/admin/hechos";
+      return "redirect:/admin";
     }
   }
 
@@ -196,11 +215,11 @@ public class AdminController {
   public String aceptarSolicitud(@PathVariable Long id, Model model) {
     try {
       solicitudesService.aceptarSolicitud(id);
-      return "redirect:/admin/solicitudes";
+      return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al aceptar solicitud", e);
       model.addAttribute("titulo", "Solicitudes de eliminación");
-      return "/admin/solicitudes";
+      return "redirect:/admin";
     }
   }
 
@@ -208,11 +227,11 @@ public class AdminController {
   public String rechazarSolicitud(@PathVariable Long id, Model model) {
     try {
       solicitudesService.rechazarSolicitud(id);
-      return "redirect:/admin/solicitudes";
+      return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al rechazar solicitud", e);
       model.addAttribute("titulo", "Solicitudes de eliminación");
-      return "/admin/solicitudes";
+      return "redirect:/admin";
     }
   }
 

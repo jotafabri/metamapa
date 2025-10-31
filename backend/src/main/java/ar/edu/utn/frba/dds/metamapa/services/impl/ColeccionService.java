@@ -140,6 +140,16 @@ public class ColeccionService implements IColeccionService {
   @Override
   public void eliminarColeccion(String handle) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
+
+    // Limpiar todas las asociaciones ManyToMany antes de eliminar
+    coleccion.getFuentes().clear();
+    coleccion.getCriterios().clear();
+    coleccion.getHechos().clear();
+
+    // Guardar para persistir la limpieza de asociaciones
+    coleccionesRepository.save(coleccion);
+
+    // Ahora sí eliminar la colección
     coleccionesRepository.deleteColeccionByHandle(coleccion.getHandle());
   }
 

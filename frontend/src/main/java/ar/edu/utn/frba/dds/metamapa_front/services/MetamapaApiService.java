@@ -257,7 +257,7 @@ public class MetamapaApiService {
   }
 
   public HechoDTO rechazarHecho(Long id) {
-    HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString() + "/rechazar", null, HechoDTO.class);
+    HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString() + "/rechazar", new java.util.HashMap<>(), HechoDTO.class);
     if (response == null) {
       throw new RuntimeException("Error al rechazar hecho en el servicio externo");
     }
@@ -285,11 +285,11 @@ public class MetamapaApiService {
   }
 
   public void aceptarSolicitudEliminacion(Long id) {
-    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/aceptar", null, null);
+    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/aceptar", new java.util.HashMap<>(), Void.class);
   }
 
   public void rechazarSolicitudEliminacion(Long id) {
-    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", null, null);
+    webApiCallerService.patch(metamapaServiceUrl + "/solicitudes/" + id.toString() + "/rechazar", new java.util.HashMap<>(), Void.class);
   }
 
   public void crearUsuario(RegistroRequest registroRequest) {
