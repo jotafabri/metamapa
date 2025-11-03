@@ -35,7 +35,7 @@ public class Coleccion extends Persistente {
   @Column(name = "titulo")
   private String titulo;
 
-  @Column(name = "descripcion")
+  @Column(name = "descripcion", columnDefinition = "TEXT")
   private String descripcion;
 
   @ManyToMany

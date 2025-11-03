@@ -398,7 +398,9 @@
     border: 1px solid #373738;
     border-radius: 0.75rem;
     transition: all 0.3s;
+    overflow: hidden;
 }
+
 
 .fact-item:hover,
 .request-item:hover {
@@ -408,7 +410,8 @@
 
 .fact-info,
 .request-info {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .fact-title,

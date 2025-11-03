@@ -12,8 +12,8 @@
         <tr th:each="sol : ${listaSolicitudes}">
             <!-- Columna con detalles de la solicitud -->
             <td>
-                Hecho: <span th:text="${sol.idHecho}">Descripción del hecho</span><br/>
-                Motivo: <span th:text="${sol.razon}">Motivo de eliminación</span><br/>
+                Hecho: <span th:text="${sol.idHecho}" class="truncate-text">Descripción del hecho</span><br/>
+                Motivo: <span th:text="${sol.razon}" class="truncate-text">Motivo de eliminación</span><br/>
             </td>
             <!-- Columna con botones de aprobar/rechazar -->
             <td>
