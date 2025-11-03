@@ -14,7 +14,9 @@
 
                 <div class="formulario-encabezado">
 
-                    <h1 class="formulario-titulo">Reportar Información Crítica</h1>
+                    <h1 class="formulario-titulo"
+                        th:text="${modoEdicion} ? 'Editar Hecho' : 'Reportar Información Crítica'"></h1>
+
                     <p class="formulario-subtitulo">
                         Contribuye con información que puede ayudar a resolver problemas sociales críticos
                     </p>
@@ -25,12 +27,14 @@
                     <div th:if="${error}" class="alert alert-danger">
                         <p th:text="${error}">Ocurrió un error</p>
                     </div>
-                    <form th:action="@{/hechos/crear}"
+                    <form th:action="${modoEdicion} ? @{/hechos/{id}/actualizar(id=${hecho.id})} : @{/hechos/crear}"
                           th:object="${hecho}"
                           method="post"
                           enctype="multipart/form-data"
                           id="formulario-contribucion"
                           class="formulario-principal">
+
+
                         <div class="seccion-paso activa" data-paso="1">
                             <div class="campos-formulario">
 
@@ -158,8 +162,8 @@
                             </div>
 
                             <div class="navegacion-pasos">
-                                <button type="button" class="btn btn-tertiary paso-anterior">Atrás</button>
-                                <button type="submit" class="btn btn-primary enviar-contribucion">Enviar Contribución
+                                <button type="submit" class="btn btn-primary enviar-contribucion"
+                                        th:text="${modoEdicion} ? 'Actualizar Hecho' : 'Enviar Contribución'">
                                 </button>
                             </div>
                         </div>

@@ -33,6 +33,7 @@ public class SecurityConfig {
             .requestMatchers("/admin/login").permitAll()
             .requestMatchers("/admin/**").hasAnyRole("ADMIN")
             .requestMatchers("/hechos/me").authenticated()
+                .requestMatchers("/hechos/*/editar").authenticated()
             .anyRequest().permitAll()
         )
         .formLogin(form -> form

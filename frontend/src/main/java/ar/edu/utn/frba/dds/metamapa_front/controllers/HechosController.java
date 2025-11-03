@@ -115,7 +115,7 @@ public class HechosController {
 
 
   }
-
+/*
   @GetMapping("/{id}/editar")
   @PreAuthorize("hasAuthority('EDITAR_HECHOS')")
   public String mostrarFormularioEditar(
@@ -131,7 +131,26 @@ public class HechosController {
       return "redirect:/404";
     }
   }
+*/
 
+  @GetMapping("/{id}/editar")
+  @PreAuthorize("hasRole('USER')")
+  public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+    try {
+      log.info("Intentando editar hecho con id: {}", id);
+      HechoDTO hechoDTO = hechosService.getHechoById(id)
+              .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+
+      model.addAttribute("hecho", hechoDTO);
+      model.addAttribute("titulo", "Editar hecho");
+      model.addAttribute("modoEdicion", true); // 🔹 indicador para el Thymeleaf
+      return "hechos/contribuir";
+    } catch (NotFoundException e) {
+      return "redirect:/404";
+    }
+  }
+
+  /*
   @PostMapping("/{id}/actualizar")
   @PreAuthorize("hasAuthority('EDITAR_HECHOS')")
   public String actualizarColeccion(@PathVariable Long id,
@@ -151,5 +170,34 @@ public class HechosController {
       return "hechos/editar";
     }
   }
+
+   */
+  @PostMapping("/{id}/actualizar")
+  //@PreAuthorize("hasAuthority('EDITAR_HECHOS')")
+  public String actualizarHecho(
+          @PathVariable Long id,
+          @ModelAttribute("hecho") HechoDTO hechoDTO,
+          @RequestParam(required = false) List<MultipartFile> archivos,
+          BindingResult bindingResult,
+          RedirectAttributes redirectAttributes,
+          Model model) {
+
+    try {
+      hechosService.actualizarHecho(id, hechoDTO);
+
+      redirectAttributes.addFlashAttribute("toastMessage", "Hecho actualizado correctamente ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
+      return "redirect:/hechos/me";
+    } catch (NotFoundException e) {
+      return "redirect:/404";
+    } catch (Exception e) {
+      log.error("Error al actualizar el hecho {}", hechoDTO.getTitulo(), e);
+      redirectAttributes.addFlashAttribute("toastMessage", "No se pudo actualizar el hecho ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/hechos/" + id + "/editar";
+    }
+  }
+
+
 
 }

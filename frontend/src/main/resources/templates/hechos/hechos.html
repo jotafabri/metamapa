@@ -47,16 +47,16 @@
                             </button>
 
                             <!-- Editar: si es ADMIN o si es el contribuyente -->
-                            <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id)}"
-                                    class="menu-item"
+                            <button class="menu-item"
                                     th:onclick="'editarHecho(' + ${hecho.id} + ')'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                 </svg>
                                 Editar
                             </button>
+
 
                             <!-- Eliminar: solo ADMIN -->
                             <button sec:authorize="hasRole('ADMIN')"

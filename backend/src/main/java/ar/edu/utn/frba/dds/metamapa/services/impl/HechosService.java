@@ -128,9 +128,10 @@ public class HechosService implements IHechosService {
   @Override
   public HechoDTO getHechoById(Long id) {
     Hecho hecho = intentarRecuperarHecho(id);
-    if (!hecho.getEstado().equals(Estado.ACEPTADA)) {
-      return null;
-    }
+
+    //if (!hecho.getEstado().equals(Estado.ACEPTADA)) {
+    //  return null;
+    //}
     return HechoDTO.fromHecho(hecho);
   }
 

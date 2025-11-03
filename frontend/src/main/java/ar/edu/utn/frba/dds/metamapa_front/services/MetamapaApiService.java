@@ -156,12 +156,26 @@ public class MetamapaApiService {
   }
 
   public HechoDTO getHechoById(Long id) {
-    HechoDTO response = webApiCallerService.getPublic(metamapaServiceUrl + "/hechos/" + id.toString(), HechoDTO.class);
-    if (response == null) {
-      throw new NotFoundException("Hecho", id.toString());
+
+    String url = metamapaServiceUrl.endsWith("/")
+            ? metamapaServiceUrl + "hechos/" + id
+            : metamapaServiceUrl + "/hechos/" + id;
+
+    log.info("Llamando al backend: {}", url);
+
+    try {
+      HechoDTO response = webApiCallerService.getPublic(url, HechoDTO.class);
+      if (response == null) {
+        throw new NotFoundException("Hecho", id.toString());
+      }
+      return response;
+
+    } catch (WebClientResponseException e) {
+      log.error("Error HTTP {} al llamar a {}: {}", e.getStatusCode(), url, e.getResponseBodyAsString());
+      throw e;
     }
-    return response;
   }
+
 
   public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
     if (archivos == null || archivos.isEmpty()) {

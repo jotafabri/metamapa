@@ -18,7 +18,7 @@ document.addEventListener('click', function(e) {
 });
 
 function editarHecho(id) {
-    console.log('Editar hecho:', id);
+    window.location.href = `/hechos/${id}/editar`;
 }
 
 function eliminarHecho(id) {
