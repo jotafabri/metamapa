@@ -164,7 +164,7 @@ public class MetamapaApiService {
     log.info("Llamando al backend: {}", url);
 
     try {
-      HechoDTO response = webApiCallerService.getPublic(url, HechoDTO.class);
+      HechoDTO response = webApiCallerService.get(url, HechoDTO.class);
       if (response == null) {
         throw new NotFoundException("Hecho", id.toString());
       }
