@@ -1,14 +1,16 @@
-function solicitarEliminacion(hechoId) {
-    const hecho = window.hechosData.find(h => h.id === hechoId);
-
-    if (!hecho) return;
+function abrirModalEliminacion(button) {
+    // Leer datos directamente del botón
+    const hechoId = button.dataset.id;
+    const titulo = button.dataset.titulo;
+    const descripcion = button.dataset.descripcion || 'Sin descripción';
+    const categoria = button.dataset.categoria || '';
+    const fecha = button.dataset.fecha || '';
 
     // Rellenar datos del modal
-    document.getElementById('modal-titulo').textContent = hecho.titulo;
-    document.getElementById('modal-descripcion').textContent = hecho.descripcion || 'Sin descripción';
-    document.getElementById('modal-categoria').textContent = hecho.categoria || '';
-    document.getElementById('modal-fecha').textContent = hecho.fechaAcontecimiento ?
-        new Date(hecho.fechaAcontecimiento).toLocaleDateString('es-AR') : '';
+    document.getElementById('modal-titulo').textContent = titulo;
+    document.getElementById('modal-descripcion').textContent = descripcion;
+    document.getElementById('modal-categoria').textContent = categoria;
+    document.getElementById('modal-fecha').textContent = fecha;
     document.getElementById('hecho-id').value = hechoId;
 
     // Mostrar modal
@@ -29,7 +31,7 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Cerrar al hacer click fuera
+// Cerrar al hacer click fuera del modal
 document.addEventListener('click', function(e) {
     if (e.target.id === 'modal-eliminacion') {
         cerrarModal();

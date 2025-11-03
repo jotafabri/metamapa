@@ -31,11 +31,17 @@ public class SolicitudesController {
   ) {
     try {
       solicitudesService.crearSolicitud(solicitudEliminacionDTO);
+      // Toast de éxito
+      redirectAttributes.addFlashAttribute("toastMessage", "Solicitud enviada correctamente");
+      redirectAttributes.addFlashAttribute("toastType", "success");
       return "redirect:/hechos/" + solicitudEliminacionDTO.getIdHecho().toString();
       //return "redirect:/";
     } catch (Exception e) {
       log.error("Error al crear solicitud de eliminación", e);
-      return "redirect:/hechos/" + solicitudEliminacionDTO.getIdHecho().toString();
+      // Toast de error
+      redirectAttributes.addFlashAttribute("toastMessage", "Error al enviar la solicitud");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/hechos/me";
     }
   }
 

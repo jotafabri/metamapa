@@ -27,7 +27,14 @@
                             <!-- Solicitar eliminación: solo si NO es ADMIN -->
                             <button th:if="${!isAdmin}"
                                     class="menu-item"
-                                    th:onclick="'solicitarEliminacion(' + ${hecho.id} + ')'">
+                                    th:attr="
+                                        data-id=${hecho.id},
+                                        data-titulo=${hecho.titulo},
+                                        data-descripcion=${hecho.descripcion},
+                                        data-categoria=${hecho.categoria},
+                                        data-fecha=${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')},
+                                        onclick='abrirModalEliminacion(this)'
+                                    ">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"/>
