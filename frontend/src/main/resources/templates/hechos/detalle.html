@@ -56,7 +56,7 @@
 
 
                 <!-- Editar: si es ADMIN o si es el contribuyente -->
-                <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id)}"
+                <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id) and puedeEditar}"
                         class="btn btn-primary"
                         th:onclick="'editarHecho(' + ${hecho.id} + ')'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
