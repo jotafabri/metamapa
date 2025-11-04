@@ -170,7 +170,10 @@
                     <div class="collection-card" th:each="coleccion : ${colecciones}">
                         <div class="collection-header">
                             <h3 class="collection-title" th:text="${coleccion.titulo}">Título</h3>
-                            <p class="collection-description" th:text="${coleccion.descripcion}">Descripción</p>
+                            <div class="collection-description-wrapper">
+                                <p class="collection-description truncated" th:text="${coleccion.descripcion}">Descripción</p>
+                                <span class="ver-mas-dots" onclick="toggleDescripcion(this)">...</span>
+                            </div>
                         </div>
                         <div class="collection-stats">
                             <div class="collection-stat">
@@ -296,6 +299,34 @@
                 document.getElementById(`${tabName}-content`).classList.add('active');
             });
         });
+
+        // Detectar si las descripciones están truncadas
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.collection-description').forEach(desc => {
+                if (desc.scrollHeight > desc.clientHeight) {
+                    const dotsElement = desc.nextElementSibling;
+                    if (dotsElement && dotsElement.classList.contains('ver-mas-dots')) {
+                        dotsElement.classList.add('show');
+                    }
+                }
+            });
+        });
+
+        // Toggle descripción
+        function toggleDescripcion(dotsElement) {
+            const descripcion = dotsElement.previousElementSibling;
+            const isExpanded = descripcion.classList.contains('expanded');
+
+            if (!isExpanded) {
+                descripcion.classList.remove('truncated');
+                descripcion.classList.add('expanded');
+                dotsElement.textContent = '× cerrar';
+            } else {
+                descripcion.classList.remove('expanded');
+                descripcion.classList.add('truncated');
+                dotsElement.textContent = '...';
+            }
+        }
     </script>
 </div>
 </html>

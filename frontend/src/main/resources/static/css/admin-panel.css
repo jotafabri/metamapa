@@ -575,6 +575,45 @@
 .collection-description {
     font-size: 0.875rem;
     color: #95959F;
+    line-height: 1.5;
+    margin-bottom: 0;
+    word-wrap: break-word;
+}
+
+.collection-description.truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.collection-description.expanded {
+    display: block;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.collection-description-wrapper {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.ver-mas-dots {
+    color: #E88827;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    user-select: none;
+    display: none;
+}
+
+.ver-mas-dots:hover {
+    color: #ff9f40;
+}
+
+.ver-mas-dots.show {
+    display: inline;
 }
 
 .collection-stats {
