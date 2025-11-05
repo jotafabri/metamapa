@@ -27,13 +27,12 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     log.info("Configurando Security");
-    http.csrf(AbstractHttpConfigurer::disable) // Desactivar CSRF para desarrollo
+    http.csrf(AbstractHttpConfigurer::disable)
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            // Permitir acceso público a endpoints de autenticación
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/hechos/me").authenticated()
-            // Permitir acceso a otros endpoints (temporal para desarrollo)
+            // Permitir acceso a hechos propios a roles USER y ADMIN.
+            .requestMatchers("/hechos/me").hasAnyRole("USER", "ADMIN")
+            // Permitir acceso publico a otros endpoints
             .anyRequest().permitAll())
         .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

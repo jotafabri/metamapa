@@ -16,7 +16,7 @@
                     <video th:if="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
                                        #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
                                        #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                           th:src="@{${backendUrl} + '/files/' + ${ruta}}"
+                           th:src="@{${backendUrl} + 'files/' + ${ruta}}"
                            class="carousel-media"
                            controls
                            playsinline>
@@ -25,7 +25,7 @@
                     <img th:unless="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
                                          #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
                                          #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
-                         th:src="@{${backendUrl} + '/files/' + ${ruta}}"
+                         th:src="@{${backendUrl} + 'files/' + ${ruta}}"
                          th:alt="'Imagen ' + ${iterStat.count}"
                          class="carousel-media">
                 </div>

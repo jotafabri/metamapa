@@ -769,3 +769,37 @@
         padding: 0.5rem 0.75rem;
     }
 }
+
+
+.collection-actions {
+    display: flex;
+    justify-content: flex-end; /* o center si querés centrarlos */
+    align-items: center; /* alinea verticalmente */
+    gap: 0.5rem; /* espacio uniforme entre botones */
+    margin-top: 1rem;
+}
+
+.collection-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px; /* fuerza igual altura */
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.collection-actions form {
+    margin: 0; /* elimina margen por defecto */
+}
+
+.collection-actions form button {
+    margin-top: 0 !important; /* elimina el desplazamiento */
+    height: 38px; /* igual altura al botón Editar */
+    padding: 0 1rem; /* igual padding horizontal */
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
