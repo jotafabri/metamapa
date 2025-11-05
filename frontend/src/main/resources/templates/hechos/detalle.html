@@ -87,6 +87,8 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             const hecho = /*[[${hecho}]]*/ null;
+            const hechosData = hecho ? [hecho] : [];
+            window.hechosData = hechosData;
             /*]]>*/
         </script>
 
