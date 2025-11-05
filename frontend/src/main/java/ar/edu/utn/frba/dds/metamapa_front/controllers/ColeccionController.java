@@ -37,7 +37,6 @@ public class ColeccionController {
   private String backendUrl;
 
   @GetMapping
-//  @PreAuthorize("hasAnyRole('VISUALIZADOR', 'CONTRIBUYENTE', 'ADMIN')")
   public String listarColecciones(Model model) {
     List<ColeccionDTO> colecciones;
     try {

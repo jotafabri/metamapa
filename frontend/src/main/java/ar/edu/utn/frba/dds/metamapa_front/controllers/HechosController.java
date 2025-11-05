@@ -39,6 +39,7 @@ public class HechosController {
   private String backendUrl;
 
   @GetMapping("/me")
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public String verHechosDeUsuario(Model model) {
     try {
       List<HechoDTO> hecho = hechosService.getMisHechos();
@@ -139,7 +140,7 @@ public class HechosController {
 */
 
   @GetMapping("/{id}/editar")
-  @PreAuthorize("hasRole('USER')")
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
     try {
       log.info("Intentando editar hecho con id: {}", id);
@@ -178,7 +179,7 @@ public class HechosController {
 
    */
   @PostMapping("/{id}/actualizar")
-  //@PreAuthorize("hasAuthority('EDITAR_HECHOS')")
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public String actualizarHecho(
           @PathVariable Long id,
           @ModelAttribute("hecho") HechoDTO hechoDTO,

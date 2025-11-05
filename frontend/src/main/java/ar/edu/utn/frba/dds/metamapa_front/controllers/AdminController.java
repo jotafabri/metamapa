@@ -68,6 +68,7 @@ public class AdminController {
   // --- DASHBOARD ---
 
   @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarDashboard(Model model) {
     model.addAttribute("titulo", "Panel de administración");
 
@@ -88,12 +89,14 @@ public class AdminController {
   }
 
   @GetMapping("/panel")
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarPanelCompleto(Model model) {
     model.addAttribute("titulo", "Panel de Administración");
     return "admin/panel"; // Template: src/main/resources/templates/admin/panel.html
   }
 
   @GetMapping("/colecciones")
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarColecciones(Model model) {
     model.addAttribute("colecciones", coleccionService.getAllColecciones());
     model.addAttribute("coleccion", new ColeccionDTO());
@@ -102,6 +105,7 @@ public class AdminController {
   }
 
   @GetMapping("/colecciones/crear")
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("coleccion", new ColeccionDTO());
     model.addAttribute("titulo", "Crear nueva colección");
@@ -109,6 +113,7 @@ public class AdminController {
   }
 
   @PostMapping("/colecciones/crear")
+  @PreAuthorize("hasRole('ADMIN')")
   public String crearColeccion(@ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
                                BindingResult bindingResult,
                                Model model,
@@ -124,6 +129,7 @@ public class AdminController {
   }
 
   @GetMapping("/colecciones/{handle}/editar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarFormularioEditar(
       @PathVariable String handle,
       Model model) {
@@ -139,6 +145,7 @@ public class AdminController {
   }
 
   @PostMapping("/colecciones/{handle}/actualizar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String actualizarColeccion(@PathVariable String handle,
                                     @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
                                     BindingResult bindingResult,
@@ -158,6 +165,7 @@ public class AdminController {
   }
 
   @PostMapping("/colecciones/{handle}/eliminar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String eliminarColeccion(@PathVariable String handle) {
     try {
       coleccionService.eliminarColeccion(handle);
@@ -171,6 +179,7 @@ public class AdminController {
   }
 
   @GetMapping("/hechos")
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarHechos(Model model) {
     List<HechoDTO> hechosPendientes = hechosService.obtenerHechosPendientes();
     model.addAttribute("hechosPendientes", hechosPendientes);
@@ -180,6 +189,7 @@ public class AdminController {
   // TODO: POST importar archivo CSV
 
   @PostMapping("/hechos/{id}/aprobar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String aprobarHecho(@PathVariable Long id, Model model, @ModelAttribute("hechoActualizado") HechoDTO hechoActualizado) {
     try {
       hechosService.aprobarHecho(id, hechoActualizado);
@@ -192,6 +202,7 @@ public class AdminController {
   }
 
   @PostMapping("/hechos/{id}/rechazar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String rechazarHecho(@PathVariable Long id, Model model) {
     try {
       hechosService.rechazarHecho(id);
@@ -204,6 +215,7 @@ public class AdminController {
   }
 
   @GetMapping("/solicitudes")
+  @PreAuthorize("hasRole('ADMIN')")
   public String mostrarSolicitudes(Model model) {
     List<SolicitudEliminacionDTO> solicitudes = solicitudesService.obtenerSolicitudes();
     model.addAttribute("titulo", "Solicitudes de eliminación");
@@ -212,6 +224,7 @@ public class AdminController {
   }
 
   @PostMapping("/solicitudes/{id}/aceptar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String aceptarSolicitud(@PathVariable Long id, Model model) {
     try {
       solicitudesService.aceptarSolicitud(id);
@@ -224,6 +237,7 @@ public class AdminController {
   }
 
   @PostMapping("/solicitudes/{id}/rechazar")
+  @PreAuthorize("hasRole('ADMIN')")
   public String rechazarSolicitud(@PathVariable Long id, Model model) {
     try {
       solicitudesService.rechazarSolicitud(id);
