@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,6 +39,7 @@ public class HechosController {
   private IFileStorageService fileStorageService;
 
   @GetMapping("/me")
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public ResponseEntity<List<HechoDTO>> getMisHechos() {
     try {
       String emailUsuario = null;
@@ -105,6 +107,7 @@ public class HechosController {
   }
 
   @PatchMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<HechoDTO> actualizarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoDTO) {
     try {
       HechoDTO hechoActualizado = this.hechosService.actualizarHecho(id, hechoDTO);
@@ -115,6 +118,7 @@ public class HechosController {
   }
 
   @PatchMapping("/{id}/eliminar")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> marcarEliminado(@PathVariable Long id) {
     try {
       this.hechosService.marcarEliminado(id);
@@ -127,6 +131,7 @@ public class HechosController {
   }
 
   @PatchMapping("/{id}/aprobar")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<HechoDTO> aprobarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoActualizado) {
     try {
       HechoDTO hecho = hechosService.aprobarHecho(id, hechoActualizado);
@@ -141,6 +146,7 @@ public class HechosController {
   }
 
   @PatchMapping("/{id}/rechazar")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<HechoDTO> rechazarHecho(@PathVariable Long id) {
     try {
       HechoDTO hecho = hechosService.rechazarHecho(id);
@@ -166,6 +172,7 @@ public class HechosController {
   }
 
   @GetMapping("/pendientes")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<HechoDTO>> obtenerHechosPendientes() {
     try {
       List<HechoDTO> hechos = hechosService.obtenerHechosPendientes();

@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class SolicitudesController {
   }
 
   @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<SolicitudEliminacionOutputDTO>> getSolicitudes() {
     try {
       List<SolicitudEliminacionOutputDTO> solicitudes = this.agregacionService.findAllSolicitudes();
@@ -46,6 +48,7 @@ public class SolicitudesController {
   }
 
   @PatchMapping("{id}/aceptar")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> aceptarSolicitud(@PathVariable Long id) {
     try {
       this.agregacionService.aprobarSolicitudById(id);
@@ -56,6 +59,7 @@ public class SolicitudesController {
   }
 
   @PatchMapping("{id}/rechazar")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> rechazarSolicitud(@PathVariable Long id) {
     try {
       this.agregacionService.rechazarSolicitudById(id);
