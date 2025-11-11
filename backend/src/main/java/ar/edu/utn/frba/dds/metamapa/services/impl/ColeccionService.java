@@ -1,11 +1,8 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
@@ -30,6 +27,14 @@ public class ColeccionService implements IColeccionService {
   private IColeccionesRepository coleccionesRepository;
 
   //ADMIN:Operacion C(R)UD
+  @Override
+  public List<ColeccionDTO> getAllColecciones(Integer limit) {
+    return this.coleccionesRepository.findAllLimit(limit)
+        .stream()
+        .map(ColeccionDTO::fromColeccion)
+        .toList();
+  }
+
   @Override
   public List<ColeccionDTO> getAllColecciones() {
     return this.coleccionesRepository.findAll()

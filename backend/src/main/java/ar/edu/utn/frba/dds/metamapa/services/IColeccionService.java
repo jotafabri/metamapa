@@ -11,6 +11,8 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 public interface IColeccionService {
   List<ColeccionDTO> getAllColecciones();
 
+  List<ColeccionDTO> getAllColecciones(Integer limit);
+
   List<HechoDTO> getHechosByHandle(String handle,
                                    HechoFiltroDTO filtros);
 

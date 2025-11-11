@@ -50,13 +50,9 @@ public class ColeccionService {
   public void eliminarColeccion(String handle) {
     metamapaApiService.eliminarColeccion(handle);
   }
-/*
+
   public List<ColeccionDTO> getDestacadas() {
-    List<ColeccionDTO> todas = metamapaApiService.getAllColecciones();
-    return todas.stream()
-            .sorted(Comparator.comparing(ColeccionDTO::getFechaC).reversed())
-            .limit(3)
-            .collect(Collectors.toList());
+    return metamapaApiService.getAllColecciones(5);
   }
-*/
+
 }

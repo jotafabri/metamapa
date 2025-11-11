@@ -17,8 +17,8 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   List<Hecho> findAllPendientes();
 
   // Lista solo los hechos que fueron aceptados
-  @Query("SELECT h FROM Hecho h WHERE h.eliminado = FALSE AND LOWER(h.estado) = 'aceptada' ")
-  List<Hecho> findAllAceptados();
+  @Query("SELECT h FROM Hecho h WHERE h.eliminado = FALSE AND LOWER(h.estado) = 'aceptada' ORDER BY h.fechaAlta LIMIT :limit")
+  List<Hecho> findAllAceptados(@Param("limit") Integer limit);
 
   // Lista solo los hechos que no fueron eliminados
   List<Hecho> findAllByEliminadoFalse();

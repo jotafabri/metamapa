@@ -110,7 +110,15 @@ public class MetamapaApiService {
   }
 
   public List<ColeccionDTO> getAllColecciones() {
-    List<ColeccionDTO> response = webApiCallerService.getListPublic(metamapaServiceUrl + "/colecciones", ColeccionDTO.class);
+    return retrieveColecciones("/colecciones");
+  }
+
+  public List<ColeccionDTO> getAllColecciones(Integer limit) {
+    return retrieveColecciones("/colecciones?limit=" + limit);
+  }
+
+  private List<ColeccionDTO> retrieveColecciones(String endpoint) {
+    List<ColeccionDTO> response = webApiCallerService.getListPublic(metamapaServiceUrl + endpoint, ColeccionDTO.class);
     return response != null ? response : List.of();
   }
 
@@ -158,8 +166,8 @@ public class MetamapaApiService {
   public HechoDTO getHechoById(Long id) {
 
     String url = metamapaServiceUrl.endsWith("/")
-            ? metamapaServiceUrl + "hechos/" + id
-            : metamapaServiceUrl + "/hechos/" + id;
+        ? metamapaServiceUrl + "hechos/" + id
+        : metamapaServiceUrl + "/hechos/" + id;
 
     log.info("Llamando al backend: {}", url);
 
@@ -284,8 +292,8 @@ public class MetamapaApiService {
     return response != null ? response : List.of();
   }
 
-  public List<HechoDTO> getAllHechos() {
-    return webApiCallerService.getListPublic(metamapaServiceUrl + "/hechos", HechoDTO.class);
+  public List<HechoDTO> getAllHechos(Integer limit) {
+    return webApiCallerService.getListPublic(metamapaServiceUrl + "/hechos?size=" + limit.toString(), HechoDTO.class);
   }
 
 

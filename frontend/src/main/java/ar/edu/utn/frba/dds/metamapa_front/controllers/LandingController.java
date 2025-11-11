@@ -22,10 +22,10 @@ public class LandingController {
     model.addAttribute("titulo", "Información Colaborativa para el Bien Social");
 
     List<HechoDTO> hechosDestacados = hechosService.getDestacados();
-    //List<ColeccionDTO> coleccionesDestacadas = coleccionService.getDestacadas();
+    List<ColeccionDTO> coleccionesDestacadas = coleccionService.getDestacadas();
 
     model.addAttribute("hechosDestacados", hechosDestacados);
-    //model.addAttribute("coleccionesDestacadas", coleccionesDestacadas);
+    model.addAttribute("coleccionesDestacadas", coleccionesDestacadas);
 
     return "landing/landing";
   }

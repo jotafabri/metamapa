@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface IColeccionesRepository extends JpaRepository<Coleccion, Long> {
+  @Query("SELECT col FROM Coleccion col ORDER BY col.fechaAlta LIMIT :limit")
+  List<Coleccion> findAllLimit(@Param("limit") Integer limit);
+
   Coleccion findColeccionByHandle(String handle);
 
   boolean existsByHandle(String candidato);

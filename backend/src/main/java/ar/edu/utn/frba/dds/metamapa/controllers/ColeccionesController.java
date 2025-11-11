@@ -38,9 +38,14 @@ public class ColeccionesController {
   private IColeccionService coleccionService;
 
   @GetMapping
-  public ResponseEntity<List<ColeccionDTO>> getAllColecciones() {
+  public ResponseEntity<List<ColeccionDTO>> getAllColecciones(@RequestParam(required = false) Integer limit) {
     log.info("Obteniendo todas las colecciones");
-    List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
+    List<ColeccionDTO> colecciones;
+    if (limit != null) {
+      colecciones = coleccionService.getAllColecciones(limit);
+    } else {
+      colecciones = coleccionService.getAllColecciones();
+    }
     return ResponseEntity.ok(colecciones);
   }
 

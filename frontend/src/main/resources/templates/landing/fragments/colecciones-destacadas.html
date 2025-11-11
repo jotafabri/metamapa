@@ -4,9 +4,8 @@
         <h2>Colecciones Destacadas</h2>
         <div class="grid-destacados">
             <div th:each="coleccion : ${coleccionesDestacadas}" class="tarjeta-destacada">
-                <h3 th:text="${coleccion.nombre}">Nombre de la colección</h3>
+                <h3 th:text="${coleccion.titulo}">Nombre de la colección</h3>
                 <p th:text="${coleccion.descripcion}">Descripción breve de la colección</p>
-                <p><strong>Tipo de consenso:</strong> <span th:text="${coleccion.tipoConsenso}">Tipo de consenso</span></p>
                 <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}" class="ver-mas">Explorar</a>
             </div>
         </div>

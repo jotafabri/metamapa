@@ -55,11 +55,7 @@ public class HechosService {
   }
 
   public List<HechoDTO> getDestacados() {
-    List<HechoDTO> hechos = metamapaApiService.getAllHechos();
-    return hechos.stream()
-            .sorted(Comparator.comparing(HechoDTO::getFechaCarga).reversed())
-            .limit(3)
-            .collect(Collectors.toList());
+    return metamapaApiService.getAllHechos(5);
   }
 
 }

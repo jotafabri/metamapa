@@ -8,7 +8,7 @@
         <p th:text="${hecho.descripcion}">Descripción breve del hecho</p>
         <p><strong>Categoría:</strong> <span th:text="${hecho.categoria}">Categoría</span></p>
         <p><strong>Fecha:</strong> <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">Fecha</span></p>
-        <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="ver-mas">Ver más</a>
+        <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="ver-mas">Ver Detalle</a>
       </div>
     </div>
   </section>

@@ -76,7 +76,7 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoDTO> getHechosWithParams(HechoFiltroDTO filtros) {
-    return this.hechosRepository.findAllAceptados()
+    return this.hechosRepository.findAllAceptados(filtros.getSize())
         .stream()
         .filter(h -> filtros.getList().stream().allMatch(c -> c.cumple(h)))
         .map(HechoDTO::fromHecho)
