@@ -1,0 +1,81 @@
+/* Estilos compartidos para Hechos y Colecciones Destacadas */
+
+.seccion-destacada {
+    background-color: #1e1f20;
+    color: #e0e0e0;
+    padding: 60px 20px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.seccion-destacada h2 {
+    font-size: 2.25rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.grid-destacados {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    justify-items: center;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.tarjeta-destacada {
+    background-color: #1e1f20;
+    border-left: 5px solid #FB9A34;
+    border-radius: 10px;
+    padding: 25px 20px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    max-width: 360px;
+    width: 100%;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.tarjeta-destacada:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.tarjeta-destacada h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.tarjeta-destacada p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #c0c0c0;
+    margin-bottom: 5px;
+}
+
+.ver-mas {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #FB9A34;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.ver-mas:hover {
+    text-decoration: underline;
+}
+
+/* Animación reutilizada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

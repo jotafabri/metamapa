@@ -1,0 +1,15 @@
+<div th:fragment="hechosDestacados">
+  <link rel="stylesheet" th:href="@{/css/destacados.css}">
+  <section class="seccion-destacada">
+    <h2>Hechos Destacados</h2>
+    <div class="grid-destacados">
+      <div th:each="hecho : ${hechosDestacados}" class="tarjeta-destacada">
+        <h3 th:text="${hecho.titulo}">Título del hecho</h3>
+        <p th:text="${hecho.descripcion}">Descripción breve del hecho</p>
+        <p><strong>Categoría:</strong> <span th:text="${hecho.categoria}">Categoría</span></p>
+        <p><strong>Fecha:</strong> <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">Fecha</span></p>
+        <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="ver-mas">Ver más</a>
+      </div>
+    </div>
+  </section>
+</div>

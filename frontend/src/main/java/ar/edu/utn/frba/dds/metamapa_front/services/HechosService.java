@@ -3,6 +3,8 @@ package ar.edu.utn.frba.dds.metamapa_front.services;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
@@ -50,6 +52,14 @@ public class HechosService {
 
   public List<HechoDTO> getMisHechos() {
     return metamapaApiService.getMisHechos();
+  }
+
+  public List<HechoDTO> getDestacados() {
+    List<HechoDTO> hechos = metamapaApiService.getAllHechos();
+    return hechos.stream()
+            .sorted(Comparator.comparing(HechoDTO::getFechaCarga).reversed())
+            .limit(3)
+            .collect(Collectors.toList());
   }
 
 }
