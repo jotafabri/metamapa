@@ -121,23 +121,7 @@ public class HechosController {
 
 
   }
-/*
-  @GetMapping("/{id}/editar")
-  @PreAuthorize("hasAuthority('EDITAR_HECHOS')")
-  public String mostrarFormularioEditar(
-      @PathVariable Long id,
-      Model model) {
-    try {
-      HechoDTO hechoDTO = hechosService.getHechoById(id).get();
 
-      model.addAttribute("coleccion", hechoDTO);
-      model.addAttribute("titulo", "Editar hecho");
-      return "hechos/editar";
-    } catch (NotFoundException e) {
-      return "redirect:/404";
-    }
-  }
-*/
 
   @GetMapping("/{id}/editar")
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -156,28 +140,6 @@ public class HechosController {
     }
   }
 
-  /*
-  @PostMapping("/{id}/actualizar")
-  @PreAuthorize("hasAuthority('EDITAR_HECHOS')")
-  public String actualizarColeccion(@PathVariable Long id,
-                                    @ModelAttribute("hecho") HechoDTO hechoDTO,
-                                    BindingResult bindingResult,
-                                    Model model,
-                                    RedirectAttributes redirectAttributes) {
-    try {
-      HechoDTO hechoActualizado = hechosService.actualizarHecho(id, hechoDTO);
-
-      return "redirect:/colecciones/colecciones";
-    } catch (NotFoundException e) {
-      return "redirect:/404";
-    } catch (Exception e) {
-      log.error("Error al editar hecho {}", hechoDTO.getTitulo(), e);
-      model.addAttribute("titulo", "Editar hecho");
-      return "hechos/editar";
-    }
-  }
-
-   */
   @PostMapping("/{id}/actualizar")
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public String actualizarHecho(

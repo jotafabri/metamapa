@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RefreshRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.TokenResponse;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.UserDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
 import ar.edu.utn.frba.dds.metamapa.services.IUsuarioService;
 import ar.edu.utn.frba.dds.metamapa.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -51,24 +52,22 @@ public class AuthController {
       String email = loginRequest.getEmail();
       String password = loginRequest.getPassword();
 
-      // Validación básica de credenciales
       if (email == null || email.trim().isEmpty() ||
-          password == null || password.trim().isEmpty()) {
+              password == null || password.trim().isEmpty()) {
         return ResponseEntity.badRequest().build();
       }
 
-      usuarioService.autenticar(email, password);
+      Usuario usuario = usuarioService.autenticar(email, password);
 
-      // Generar tokens
-      String accessToken = usuarioService.generarAccessToken(email);
-      String refreshToken = usuarioService.generarRefreshToken(email);
+      String accessToken = usuarioService.generarAccessToken(usuario.getEmail(), usuario.getRol().name());
+      String refreshToken = usuarioService.generarRefreshToken(usuario.getEmail());
 
       AuthResponseDTO response = AuthResponseDTO.builder()
-          .accessToken(accessToken)
-          .refreshToken(refreshToken)
-          .build();
+              .accessToken(accessToken)
+              .refreshToken(refreshToken)
+              .build();
 
-      log.info("El usuario {} está logueado. El token generado es {}", email, accessToken);
+      log.info("El usuario {} está logueado. Token generado: {}", email, accessToken);
 
       return ResponseEntity.ok(response);
     } catch (BadCredentialsException e) {
@@ -78,23 +77,26 @@ public class AuthController {
     }
   }
 
+
   @PostMapping("/refresh")
   public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshRequest request) {
     try {
       String email = JwtUtil.validarToken(request.getRefreshToken());
 
-      // Validar que el token sea de tipo refresh
       Claims claims = Jwts.parserBuilder()
-          .setSigningKey(JwtUtil.getKey())
-          .build()
-          .parseClaimsJws(request.getRefreshToken())
-          .getBody();
+              .setSigningKey(JwtUtil.getKey())
+              .build()
+              .parseClaimsJws(request.getRefreshToken())
+              .getBody();
 
       if (!"refresh".equals(claims.get("type"))) {
         return ResponseEntity.badRequest().build();
       }
 
-      String newAccessToken = JwtUtil.generarAccessToken(email);
+      // obtener el rol del usuario (de la BD)
+      Usuario usuario = usuarioService.getUserEntityByEmail(email);
+
+      String newAccessToken = JwtUtil.generarAccessToken(email, usuario.getRol().name());
       TokenResponse response = new TokenResponse(newAccessToken, request.getRefreshToken());
 
       return ResponseEntity.ok(response);
@@ -102,6 +104,7 @@ public class AuthController {
       return ResponseEntity.badRequest().build();
     }
   }
+
 
   @PostMapping("/user")
   public ResponseEntity<UserDTO> getUserByEmail(@RequestBody Map<String, String> body) {

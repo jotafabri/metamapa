@@ -11,7 +11,9 @@ public interface IUsuarioService {
 
   UserDTO getUserByEmail(String email);
 
-  String generarAccessToken(String email);
+  Usuario getUserEntityByEmail(String email);
+
+  String generarAccessToken(String email, String rol);
 
   String generarRefreshToken(String email);
 }

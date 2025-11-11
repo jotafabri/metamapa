@@ -57,8 +57,8 @@ public class UsuarioService implements IUsuarioService {
     return usuario;
   }
 
-  public String generarAccessToken(String email) {
-    return JwtUtil.generarAccessToken(email);
+  public String generarAccessToken(String email, String rol) {
+    return JwtUtil.generarAccessToken(email, rol);
   }
 
   public String generarRefreshToken(String email) {
@@ -84,6 +84,11 @@ public class UsuarioService implements IUsuarioService {
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     usuario.setPassword(passwordEncoder.encode(nuevaPassword));
     usuarioRepository.save(usuario);
+  }
+
+  public Usuario getUserEntityByEmail(String email) {
+    return usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
   }
 
 }

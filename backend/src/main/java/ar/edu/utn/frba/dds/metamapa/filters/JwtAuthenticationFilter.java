@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import ar.edu.utn.frba.dds.metamapa.utils.JwtUtil;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,16 +25,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String header = request.getHeader("Authorization");
     if (header != null && header.startsWith("Bearer ")) {
       String token = header.substring(7);
+      log.info("JWT recibido: {}", token);
       try {
         String username = JwtUtil.validarToken(token);
-        var auth = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        String rol = Jwts.parserBuilder()
+                .setSigningKey(JwtUtil.getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("rol", String.class);
+
+        log.info("Token válido. Usuario: {}, Rol: {}", username, rol);
+
+        var auth = new UsernamePasswordAuthenticationToken(
+                username,
+                null,
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
+        );
         SecurityContextHolder.getContext().setAuthentication(auth);
+
+        log.info("Autenticación asignada al contexto de seguridad para {}", username);
+
       } catch (Exception e) {
+        log.error("Error al validar token: {}", e.getMessage());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
         return;
       }
     } else {
-      log.warn("No hay token de autorización");
+      log.warn("Solicitud a '{}' no tiene token de autorización. Si el endpoint requiere auth, se denegará acceso.", request.getRequestURI());
+
     }
 
     filterChain.doFilter(request, response);
@@ -42,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
     String path = request.getRequestURI();
-    // No aplicar el filtro JWT solo a los endpoints públicos de autenticación
-    return path.equals("/api/auth") || path.equals("/api/auth/refresh");
+    // Ignorar todos los endpoints de autenticación pública
+    return path.startsWith("/auth");
   }
 }

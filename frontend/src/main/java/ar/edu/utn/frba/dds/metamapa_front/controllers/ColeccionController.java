@@ -64,6 +64,7 @@ public class ColeccionController {
       List<HechoDTO> hechosPaginados = coleccionService.getHechosByHandle(handle, filtros);
       DatosGeograficosDTO datosGeograficos = coleccionService.getCategoriasByHandle(handle);
 
+
       Integer page = filtros.getPage();
       Integer size = filtros.getSize();
 
