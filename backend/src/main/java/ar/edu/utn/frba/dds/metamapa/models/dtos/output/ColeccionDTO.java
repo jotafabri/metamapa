@@ -3,6 +3,9 @@ package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import lombok.Data;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 public class ColeccionDTO {
   private String handle;
@@ -10,6 +13,7 @@ public class ColeccionDTO {
   private String descripcion;
   private String algoritmo;
   private Integer cantHechos;
+  private List<FuenteOutputDTO> fuentes;
 
   // Mapper
   public static ColeccionDTO fromColeccion(Coleccion coleccion) {
@@ -23,6 +27,12 @@ public class ColeccionDTO {
                     : "-"
     );
     dto.setCantHechos(coleccion.getHechos().size());
+    dto.setFuentes(
+            coleccion.getFuentes().stream()
+                    .map(FuenteOutputDTO::fromFuente)
+                    .collect(Collectors.toList())
+    ); // ✅ mapeamos las fuentes
+
     return dto;
   }
 }
