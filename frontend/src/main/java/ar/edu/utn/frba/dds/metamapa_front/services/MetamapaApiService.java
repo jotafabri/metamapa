@@ -135,12 +135,27 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    ColeccionDTO response = webApiCallerService.patch(metamapaServiceUrl + "/colecciones/" + handle, coleccionDTO, ColeccionDTO.class);
+    // 1️⃣ Actualizamos la colección básica con PATCH
+    ColeccionDTO response = webApiCallerService.patch(
+            metamapaServiceUrl + "/colecciones/" + handle,
+            coleccionDTO,
+            ColeccionDTO.class
+    );
+
     if (response == null) {
       throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
     }
+
+    // 2️⃣ Reemplazamos todas las fuentes con PUT, incluso si la lista está vacía
+    webApiCallerService.put(
+            metamapaServiceUrl + "/colecciones/" + handle + "/fuentes",
+            coleccionDTO.getFuentesIds(), // puede ser vacía
+            Void.class
+    );
+
     return response;
   }
+
 
   public void eliminarColeccion(String handle) {
     webApiCallerService.delete(metamapaServiceUrl + "/colecciones/" + handle);
