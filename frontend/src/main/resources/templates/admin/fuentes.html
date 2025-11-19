@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>MetaMapa Admin - Fuentes</title>
+    <!-- Inserta el fragmento común de recursos (CSS, JS comunes) -->
+    <th:insert th:replace="fragments/common :: head"></th:insert>
+</head>
+<body>
+<!-- Barra de navegación común -->
+<header th:replace="fragments/navbar :: navbar"></header>
+
+<div class="container">
+    <h1>Configurar Fuentes de Colección</h1>
+    <!-- Selección de colección (si aplica) -->
+    <div class="mb-3">
+        <label for="coleccionSelect">Colección:</label>
+        <select id="coleccionSelect" name="coleccionId" th:field="*{coleccionId}">
+            <option value="" disabled selected>Seleccione una colección</option>
+            <option th:each="col : ${colecciones}"
+                    th:value="${col.id}" th:text="${col.nombre}"
+                    th:selected="${col.id} == ${coleccionActual.id}">
+            </option>
+        </select>
+    </div>
+
+    <!-- Tabla de fuentes asociadas -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nombre de la Fuente</th>
+            <th>Tipo</th>
+            <th>Detalle/URL</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="fuente : ${fuentes}">
+            <td th:text="${fuente.nombre}">Nombre</td>
+            <td th:text="${fuente.tipo}">Tipo</td>
+            <td th:text="${fuente.detalle}">Detalle</td>
+            <td>
+                <a th:href="@{'/admin/fuentes/editar/' + ${fuente.id}}">Editar</a> |
+                <a th:href="@{'/admin/fuentes/eliminar/' + ${fuente.id}}"
+                   onclick="return confirm('¿Eliminar esta fuente?');">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Formulario para agregar una nueva fuente -->
+    <h2>Nueva Fuente</h2>
+    <form th:action="@{/admin/fuentes/agregar}" th:method="post" th:object="${nuevaFuente}">
+        <div class="mb-2">
+            <label for="nombreFuente">Nombre:</label>
+            <input id="nombreFuente" type="text" th:field="*{nombre}" required />
+        </div>
+        <div class="mb-2">
+            <label for="tipoFuente">Tipo:</label>
+            <select id="tipoFuente" th:field="*{tipo}" required>
+                <option value="" disabled selected>-- Seleccione el tipo --</option>
+                <option value="ESTATICA">Estática</option>
+                <option value="DINAMICA">Dinámica</option>
+                <option value="PROXY">Proxy</option>
+            </select>
+        </div>
+        <div class="mb-2">
+            <label for="detalleFuente">Detalle (URL u otra información):</label>
+            <input id="detalleFuente" type="text" th:field="*{detalle}" placeholder="URL o detalle de la fuente" />
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Fuente</button>
+    </form>
+</div>
+</body>
+</html>

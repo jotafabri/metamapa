@@ -1,0 +1,13 @@
+<div th:fragment="coleccionesDestacadas">
+    <link rel="stylesheet" th:href="@{/css/destacados.css}">
+    <section class="seccion-destacada">
+        <h2>Colecciones Destacadas</h2>
+        <div class="grid-destacados">
+            <div th:each="coleccion : ${coleccionesDestacadas}" class="tarjeta-destacada">
+                <h3 th:text="${coleccion.titulo}">Nombre de la colección</h3>
+                <p th:text="${coleccion.descripcion}">Descripción breve de la colección</p>
+                <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}" class="ver-mas">Explorar</a>
+            </div>
+        </div>
+    </section>
+</div>

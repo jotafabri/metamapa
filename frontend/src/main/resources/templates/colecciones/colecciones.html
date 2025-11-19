@@ -1,0 +1,33 @@
+<html th:replace="~{layout/base :: html}">
+<!-- Contenido principal -->
+<div th:fragment="contenido" class="main">
+    <link rel="stylesheet" th:href="@{/css/colecciones.css}">
+    <h2 class="main-title">Colecciones de Datos</h2>
+    <p class="main-subtitle">Explora diversos conjuntos de datos.</p>
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+    <!-- Grid de colecciones -->
+    <section id="collections-grid">
+        <!-- Mensaje si no hay colecciones -->
+        <div th:if="${#lists.isEmpty(colecciones)}" class="no-collections">
+            <p>No hay colecciones disponibles en este momento.</p>
+        </div>
+        <div th:unless="${#lists.isEmpty(colecciones)}" class="grid">
+            <div th:each="coleccion : ${colecciones}" class="card">
+                <div class="card-title" th:text="${coleccion.titulo}">Título</div>
+                <div class="card-desc" th:text="${coleccion.descripcion}">Descripción</div>
+                <a th:href="@{/colecciones/{handle}(handle=${coleccion.handle})}"
+                   th:text="'Ver ' + ${coleccion.cantHechos} + ' hecho' + (${coleccion.cantHechos} != 1 ? 's' : '')"
+                   class="btn btn-primary">
+                    Ver hechos
+                </a>
+            </div>
+        </div>
+    </section>
+    <script th:src="@{/js/colecciones.js}"></script>
+</div>
+
+</html>
+
+

@@ -1,0 +1,12 @@
+<html th:replace="~{layout/base :: html}">
+
+<div th:fragment="contenido">
+    <link rel="stylesheet" th:href="@{/css/landing-styles.css}">
+    <div th:replace="~{landing/fragments/hero :: hero}"></div>
+    <div th:replace="~{landing/fragments/impacto-social :: impacto-social}"></div>
+    <div th:replace="~{landing/fragments/hechos-destacados :: hechosDestacados}"></div>
+    <div th:replace="~{landing/fragments/colecciones-destacadas :: coleccionesDestacadas}"></div>
+    <div th:replace="~{landing/fragments/cambio-social :: cambio-social}"></div>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</div>
+</html>

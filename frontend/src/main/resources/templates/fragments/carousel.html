@@ -1,0 +1,50 @@
+<div th:fragment="carousel(hecho)">
+   <link rel="stylesheet" th:href="@{/css/carousel.css}">
+    <!-- Carrusel de fotos -->
+    <div class="hecho-carousel" onclick="event.stopPropagation()" th:if="${hecho.multimedia != null and !hecho.multimedia.isEmpty()}">
+        <div class="carousel-container"
+             th:classappend="${#lists.size(hecho.multimedia) > 1} ? 'multiple-images' : ''">
+            <button class="carousel-btn prev"
+                    th:if="${#lists.size(hecho.multimedia) > 1}"
+                    th:onclick="'prevSlide(\'carousel-' + ${hecho.id} + '\')'">‹
+            </button>
+            <div class="carousel-track" th:id="'carousel-' + ${hecho.id}">
+                <div th:each="ruta, iterStat : ${hecho.multimedia}"
+                     class="carousel-item"
+                     th:classappend="${iterStat.first} ? 'active' : ''">
+                    <!-- Video si es MP4, WebM, OGG -->
+                    <video th:if="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
+                                       #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
+                                       #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
+                           th:src="@{${backendUrl} + 'files/' + ${ruta}}"
+                           class="carousel-media"
+                           controls
+                           playsinline>
+                    </video>
+                    <!-- Imagen para otros formatos -->
+                    <img th:unless="${#strings.endsWith(#strings.toLowerCase(ruta), '.mp4') or
+                                         #strings.endsWith(#strings.toLowerCase(ruta), '.webm') or
+                                         #strings.endsWith(#strings.toLowerCase(ruta), '.ogg')}"
+                         th:src="@{${backendUrl} + 'files/' + ${ruta}}"
+                         th:alt="'Imagen ' + ${iterStat.count}"
+                         class="carousel-media">
+                </div>
+            </div>
+            <button class="carousel-btn next"
+                    th:if="${#lists.size(hecho.multimedia) > 1}"
+                    th:onclick="'nextSlide(\'carousel-' + ${hecho.id} + '\')'">›
+            </button>
+
+            <div class="carousel-indicators"
+                 th:if="${#lists.size(hecho.multimedia) > 1}"
+                 th:id="'indicators-' + ${hecho.id}">
+                <span th:each="ruta, iterStat : ${hecho.multimedia}"
+                      class="indicator"
+                      th:classappend="${iterStat.first} ? 'active' : ''"
+                      th:onclick="'goToSlide(\'carousel-' + ${hecho.id} + '\', ' + ${iterStat.index} + ')'"></span>
+            </div>
+        </div>
+
+    </div>
+    <script th:src="@{/js/carrousel.js}"></script>
+</div>

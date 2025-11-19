@@ -1,0 +1,33 @@
+<html th:replace="~{layout/base :: html}">
+<div th:fragment="contenido" class="container">
+    <h1>Solicitudes de Eliminación de Hechos</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Solicitud</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sol : ${listaSolicitudes}">
+            <!-- Columna con detalles de la solicitud -->
+            <td>
+                Hecho: <span th:text="${sol.idHecho}" class="truncate-text">Descripción del hecho</span><br/>
+                Motivo: <span th:text="${sol.razon}" class="truncate-text">Motivo de eliminación</span><br/>
+            </td>
+            <!-- Columna con botones de aprobar/rechazar -->
+            <td>
+                <form th:action="@{/admin/solicitudes/aprobar}" th:method="post" style="display:inline;">
+                    <input type="hidden" name="solicitudId" th:value="${sol.id}"/>
+                    <button type="submit" class="btn btn-success">Aprobar eliminación</button>
+                </form>
+                <form th:action="@{/admin/solicitudes/rechazar}" th:method="post" style="display:inline;">
+                    <input type="hidden" name="solicitudId" th:value="${sol.id}"/>
+                    <button type="submit" class="btn btn-danger">Rechazar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</html>

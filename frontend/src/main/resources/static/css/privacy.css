@@ -1,0 +1,19 @@
+.privacy-page {
+    margin-left: 50px;
+    padding: 20px;
+}
+
+p {
+    padding-left: 2em;
+    padding-right: 2em;
+    text-indent: -2em;
+    text-align: justify;
+    margin-top: 15px;
+}
+
+.main-description {
+    font-size: 1.25rem;
+    color: #ADB8C8;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}

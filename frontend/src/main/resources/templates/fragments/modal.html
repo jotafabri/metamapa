@@ -1,0 +1,45 @@
+<div th:fragment="modal-eliminacion">
+    <div id="modal-eliminacion" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Solicitar eliminación</h3>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="hecho-detalle">
+                    <h4 id="modal-titulo"></h4>
+                    <p class="detalle-descripcion" id="modal-descripcion"></p>
+                    <div class="detalle-meta">
+                        <span class="detalle-categoria" id="modal-categoria"></span>
+                        <span class="detalle-fecha" id="modal-fecha"></span>
+                    </div>
+                </div>
+
+                <form id="form-eliminacion" th:action="@{/solicitudes}" th:object="${solicitudEliminacion}" method="post">
+                    <input type="hidden" id="hecho-id" name="hechoId" value="" th:field="*{idHecho}">
+
+                    <div class="form-group">
+                        <label for="razon-eliminacion">Razón de la solicitud *</label>
+                        <textarea
+                                th:field="*{razon}"
+                                id="razon-eliminacion"
+                                name="razon"
+                                rows="6"
+                                required
+                                minlength="500"
+                                maxlength="65536"
+                                placeholder="Explica por qué solicitas la eliminación de este hecho..."></textarea>
+                        <span class="form-hint">Mínimo 500 caracteres</span>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                        <button type="submit" class="btn-primary">Enviar solicitud</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/modal.js}"></script>
+</div>

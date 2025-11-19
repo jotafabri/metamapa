@@ -1,0 +1,155 @@
+/* Estilos específicos para la página de colecciones */
+.nav {
+  display: flex;
+  height: 4rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-back {
+  color: #E88827;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.nav-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-link {
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+/* Main content */
+.main {
+  text-align: center;
+  padding: 2rem;
+}
+
+.main-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.main-subtitle {
+  color: #9ca3af;
+  margin-bottom: 2rem;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Cards */
+.card {
+  background: #121212;
+  padding: 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Header con tag y país */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tag {
+  display: inline-block;
+  background: #374151;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  text-transform: lowercase;
+}
+
+.country {
+  font-size: 0.85rem;
+  color: #d1d5db;
+  display: inline-flex;
+  align-items: center; /* centra verticalmente */
+  gap: 4px; 
+}
+
+.country svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Título */
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Descripción con ... si es larga */
+.card-desc {
+  font-size: 0.85rem;
+  color: #d1d5db;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* máximo 2 líneas */
+  -webkit-box-orient: vertical;
+    padding-bottom: 1em;
+}
+
+/* Metadatos (hechos y curados) */
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* Botón específico para cards de colecciones */
+.btn-secondary {
+  background: #FB9A34;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: auto;
+  text-align: center;
+  font-weight: 500;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background-color: #d77f24;
+    color: #fff;
+    border-color: #d77f24;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(251, 154, 52, 0.3);
+}
+
+
+/* Nav específico para esta página (si difiere del header.css) */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

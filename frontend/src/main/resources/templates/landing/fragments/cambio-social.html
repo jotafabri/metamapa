@@ -1,0 +1,53 @@
+ <div th:fragment="cambio-social" class="seccion-cambio-social">
+        <div class="contenedor-principal">
+            <div class="contenido-centrado">
+                <h2 class="titulo-principal">
+                    Únete al Cambio Social
+                </h2>
+
+                <p class="descripcion-principal">
+                    Tu información puede salvar vidas, proteger el medio ambiente y defender los derechos humanos.
+                    Contribuye de forma segura y anónima a la inteligencia colectiva.
+                </p>
+
+                <div class="contenedor-botones">
+
+                    <a th:href="@{/hechos/nuevo}" class="btn btn-hero btn-quaternary">
+                        <svg class="icono-boton" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" x2="12" y1="3" y2="15"></line>
+                        </svg>
+                        Reportar Hechos
+                    </a>
+
+                    <a th:href="@{/register}" class="btn btn-hero btn-secondary">
+    <svg class="icono-boton" xmlns="http://www.w3.org/2000/svg"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round"
+         viewBox="0 0 24 24">
+        <!-- Cabeza del usuario -->
+        <circle cx="9" cy="7" r="4"></circle>
+        <!-- Cuerpo del usuario -->
+        <path d="M3 21v-2a6 6 0 0 1 12 0v2"></path>
+        <!-- Símbolo de + -->
+        <line x1="19" y1="8" x2="19" y2="14"></line>
+        <line x1="16" y1="11" x2="22" y2="11"></line>
+    </svg>
+    Registrarse
+</a>
+
+
+                </div>
+
+                <div class="texto-organizaciones">
+                    <p>
+                        ¿Eres una ONG, universidad u organismo estatal?
+                        <a href="/install" class="enlace-instalar">
+                            Instala tu propia instancia
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>

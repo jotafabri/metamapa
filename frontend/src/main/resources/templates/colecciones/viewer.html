@@ -1,0 +1,14 @@
+<html th:replace="~{layout/base :: html}">
+
+<div th:fragment="contenido" class="hero-section">
+    <link rel="stylesheet" th:href="@{/css/viewer.css}">
+    <!-- En colecciones.html o donde muestras los hechos -->
+    <div th:replace="~{fragments/modal :: modal-eliminacion}"></div>
+    <div class="main-layout">
+        <div th:replace="~{colecciones/fragments/filtros :: filtros}"></div>
+        <div th:replace="~{colecciones/fragments/mapa :: mapa}"></div>
+        <div th:replace="~{colecciones/fragments/hechos :: hechos}"></div>
+    </div>
+    <script th:src="@{/js/navigatePage.js}"></script>
+</div>
+</html>
