@@ -1,0 +1,40 @@
+type Mutation {
+    agregarFuenteAColeccion(fuente: FuenteInput, coleccion: ColeccionInput): Fuente
+    eliminarFuenteDeColeccion(fuente: FuenteInput, coleccion: ColeccionInput): Fuente
+    crearSolicitud(solicitud: SolicitudEliminacionInput): SolicitudEliminacion
+    aceptarSolicitud(solicitud: SolicitudEliminacionOutput): SolicitudEliminacion
+    rechazarSolicitud(solicitud: SolicitudEliminacionOutput): SolicitudEliminacion
+}
+
+type Query {
+    getSolicitudes: [SolicitudEliminacion]
+}
+
+input FuenteInput {
+    id: ID!
+}
+
+input ColeccionInput {
+    handle: String!
+}
+
+type Fuente {
+    id: ID!
+    ruta: String!
+}
+
+type SolicitudEliminacion {
+    id: ID!
+    razon: String
+    idHecho: ID
+    estado: String
+}
+
+input SolicitudEliminacionInput {
+    idHecho: ID!
+    razon: String!
+}
+
+input SolicitudEliminacionOutput {
+    id: ID!
+}
