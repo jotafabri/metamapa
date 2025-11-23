@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa_front.config;
 
+import ar.edu.utn.frba.dds.metamapa_front.exceptions.RateLimitExceededException;
 import ar.edu.utn.frba.dds.metamapa_front.providers.CustomAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 @EnableMethodSecurity(prePostEnabled = true)
 @Configuration
@@ -41,6 +43,13 @@ public class SecurityConfig {
             .defaultSuccessUrl("/", true)
             .usernameParameter("email")
             .passwordParameter("password")
+            .failureHandler((request, response, exception) -> {
+              if (exception instanceof RateLimitExceededException) {
+                response.sendRedirect("/login?ratelimit");
+              } else {
+                response.sendRedirect("/login?error");
+              }
+            })
             .permitAll()
         )
         .logout(logout -> logout
