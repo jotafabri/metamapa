@@ -1,15 +1,16 @@
 package ar.edu.utn.frba.dds.metamapa_front.services.internal;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.MediaType;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class GraphQlCallerService {
@@ -48,17 +49,28 @@ public class GraphQlCallerService {
     });
   }
 
-  private JsonNode getJsonNode(String query, String accessToken) {
-    JsonNode response = webClient.post()
-        .uri(graphqlServiceUrl)
-        .contentType(MediaType.APPLICATION_JSON)
-        .header("Authorization", "Bearer " + accessToken)
-        .bodyValue(Map.of("query", query))
-        .retrieve()
-        .bodyToMono(JsonNode.class)
-        .block();
+  public <T> T executePublicQuery(String query, Class<T> responseType) {
+    JsonNode objNode = getJsonNode(query, null);
+    if (objNode == null) return null;
+    return objectMapper.convertValue(objNode, responseType);
+  }
 
-    JsonNode dataNode = response.get("data");
+  private JsonNode getJsonNode(String query, String accessToken) {
+    Supplier<JsonNode> response = () -> {
+      var post = webClient.post()
+          .uri(graphqlServiceUrl)
+          .contentType(MediaType.APPLICATION_JSON);
+      if (accessToken != null) {
+        post = post.header("Authorization", "Bearer " + accessToken);
+      }
+      return post.bodyValue(Map.of("query", query))
+          .retrieve()
+          .bodyToMono(JsonNode.class)
+          .block();
+    };
+
+    JsonNode getResponse = response.get();
+    JsonNode dataNode = getResponse != null ? getResponse.get("data") : null;
     if (dataNode == null || !dataNode.fieldNames().hasNext()) {
       return null;
     }

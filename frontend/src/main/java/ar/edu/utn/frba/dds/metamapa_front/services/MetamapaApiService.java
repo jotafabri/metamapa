@@ -310,10 +310,18 @@ public class MetamapaApiService {
 
 
   public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
-    String query = "mutation { crearSolicitud(solicitud: { idHecho: " +
-        solicitudDTO.getIdHecho() + " razon: " + solicitudDTO.getRazon() +
-        " }) { id razon idHecho estado } }";
-    graphQlCallerService.executeQuery(query, SolicitudEliminacionDTO.class);
+    String razonEscapada = solicitudDTO.getRazon()
+        .replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+        .replace("\n", "\\n");
+
+    String query = String.format(
+        "mutation { crearSolicitud(solicitud: { idHecho: %s, razon: \"\"\"%s\"\"\" }) { id razon idHecho estado } }",
+        solicitudDTO.getIdHecho().toString(),
+        razonEscapada
+    );
+
+    graphQlCallerService.executePublicQuery(query, SolicitudEliminacionDTO.class);
   }
 
   public void aceptarSolicitudEliminacion(Long id) {

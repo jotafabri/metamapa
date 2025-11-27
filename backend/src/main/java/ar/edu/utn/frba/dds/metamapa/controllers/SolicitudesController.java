@@ -25,7 +25,7 @@ public class SolicitudesController {
   @MutationMapping
   public ResponseEntity<SolicitudEliminacionOutputDTO> crearSolicitud(@Argument SolicitudEliminacionInput solicitud) {
     try {
-      SolicitudEliminacionOutputDTO solicitudCreada = agregacionService.crearSolicitud(solicitud.hechoId(), solicitud.razon());
+      SolicitudEliminacionOutputDTO solicitudCreada = agregacionService.crearSolicitud(solicitud.idHecho(), solicitud.razon());
       return ResponseEntity.status(HttpStatus.CREATED).body(solicitudCreada);
     } catch (NotFoundException e) {
       return ResponseEntity.notFound().build();
@@ -64,7 +64,7 @@ public class SolicitudesController {
     }
   }
 
-  record SolicitudEliminacionInput(Long hechoId, String razon) {
+  record SolicitudEliminacionInput(Long idHecho, String razon) {
   }
 
   record SolicitudEliminacionOutput(Long id) {
