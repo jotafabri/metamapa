@@ -12,10 +12,20 @@ import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -102,27 +112,31 @@ public class ColeccionesController {
     }
   }
 
-  //localhost:8080/
-  @PostMapping("/{handle}/fuentes")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> agregarFuenteAColeccion(@PathVariable String handle, @RequestParam Long idFuente) {
+  // Métodos del servicio agregador, utilizan graphQL
+  @MutationMapping
+  public ResponseEntity<Void> agregarFuenteAColeccion(@Argument FuenteInput fuenteInput, @Argument ColeccionInput coleccionInput) {
     try {
-      this.agregacionService.agregarFuenteAColeccion(handle, idFuente);
+      agregacionService.agregarFuenteAColeccion(coleccionInput.handle(), fuenteInput.id());
       return ResponseEntity.ok().build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
   }
 
-  @DeleteMapping("/{handle}/fuentes/{idFuente}")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> eliminarFuenteDeColeccion(@PathVariable String handle, @PathVariable Long idFuente) {
+  @MutationMapping
+  public ResponseEntity<Void> eliminarFuenteDeColeccion(@Argument FuenteInput fuenteInput, @Argument ColeccionInput coleccionInput) {
     try {
-      this.agregacionService.eliminarFuenteDeColeccion(handle, idFuente);
+      agregacionService.eliminarFuenteDeColeccion(coleccionInput.handle(), fuenteInput.id());
       return ResponseEntity.noContent().build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
+  }
+
+  record FuenteInput(Long id) {
+  }
+
+  record ColeccionInput(String handle) {
   }
 
   // localhost:8080/colecciones/AccidentesDeTransito/hechos?=...

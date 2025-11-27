@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class SolicitudEliminacionOutputDTO {
   private Long id;
-  private HechoDTO hecho;
+  private Long idHecho;
   private String razon;
   private String estado;
 
@@ -14,7 +14,7 @@ public class SolicitudEliminacionOutputDTO {
   public static SolicitudEliminacionOutputDTO fromSolicitud(SolicitudEliminacion solicitud) {
     var dto = new SolicitudEliminacionOutputDTO();
     dto.setId(solicitud.getId());
-    dto.setHecho(HechoDTO.fromHecho(solicitud.getHecho()));
+    dto.setIdHecho(solicitud.getHecho().getId());
     dto.setRazon(solicitud.getCausa());
     dto.setEstado(solicitud.getEstado().name());
     return dto;
