@@ -135,6 +135,22 @@ public class ColeccionesController {
     }
   }
 
+  @MutationMapping
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<Void> reemplazarFuentesColeccion(@Argument ColeccionInput coleccionInput, @Argument List<Long> idsFuentesDeseadas) {
+    String handle = coleccionInput.handle();
+    try {
+      agregacionService.sincronizarFuentesColeccion(handle, idsFuentesDeseadas);
+      return ResponseEntity.ok().build();
+    } catch (NotFoundException e) {
+      log.error(e.getMessage());
+      return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      log.error("Error al reemplazar fuentes de la colección {}: {}", handle, e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
   record FuenteInput(Long id) {
   }
 
@@ -208,24 +224,5 @@ public class ColeccionesController {
 
     return lista.subList(start, end);
   }
-
-
-  @PutMapping("/{handle}/fuentes")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> reemplazarFuentesColeccion(
-          @PathVariable String handle,
-          @RequestBody List<Long> idsFuentesDeseadas) {
-    try {
-      agregacionService.sincronizarFuentesColeccion(handle, idsFuentesDeseadas);
-      return ResponseEntity.ok().build();
-    } catch (NotFoundException e) {
-      log.error(e.getMessage());
-      return ResponseEntity.notFound().build();
-    } catch (Exception e) {
-      log.error("Error al reemplazar fuentes de la colección {}: {}", handle, e.getMessage());
-      return ResponseEntity.badRequest().build();
-    }
-  }
-
 
 }

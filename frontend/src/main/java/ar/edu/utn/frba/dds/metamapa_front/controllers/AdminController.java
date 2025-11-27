@@ -136,7 +136,6 @@ public class AdminController {
 
       List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
 
-      // ⚙️ Extrae solo los IDs de las fuentes actuales para marcarlas como seleccionadas
       List<Long> fuentesIds = coleccionDTO.getFuentes() != null
               ? coleccionDTO.getFuentes().stream().map(FuenteOutputDTO::getId).toList()
               : new ArrayList<>();

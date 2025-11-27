@@ -144,7 +144,6 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    // 1️⃣ Actualizamos la colección básica con PATCH
     ColeccionDTO response = webApiCallerService.patch(
             metamapaServiceUrl + "/colecciones/" + handle,
             coleccionDTO,
@@ -155,12 +154,7 @@ public class MetamapaApiService {
       throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
     }
 
-    // 2️⃣ Reemplazamos todas las fuentes con PUT, incluso si la lista está vacía
-    webApiCallerService.put(
-            metamapaServiceUrl + "/colecciones/" + handle + "/fuentes",
-            coleccionDTO.getFuentesIds(), // puede ser vacía
-            Void.class
-    );
+    reemplazarFuentesColeccion(handle, coleccionDTO.getFuentesIds());
 
     return response;
   }
@@ -339,6 +333,11 @@ public class MetamapaApiService {
   public void rechazarSolicitudEliminacion(Long id) {
     String query = "mutation { rechazarSolicitud(solicitud: { id: \"" + id.toString() + "\" }) { id razon idHecho estado } }";
     graphQlCallerService.executeQuery(query, SolicitudEliminacionDTO.class);
+  }
+
+  public void reemplazarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas) {
+    String query = "mutation { reemplazarFuentesColeccion(coleccion: { handle: \"" + handleColeccion + "\" }, fuentes: {"+ idsFuentesDeseadas.toString() +"} ) { id fuentes } }";
+    graphQlCallerService.executeQuery(query, ColeccionDTO.class);
   }
 
   public void crearUsuario(RegistroRequest registroRequest) {
