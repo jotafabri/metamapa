@@ -1,16 +1,11 @@
 package ar.edu.utn.frba.dds.metamapa_front.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.LoginRequest;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
-import ar.edu.utn.frba.dds.metamapa_front.services.ColeccionService;
-import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
-import ar.edu.utn.frba.dds.metamapa_front.services.SolicitudesService;
-import ar.edu.utn.frba.dds.metamapa_front.services.UsuarioService;
+import ar.edu.utn.frba.dds.metamapa_front.services.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +30,7 @@ public class AdminController {
   private final ColeccionService coleccionService;
   private final SolicitudesService solicitudesService;
   private final HechosService hechosService;
+  private final FuenteService fuenteService;
 
   // --- LOGIN ADMIN ---
 
@@ -138,7 +134,17 @@ public class AdminController {
     try {
       ColeccionDTO coleccionDTO = coleccionService.getColeccionByHandle(handle).get();
 
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+
+      // ⚙️ Extrae solo los IDs de las fuentes actuales para marcarlas como seleccionadas
+      List<Long> fuentesIds = coleccionDTO.getFuentes() != null
+              ? coleccionDTO.getFuentes().stream().map(FuenteOutputDTO::getId).toList()
+              : new ArrayList<>();
+      coleccionDTO.setFuentesIds(fuentesIds);
+
       model.addAttribute("coleccion", coleccionDTO);
+      model.addAttribute("todasLasFuentes", todasLasFuentes);
+
       model.addAttribute("titulo", "Editar colección");
       model.addAttribute("adminPanel", true);
       return "admin/colecciones/editar";

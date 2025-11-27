@@ -13,6 +13,8 @@ public interface IAgregacionService {
 
   void eliminarFuenteDeColeccion(String handleColeccion, Long idFuente);
 
+  void sincronizarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas);
+
   void refrescarColecciones();
 
   //void refrescarHechosColeccion(Coleccion coleccion);

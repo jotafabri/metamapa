@@ -14,16 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -50,6 +42,7 @@ public class ColeccionesController {
   }
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ColeccionDTO> crearColeccion(@RequestBody ColeccionDTO coleccionDTO) {
     try {
       log.info("Creando la coleccion {}", coleccionDTO);
@@ -78,6 +71,7 @@ public class ColeccionesController {
   }
 
   @PatchMapping("/{handle}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ColeccionDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionDTO coleccionDTO) {
     try {
       log.info("Actualizando la coleccion {}", handle);
@@ -93,6 +87,7 @@ public class ColeccionesController {
   }
 
   @DeleteMapping("/{handle}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> eliminarColeccion(@PathVariable String handle) {
     try {
       log.info("Eliminando la coleccion {}", handle);
@@ -109,6 +104,7 @@ public class ColeccionesController {
 
   //localhost:8080/
   @PostMapping("/{handle}/fuentes")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> agregarFuenteAColeccion(@PathVariable String handle, @RequestParam Long idFuente) {
     try {
       this.agregacionService.agregarFuenteAColeccion(handle, idFuente);
@@ -119,6 +115,7 @@ public class ColeccionesController {
   }
 
   @DeleteMapping("/{handle}/fuentes/{idFuente}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> eliminarFuenteDeColeccion(@PathVariable String handle, @PathVariable Long idFuente) {
     try {
       this.agregacionService.eliminarFuenteDeColeccion(handle, idFuente);
@@ -160,6 +157,7 @@ public class ColeccionesController {
 
   // localhost:8080/colecciones/admin/{handle}/hechos
   @GetMapping("/admin/{handle}/hechos")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<HechoDTO>> getHechosByHandleAdmin(@PathVariable String handle, @ModelAttribute HechoFiltroDTO filtros) {
     try {
       List<HechoDTO> todosLosHechos = coleccionService.getHechosByHandleAdmin(handle, filtros);
@@ -194,4 +192,24 @@ public class ColeccionesController {
 
     return lista.subList(start, end);
   }
+
+
+  @PutMapping("/{handle}/fuentes")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<Void> reemplazarFuentesColeccion(
+          @PathVariable String handle,
+          @RequestBody List<Long> idsFuentesDeseadas) {
+    try {
+      agregacionService.sincronizarFuentesColeccion(handle, idsFuentesDeseadas);
+      return ResponseEntity.ok().build();
+    } catch (NotFoundException e) {
+      log.error(e.getMessage());
+      return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      log.error("Error al reemplazar fuentes de la colección {}: {}", handle, e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+
 }

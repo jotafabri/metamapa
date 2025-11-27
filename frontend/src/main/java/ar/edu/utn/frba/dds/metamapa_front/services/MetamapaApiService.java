@@ -6,16 +6,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.ColeccionDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.DatosGeograficosDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoFiltroDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.LoginRequest;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RegistroRequest;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.Rol;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -152,12 +143,27 @@ public class MetamapaApiService {
   }
 
   public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
-    ColeccionDTO response = webApiCallerService.patch(metamapaServiceUrl + "/colecciones/" + handle, coleccionDTO, ColeccionDTO.class);
+    // 1️⃣ Actualizamos la colección básica con PATCH
+    ColeccionDTO response = webApiCallerService.patch(
+            metamapaServiceUrl + "/colecciones/" + handle,
+            coleccionDTO,
+            ColeccionDTO.class
+    );
+
     if (response == null) {
       throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
     }
+
+    // 2️⃣ Reemplazamos todas las fuentes con PUT, incluso si la lista está vacía
+    webApiCallerService.put(
+            metamapaServiceUrl + "/colecciones/" + handle + "/fuentes",
+            coleccionDTO.getFuentesIds(), // puede ser vacía
+            Void.class
+    );
+
     return response;
   }
+
 
   public void eliminarColeccion(String handle) {
     webApiCallerService.delete(metamapaServiceUrl + "/colecciones/" + handle);
@@ -413,4 +419,12 @@ public class MetamapaApiService {
   public void postPublicJson(String path, Object body) {
     webApiCallerService.postPublic(metamapaServiceUrl + path, body, Void.class);
   }
+
+
+  public List<FuenteOutputDTO> getTodasLasFuentes() {
+    List<FuenteOutputDTO> response = webApiCallerService.getList(metamapaServiceUrl + "/fuentes", FuenteOutputDTO.class);
+    return response != null ? response : List.of();
+  }
+
+
 }
