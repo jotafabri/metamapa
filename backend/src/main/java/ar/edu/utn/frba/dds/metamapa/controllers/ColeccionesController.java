@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
@@ -137,8 +138,11 @@ public class ColeccionesController {
 
   @MutationMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> reemplazarFuentesColeccion(@Argument ColeccionInput coleccionInput, @Argument List<Long> idsFuentesDeseadas) {
-    String handle = coleccionInput.handle();
+  public ResponseEntity<Void> reemplazarFuentesColeccion(@Argument ColeccionInput coleccion, @Argument List<FuenteInput> fuentes) {
+    String handle = coleccion.handle();
+    List<Long> idsFuentesDeseadas = fuentes.stream()
+        .map(FuenteInput::id)
+        .collect(Collectors.toList());
     try {
       agregacionService.sincronizarFuentesColeccion(handle, idsFuentesDeseadas);
       return ResponseEntity.ok().build();

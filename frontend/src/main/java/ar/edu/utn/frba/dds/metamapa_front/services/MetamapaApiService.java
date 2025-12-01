@@ -5,6 +5,7 @@ import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
@@ -336,7 +337,10 @@ public class MetamapaApiService {
   }
 
   public void reemplazarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas) {
-    String query = "mutation { reemplazarFuentesColeccion(coleccion: { handle: \"" + handleColeccion + "\" }, fuentes: {"+ idsFuentesDeseadas.toString() +"} ) { id fuentes } }";
+    String fuentesArray = idsFuentesDeseadas.stream()
+        .map(id -> "{ id: " + id + " }")
+        .collect(Collectors.joining(", "));
+    String query = "mutation { reemplazarFuentesColeccion(coleccion: { handle: \"" + handleColeccion + "\" }, fuentes: [" + fuentesArray + "] ) { id fuentes { id } } }";
     graphQlCallerService.executeQuery(query, ColeccionDTO.class);
   }
 

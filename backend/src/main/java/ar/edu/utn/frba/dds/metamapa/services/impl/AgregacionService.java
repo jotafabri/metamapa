@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
@@ -84,8 +82,9 @@ public class AgregacionService implements IAgregacionService {
           if (solicitud.getHecho() == null) {
             throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
           }
-          solicitud.aceptarSolicitud();
-          this.solicitudesRepository.save(solicitud);
+          Hecho hecho = solicitud.aceptarSolicitud();
+          hechosRepository.save(hecho);
+          solicitudesRepository.save(solicitud);
         });
   }
 
@@ -105,44 +104,29 @@ public class AgregacionService implements IAgregacionService {
         });
   }
 
-      public List<SolicitudEliminacionOutputDTO> findAllSolicitudes() {
-        List<SolicitudEliminacion> solicitudes = solicitudesRepository.findAllPendientes();
-        return solicitudes.stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
-      }
+  public List<SolicitudEliminacionOutputDTO> findAllSolicitudes() {
+    List<SolicitudEliminacion> solicitudes = solicitudesRepository.findAllPendientes();
+    return solicitudes.stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
+  }
 
 
-        @Override
-        @Transactional
-        public void sincronizarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas) {
-            Coleccion coleccion = this.coleccionesRepository.findColeccionByHandle(handleColeccion);
-            if (coleccion == null) {
-                throw new NotFoundException("Coleccion", handleColeccion);
-            }
-
-            // IDs actuales
-            List<Long> fuentesActualesIds = coleccion.getFuentes().stream().map(Fuente::getId).toList();
-
-            // Traer todas las fuentes deseadas de una sola vez
-            List<Fuente> fuentesDeseadas = this.fuentesRepository.findAllById(idsFuentesDeseadas);
-
-            // Mapear ID -> Fuente para acceso rápido
-            Map<Long, Fuente> mapFuentesDeseadas = fuentesDeseadas.stream()
-                    .collect(Collectors.toMap(Fuente::getId, f -> f));
-
-            // Agregar nuevas fuentes
-            idsFuentesDeseadas.forEach(id -> {
-                if (!fuentesActualesIds.contains(id) && mapFuentesDeseadas.containsKey(id)) {
-                    coleccion.agregarFuente(mapFuentesDeseadas.get(id));
-                }
-            });
-
-            // Eliminar fuentes que ya no están en la lista deseada
-            coleccion.getFuentes().removeIf(f -> !idsFuentesDeseadas.contains(f.getId()));
-
-            this.coleccionesRepository.save(coleccion);
-        }
-
-
-
+  @Override
+  @Transactional
+  public void sincronizarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas) {
+    Coleccion coleccion = coleccionesRepository.findColeccionByHandle(handleColeccion);
+    if (coleccion == null) {
+      throw new NotFoundException("Coleccion", handleColeccion);
     }
+
+    // Delete manual en tabla join
+    coleccionesRepository.deleteAllFuentesByColeccionId(coleccion.getId());
+
+    // Insert manual en tabla join
+    idsFuentesDeseadas.forEach(fuenteId ->
+        coleccionesRepository.insertFuenteForColeccion(coleccion.getId(), fuenteId)
+    );
+  }
+
+
+}
 

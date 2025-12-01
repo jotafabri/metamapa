@@ -39,9 +39,10 @@ public class SolicitudEliminacion extends Persistente {
     this.causa = causa;
   }
 
-  public void aceptarSolicitud() {
+  public Hecho aceptarSolicitud() {
     this.estado = Estado.ACEPTADA;
     this.hecho.eliminar();
+    return this.hecho;
   }
 
   public void rechazarSolicitud() {
