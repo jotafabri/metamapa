@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa_front.dtos;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +16,5 @@ public class SolicitudEliminacionDTO {
   private Long idHecho;
   private String razon;
   private String estado;
+  private LocalDateTime fecha;
 }

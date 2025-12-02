@@ -34,6 +34,7 @@ type SolicitudEliminacion {
     razon: String
     idHecho: ID
     estado: String
+    fecha: String
 }
 
 input SolicitudEliminacionInput {

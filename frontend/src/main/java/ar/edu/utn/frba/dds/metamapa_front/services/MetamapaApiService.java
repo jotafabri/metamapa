@@ -305,7 +305,7 @@ public class MetamapaApiService {
   }
 
   public List<SolicitudEliminacionDTO> obtenerSolicitudes() {
-    String query = "{ getSolicitudes { id razon idHecho estado } }";
+    String query = "{ getSolicitudes { id razon idHecho estado fecha } }";
     return graphQlCallerService.executeQueryForList(query, SolicitudEliminacionDTO.class);
   }
 

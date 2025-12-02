@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class GraphQlCallerService {
     this.webClient = WebClient.builder().build();
     this.graphqlServiceUrl = graphqlServiceUrl;
     this.objectMapper = new ObjectMapper();
+    this.objectMapper.registerModule(new JavaTimeModule());
     this.webApiCallerService = webApiCallerService;
   }
 
