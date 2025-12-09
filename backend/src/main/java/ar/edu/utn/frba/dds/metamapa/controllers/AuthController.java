@@ -10,6 +10,7 @@ import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.RegistroRequest;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.auth.TokenResponse;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.UserDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.Usuario;
+import ar.edu.utn.frba.dds.metamapa.ratelimit.RateLimited;
 import ar.edu.utn.frba.dds.metamapa.services.IUsuarioService;
 import ar.edu.utn.frba.dds.metamapa.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -35,6 +36,7 @@ public class AuthController {
   private IUsuarioService usuarioService;
 
   @PostMapping("/registro")
+  @RateLimited(maxRequests = 5, durationSeconds = 60)
   public ResponseEntity<UserDTO> register(@RequestBody RegistroRequest registroRequest) {
     try {
       UserDTO user = usuarioService.register(registroRequest);
@@ -47,6 +49,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
+  @RateLimited(maxRequests = 5, durationSeconds = 60)
   public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequest loginRequest) {
     try {
       String email = loginRequest.getEmail();

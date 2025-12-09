@@ -71,6 +71,9 @@ public class MetamapaApiService {
       if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.NOT_FOUND) {
         return null;
       }
+      if (e.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
+        throw new RuntimeException("RATE_LIMIT_EXCEEDED");
+      }
       throw new RuntimeException("Error en el servicio de autenticación: " + e.getMessage(), e);
     } catch (Exception e) {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
+import ar.edu.utn.frba.dds.metamapa_front.exceptions.RateLimitExceededException;
 import ar.edu.utn.frba.dds.metamapa_front.services.MetamapaApiService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -66,6 +67,9 @@ public class CustomAuthProvider implements AuthenticationProvider {
       return new UsernamePasswordAuthenticationToken(username, password, authorities);
 
     } catch (RuntimeException e) {
+      if (e.getMessage() != null && e.getMessage().contains("RATE_LIMIT_EXCEEDED")) {
+        throw new RateLimitExceededException("Demasiados intentos de inicio de sesión. Por favor, intenta de nuevo en unos minutos.");
+      }
       throw new BadCredentialsException("Error en el sistema de autenticación: " + e.getMessage());
     }
   }

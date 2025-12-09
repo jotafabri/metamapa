@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import ar.edu.utn.frba.dds.metamapa.ratelimit.RateLimited;
 import ar.edu.utn.frba.dds.metamapa.services.impl.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ public class FileRestController {
   private FileStorageService fileStorageService;
 
   @GetMapping("/{filename:.+}")
+  @RateLimited(maxRequests = 50, durationSeconds = 60)
   public ResponseEntity<Resource> descargarArchivo(@PathVariable String filename) {
     try {
       Resource resource = fileStorageService.cargarArchivo(filename);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
+import ar.edu.utn.frba.dds.metamapa.ratelimit.RateLimited;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/solicitudes")
+@RateLimited(maxRequests = 20, durationSeconds = 60)
 public class SolicitudesController {
   @Autowired
   private IAgregacionService agregacionService;
