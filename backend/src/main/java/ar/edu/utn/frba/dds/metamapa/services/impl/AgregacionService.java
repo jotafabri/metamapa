@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
@@ -66,11 +67,12 @@ public class AgregacionService implements IAgregacionService {
     return SolicitudEliminacionOutputDTO.fromSolicitud(solicitud);
   }
 
+  @Transactional
   public void refrescarColecciones() {
-    List<Coleccion> colecciones = this.coleccionesRepository.findAll();
+    List<Coleccion> colecciones = coleccionesRepository.findAll();
     colecciones.forEach(Coleccion::actualizarColeccion);
-    this.coleccionesRepository.saveAll(colecciones);
   }
+
 
   @Override
   public void aprobarSolicitudById(Long id) {

@@ -12,7 +12,7 @@ public class AlgorithmScheduler {
     this.algoritmoConsensoService = algoritmoConsensoService;
   }
 
-  @Scheduled(cron = "${tiempo.algoritmo}")
+  @Scheduled(cron = "${tiempo.algoritmo:0 0 3 * * *}")
   public void ejecutarAlgoritmos() {
     this.algoritmoConsensoService.ejecutarAlgoritmos();
   }

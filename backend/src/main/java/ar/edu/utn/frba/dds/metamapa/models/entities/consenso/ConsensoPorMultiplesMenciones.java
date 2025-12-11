@@ -1,6 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.consenso;
 
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
@@ -32,6 +35,33 @@ public class ConsensoPorMultiplesMenciones implements EstrategiaConsenso {
     return h1.getFechaAcontecimiento().equals(h2.getFechaAcontecimiento());
   }
 
+  @Override
+  public List<Hecho> filtrarConsensuados(List<Hecho> hechos, List<Fuente> fuentes) {
+    Map<String, List<Hecho>> hectosPorTitulo = fuentes.stream()
+        .flatMap(f -> f.getHechos().stream())
+        .collect(Collectors.groupingBy(h -> h.getTitulo().toLowerCase()));
+
+    Map<String, Integer> conteoFuentesPorTitulo = fuentes.stream()
+        .flatMap(f -> f.getHechos().stream().map(h -> new AbstractMap.SimpleEntry<>(h.getTitulo().toLowerCase(), f)))
+        .distinct()
+        .collect(Collectors.groupingByConcurrent(
+            Map.Entry::getKey,
+            Collectors.summingInt(e -> 1)
+        ));
+
+    return hechos.stream()
+        .filter(h -> {
+          String tituloLower = h.getTitulo().toLowerCase();
+          int countFuentes = conteoFuentesPorTitulo.getOrDefault(tituloLower, 0);
+
+          if (countFuentes < 2) return false;
+
+          List<Hecho> hechosSameTitulo = hectosPorTitulo.getOrDefault(tituloLower, List.of());
+          return hechosSameTitulo.stream()
+              .allMatch(other -> sonIguales(h, other));
+        })
+        .toList();
+  }
   @Override
   public String getNombre() {
     return "MULTIPLES_MENCIONES";

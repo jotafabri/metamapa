@@ -13,6 +13,11 @@ public class ConsensoTrue implements EstrategiaConsenso {
   }
 
   @Override
+  public List<Hecho> filtrarConsensuados(List<Hecho> hechos, List<Fuente> fuentes) {
+    return hechos;
+  }
+
+  @Override
   public String getNombre() {
     return "TRUE";
   }
