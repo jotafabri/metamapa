@@ -3,7 +3,6 @@ package ar.edu.utn.frba.dds.metamapa.services.impl;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
-import ar.edu.utn.frba.dds.metamapa.models.dtos.input.SolicitudEliminacionInputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.SolicitudEliminacionOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
@@ -16,9 +15,9 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
-import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AgregacionService implements IAgregacionService {
@@ -54,17 +53,17 @@ public class AgregacionService implements IAgregacionService {
   }
 
   @Override
-  public SolicitudEliminacionOutputDTO crearSolicitud(SolicitudEliminacionInputDTO solicitudDto) {
-    Hecho hecho = hechosRepository.findById(solicitudDto.getIdHecho()).orElseThrow(()->new NotFoundException("Hecho", solicitudDto.getIdHecho().toString()));
-          var solicitud = new SolicitudEliminacion(
-                  hecho,
-                  solicitudDto.getRazon());
-          if (detectorDeSpam.esSpam(solicitudDto.getRazon())) {
-              solicitud.rechazarSolicitud();
-              solicitud.marcarSpam();
-          }
-          this.solicitudesRepository.save(solicitud);
-          return SolicitudEliminacionOutputDTO.fromSolicitud(solicitud);
+  public SolicitudEliminacionOutputDTO crearSolicitud(Long hechoId, String razon) {
+    Hecho hecho = hechosRepository.findById(hechoId).orElseThrow(() -> new NotFoundException("Hecho", hechoId.toString()));
+    var solicitud = new SolicitudEliminacion(
+        hecho,
+        razon);
+    if (detectorDeSpam.esSpam(razon)) {
+      solicitud.rechazarSolicitud();
+      solicitud.marcarSpam();
+    }
+    this.solicitudesRepository.save(solicitud);
+    return SolicitudEliminacionOutputDTO.fromSolicitud(solicitud);
   }
 
   public void refrescarColecciones() {
@@ -83,8 +82,9 @@ public class AgregacionService implements IAgregacionService {
           if (solicitud.getHecho() == null) {
             throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
           }
-          solicitud.aceptarSolicitud();
-          this.solicitudesRepository.save(solicitud);
+          Hecho hecho = solicitud.aceptarSolicitud();
+          hechosRepository.save(hecho);
+          solicitudesRepository.save(solicitud);
         });
   }
 
@@ -108,5 +108,25 @@ public class AgregacionService implements IAgregacionService {
     List<SolicitudEliminacion> solicitudes = solicitudesRepository.findAllPendientes();
     return solicitudes.stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
   }
+
+
+  @Override
+  @Transactional
+  public void sincronizarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas) {
+    Coleccion coleccion = coleccionesRepository.findColeccionByHandle(handleColeccion);
+    if (coleccion == null) {
+      throw new NotFoundException("Coleccion", handleColeccion);
+    }
+
+    // Delete manual en tabla join
+    coleccionesRepository.deleteAllFuentesByColeccionId(coleccion.getId());
+
+    // Insert manual en tabla join
+    idsFuentesDeseadas.forEach(fuenteId ->
+        coleccionesRepository.insertFuenteForColeccion(coleccion.getId(), fuenteId)
+    );
+  }
+
+
 }
 

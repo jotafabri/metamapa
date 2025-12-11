@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -27,4 +28,17 @@ public interface IColeccionesRepository extends JpaRepository<Coleccion, Long> {
       "JOIN col.hechos h " +
       "WHERE col.handle = :handle")
   List<Object[]> findDatosRawByHandle(@Param("handle") String handle);
+
+  @Query("SELECT f.id FROM Coleccion col " +
+      "JOIN col.fuentes f " +
+      "WHERE col.handle = :handle")
+  List<Long> findAllFuenteIdsByHandle(String handle);
+
+  @Modifying
+  @Query(value = "DELETE FROM coleccion_fuente WHERE coleccion_id = :coleccionId", nativeQuery = true)
+  void deleteAllFuentesByColeccionId(@Param("coleccionId") Long coleccionId);
+
+  @Modifying
+  @Query(value = "INSERT INTO coleccion_fuente (coleccion_id, fuente_id) VALUES (:coleccionId, :fuenteId)", nativeQuery = true)
+  void insertFuenteForColeccion(@Param("coleccionId") Long coleccionId, @Param("fuenteId") Long fuenteId);
 }

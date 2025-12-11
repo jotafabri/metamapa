@@ -251,7 +251,7 @@
                             <div class="request-info">
                                 <h4 class="request-title">Hecho ID: <span th:text="${solicitud.idHecho}">N/A</span></h4>
                                 <p class="request-reason"><strong>Razón:</strong> <span th:text="${solicitud.razon}">Sin razón</span></p>
-                                <p class="request-meta"><strong>Estado:</strong> <span th:text="${solicitud.estado}">Pendiente</span></p>
+                                <p class="request-meta"><strong>Fecha:</strong> <span th:text="${solicitud.fecha}">N/A</span></p>
                             </div>
                             <div class="request-actions">
                                 <a th:href="@{/hechos/{id}(id=${solicitud.idHecho})}" class="btn btn-outline">

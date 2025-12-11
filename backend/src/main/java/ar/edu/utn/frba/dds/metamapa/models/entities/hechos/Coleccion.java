@@ -13,6 +13,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -38,7 +39,7 @@ public class Coleccion extends Persistente {
   @Column(name = "descripcion", columnDefinition = "TEXT")
   private String descripcion;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "coleccion_fuente",
       joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "id"),
@@ -84,6 +85,8 @@ public class Coleccion extends Persistente {
   public void eliminarFuente(Fuente fuente) {
     this.fuentes.remove(fuente);
   }
+
+
 
   public void agregarCriterio(Filtro criterio) {
     this.criterios.add(criterio);

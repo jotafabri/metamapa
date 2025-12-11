@@ -30,6 +30,9 @@ public abstract class Fuente extends Persistente {
   @Column(name = "ruta")
   protected String ruta;
 
+  @Column(name = "nombre")
+  protected String nombre;
+
   @OneToMany(mappedBy = "fuente", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   protected List<Hecho> hechos = new ArrayList<>();
 

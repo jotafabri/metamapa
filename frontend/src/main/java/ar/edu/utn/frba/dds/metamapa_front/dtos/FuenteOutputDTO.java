@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.dds.metamapa_front.dtos;
 
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudEliminacionDTO {
-  private Long id;
-  private Long idHecho;
-  private String razon;
-  private String estado;
-  private LocalDateTime fecha;
+public class FuenteOutputDTO {
+
+    private Long id;
+    private String nombre;
+    private String tipo;
+    private String ruta;
+
 }

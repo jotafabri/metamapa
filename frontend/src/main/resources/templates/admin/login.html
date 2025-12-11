@@ -12,6 +12,10 @@
                 </div>
 
                 <div class="login-content">
+                    <div th:if="${param.ratelimit}" class="alert alert-danger">
+                        <strong>Demasiados intentos de inicio de sesión.</strong><br>
+                        Por favor, espera unos minutos antes de intentar nuevamente.
+                    </div>
                     <div th:if="${param.error}" class="alert alert-danger">
                         Usuario o contraseña incorrectos
                     </div>

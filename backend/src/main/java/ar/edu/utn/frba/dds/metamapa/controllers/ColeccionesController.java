@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
@@ -12,14 +13,18 @@ import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +55,7 @@ public class ColeccionesController {
   }
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ColeccionDTO> crearColeccion(@RequestBody ColeccionDTO coleccionDTO) {
     try {
       log.info("Creando la coleccion {}", coleccionDTO);
@@ -78,6 +84,7 @@ public class ColeccionesController {
   }
 
   @PatchMapping("/{handle}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ColeccionDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionDTO coleccionDTO) {
     try {
       log.info("Actualizando la coleccion {}", handle);
@@ -93,6 +100,7 @@ public class ColeccionesController {
   }
 
   @DeleteMapping("/{handle}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> eliminarColeccion(@PathVariable String handle) {
     try {
       log.info("Eliminando la coleccion {}", handle);
@@ -107,25 +115,50 @@ public class ColeccionesController {
     }
   }
 
-  //localhost:8080/
-  @PostMapping("/{handle}/fuentes")
-  public ResponseEntity<Void> agregarFuenteAColeccion(@PathVariable String handle, @RequestParam Long idFuente) {
+  // Métodos del servicio agregador, utilizan graphQL
+  @MutationMapping
+  public ResponseEntity<Void> agregarFuenteAColeccion(@Argument FuenteInput fuenteInput, @Argument ColeccionInput coleccionInput) {
     try {
-      this.agregacionService.agregarFuenteAColeccion(handle, idFuente);
+      agregacionService.agregarFuenteAColeccion(coleccionInput.handle(), fuenteInput.id());
       return ResponseEntity.ok().build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
   }
 
-  @DeleteMapping("/{handle}/fuentes/{idFuente}")
-  public ResponseEntity<Void> eliminarFuenteDeColeccion(@PathVariable String handle, @PathVariable Long idFuente) {
+  @MutationMapping
+  public ResponseEntity<Void> eliminarFuenteDeColeccion(@Argument FuenteInput fuenteInput, @Argument ColeccionInput coleccionInput) {
     try {
-      this.agregacionService.eliminarFuenteDeColeccion(handle, idFuente);
+      agregacionService.eliminarFuenteDeColeccion(coleccionInput.handle(), fuenteInput.id());
       return ResponseEntity.noContent().build();
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
+  }
+
+  @MutationMapping
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<Void> reemplazarFuentesColeccion(@Argument ColeccionInput coleccion, @Argument List<FuenteInput> fuentes) {
+    String handle = coleccion.handle();
+    List<Long> idsFuentesDeseadas = fuentes.stream()
+        .map(FuenteInput::id)
+        .collect(Collectors.toList());
+    try {
+      agregacionService.sincronizarFuentesColeccion(handle, idsFuentesDeseadas);
+      return ResponseEntity.ok().build();
+    } catch (NotFoundException e) {
+      log.error(e.getMessage());
+      return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      log.error("Error al reemplazar fuentes de la colección {}: {}", handle, e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+  record FuenteInput(Long id) {
+  }
+
+  record ColeccionInput(String handle) {
   }
 
   // localhost:8080/colecciones/AccidentesDeTransito/hechos?=...
@@ -160,6 +193,7 @@ public class ColeccionesController {
 
   // localhost:8080/colecciones/admin/{handle}/hechos
   @GetMapping("/admin/{handle}/hechos")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<HechoDTO>> getHechosByHandleAdmin(@PathVariable String handle, @ModelAttribute HechoFiltroDTO filtros) {
     try {
       List<HechoDTO> todosLosHechos = coleccionService.getHechosByHandleAdmin(handle, filtros);
@@ -194,4 +228,5 @@ public class ColeccionesController {
 
     return lista.subList(start, end);
   }
+
 }
