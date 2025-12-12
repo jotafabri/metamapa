@@ -8,7 +8,6 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,11 +99,10 @@ public class HechosController {
       RedirectAttributes redirectAttributes) {
 
     try {
-      hechosService.crearHecho(hechoDTO, archivos);
+      HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO, archivos);
 
-      redirectAttributes.addFlashAttribute("toastMessage", "Hecho creado con éxito ✅");
-      redirectAttributes.addFlashAttribute("toastType", "success");
-      return "redirect:/colecciones";
+      redirectAttributes.addFlashAttribute("hechoCreado", hechoCreado);
+      return "redirect:/hechos/exito";
     } catch (IllegalArgumentException ex) {
       if ("FECHA_FUTURA".equals(ex.getMessage())) {
         redirectAttributes.addFlashAttribute("toastMessage",
@@ -120,6 +118,23 @@ public class HechosController {
     }
 
 
+  }
+
+  @GetMapping("/exito")
+  public String mostrarExito(Model model, RedirectAttributes redirectAttributes) {
+    if (!model.containsAttribute("hechoCreado")) {
+      redirectAttributes.addFlashAttribute("toastMessage", "No hay hecho para mostrar");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/";
+    }
+
+    HechoDTO hechoCreado = (HechoDTO) model.getAttribute("hechoCreado");
+
+    model.addAttribute("hecho", hechoCreado);
+    model.addAttribute("titulo", "Hecho creado con éxito");
+    model.addAttribute("backendUrl", backendUrl);
+
+    return "hechos/exito";
   }
 
 
