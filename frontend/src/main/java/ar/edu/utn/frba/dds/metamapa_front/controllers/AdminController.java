@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.metamapa_front.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
@@ -9,7 +10,13 @@ import ar.edu.utn.frba.dds.metamapa_front.services.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,7 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
   private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-  private final UsuarioService usuarioService;
+  private final AuthenticationManager authenticationManager;
   private final ColeccionService coleccionService;
   private final SolicitudesService solicitudesService;
   private final HechosService hechosService;
@@ -42,16 +50,28 @@ public class AdminController {
   }
 
   @PostMapping("/login")
-  public String procesarLogin(@ModelAttribute("usuario") LoginRequest usuarioDTO, Model model) {
+  public String procesarLogin(@ModelAttribute("usuario") LoginRequest usuarioDTO, Model model, HttpServletRequest request) {
     try {
-      var authResponse = usuarioService.autenticar(usuarioDTO);
+      Authentication authentication = authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(), usuarioDTO.getPassword())
+      );
 
-      if (authResponse != null) {
-        return "redirect:/admin/dashboard";
-      } else {
+      boolean esAdmin = authentication.getAuthorities().stream()
+              .map(GrantedAuthority::getAuthority)
+              .anyMatch(auth -> auth.equals("ROLE_ADMIN"));
+
+      if (!esAdmin) {
         model.addAttribute("error", "Credenciales inválidas o sin permisos de administrador.");
         return "admin/login";
       }
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      request.getSession().setAttribute(
+              HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+              SecurityContextHolder.getContext()
+      );
+
+      return "redirect:/admin";
 
     } catch (Exception e) {
       log.error("Error al iniciar sesión como admin", e);
