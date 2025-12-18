@@ -3,11 +3,13 @@ package ar.edu.utn.frba.dds.metamapa.models.entities.filtros;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
+@Getter
 public abstract class FiltroString extends Filtro {
   private String stringBuscado;
 

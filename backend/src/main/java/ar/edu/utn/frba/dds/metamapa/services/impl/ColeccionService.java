@@ -9,12 +9,16 @@ import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ColeccionDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.DatosGeograficosDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.FuenteOutputDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.models.entities.consenso.EstrategiaConsenso;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.TipoAlgoritmo;
+import ar.edu.utn.frba.dds.metamapa.models.entities.filtros.Filtro;
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IColeccionesRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IColeccionService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,9 @@ public class ColeccionService implements IColeccionService {
 
   @Autowired
   private IColeccionesRepository coleccionesRepository;
+
+  @Autowired
+  private IFuentesRepository fuentesRepository;
 
   //ADMIN:Operacion C(R)UD
   @Override
@@ -106,8 +113,10 @@ public class ColeccionService implements IColeccionService {
   @Transactional
   public ColeccionDTO crearDesdeDTO(ColeccionDTO coleccionDTO) {
     Coleccion coleccion = new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion());
+    establecerDatos(coleccionDTO, coleccion);
     coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
-    this.coleccionesRepository.save(coleccion);
+
+    coleccionesRepository.save(coleccion);
     return ColeccionDTO.fromColeccion(coleccion);
   }
 
@@ -123,24 +132,8 @@ public class ColeccionService implements IColeccionService {
   @Transactional
   public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
-
-    if (coleccionDTO.getTitulo() != null) {
-      coleccion.setTitulo(coleccionDTO.getTitulo());
-    }
-
-    if (coleccionDTO.getDescripcion() != null) {
-      coleccion.setDescripcion(coleccionDTO.getDescripcion());
-    }
-
-    if (coleccionDTO.getAlgoritmo() != null) {
-      String nombre = coleccionDTO.getAlgoritmo();
-      TipoAlgoritmo tipo = TipoAlgoritmo.valueOf(nombre.toUpperCase());
-      EstrategiaConsenso algoritmo = tipo.getConsenso();
-      coleccion.setAlgoritmoDeConsenso(algoritmo);
-    }
-
+    establecerDatos(coleccionDTO, coleccion);
     coleccionesRepository.save(coleccion);
-
     return ColeccionDTO.fromColeccion(coleccion);
   }
 
@@ -160,6 +153,39 @@ public class ColeccionService implements IColeccionService {
 
     // Ahora sí eliminar la colección
     coleccionesRepository.deleteColeccionByHandle(coleccion.getHandle());
+  }
+
+  private void establecerDatos(ColeccionDTO coleccionDTO, Coleccion coleccion) {
+    if (coleccionDTO.getTitulo() != null) {
+      coleccion.setTitulo(coleccionDTO.getTitulo());
+    }
+
+    if (coleccionDTO.getDescripcion() != null) {
+      coleccion.setDescripcion(coleccionDTO.getDescripcion());
+    }
+
+    if (coleccionDTO.getAlgoritmo() != null) {
+      String nombre = coleccionDTO.getAlgoritmo();
+      TipoAlgoritmo tipo = TipoAlgoritmo.valueOf(nombre.toUpperCase());
+      EstrategiaConsenso algoritmo = tipo.getConsenso();
+      coleccion.setAlgoritmoDeConsenso(algoritmo);
+    }
+
+    if (coleccionDTO.getCriterios() != null) {
+      List<Filtro> criterios = coleccionDTO.getCriterios().getList();
+      criterios.forEach(c -> c.setColeccion(coleccion));
+      coleccion.getCriterios().clear();
+      coleccion.getCriterios().addAll(criterios);
+    }
+
+    if (coleccionDTO.getFuentes() != null) {
+      List<Long> fuenteIds = coleccionDTO.getFuentes().stream()
+          .map(FuenteOutputDTO::getId)
+          .toList();
+      List<Fuente> fuentes = fuentesRepository.findAllByIdIn(fuenteIds);
+      coleccion.getFuentes().clear();
+      coleccion.getFuentes().addAll(fuentes);
+    }
   }
 
   private Coleccion intentarRecuperarColeccion(String handle) {

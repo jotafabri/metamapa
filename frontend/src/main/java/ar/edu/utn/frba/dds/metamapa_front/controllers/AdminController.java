@@ -104,6 +104,8 @@ public class AdminController {
   @GetMapping("/colecciones/crear")
   @PreAuthorize("hasRole('ADMIN')")
   public String mostrarFormularioCrear(Model model) {
+    List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+    model.addAttribute("todasLasFuentes", todasLasFuentes);
     model.addAttribute("coleccion", new ColeccionDTO());
     model.addAttribute("titulo", "Crear nueva colección");
     model.addAttribute("adminPanel", true);
@@ -117,10 +119,15 @@ public class AdminController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
     try {
+      convertirFuentesIdsAFuentes(coleccionDTO);
       ColeccionDTO coleccionCreada = coleccionService.crearColeccion(coleccionDTO);
+      redirectAttributes.addFlashAttribute("toastMessage", "Colección creada con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
       return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al crear nueva colección", e);
+      redirectAttributes.addFlashAttribute("toastMessage", "Error al crear colección ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
       model.addAttribute("titulo", "Crear colección");
       return "admin/colecciones/crear";
     }
@@ -160,6 +167,7 @@ public class AdminController {
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
     try {
+      convertirFuentesIdsAFuentes(coleccionDTO);
       ColeccionDTO coleccionActualizada = coleccionService.actualizarColeccion(handle, coleccionDTO);
       redirectAttributes.addFlashAttribute("toastMessage", "Colección actualizada con éxito ✅");
       redirectAttributes.addFlashAttribute("toastType", "success");
@@ -308,5 +316,14 @@ public class AdminController {
     }
   }
 
+  private void convertirFuentesIdsAFuentes(ColeccionDTO coleccionDTO) {
+    if (coleccionDTO.getFuentesIds() != null && !coleccionDTO.getFuentesIds().isEmpty()) {
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+      List<FuenteOutputDTO> fuentesSeleccionadas = todasLasFuentes.stream()
+          .filter(fuente -> coleccionDTO.getFuentesIds().contains(fuente.getId()))
+          .toList();
+      coleccionDTO.setFuentes(fuentesSeleccionadas);
+    }
+  }
 
 }

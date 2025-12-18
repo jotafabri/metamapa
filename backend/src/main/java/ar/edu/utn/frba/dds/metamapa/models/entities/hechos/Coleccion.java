@@ -20,6 +20,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -50,12 +51,7 @@ public class Coleccion extends Persistente {
   )
   private List<Fuente> fuentes = new ArrayList<>();
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "coleccion_criterio",
-      joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "criterio_id", referencedColumnName = "id")
-  )
+  @OneToMany(mappedBy = "coleccion", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Filtro> criterios = new ArrayList<>();
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

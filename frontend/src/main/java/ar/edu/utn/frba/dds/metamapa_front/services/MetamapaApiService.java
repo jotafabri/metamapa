@@ -144,6 +144,11 @@ public class MetamapaApiService {
     if (response == null) {
       throw new RuntimeException("Error al crear coleccion en el servicio externo");
     }
+
+    if (coleccionDTO.getFuentesIds() != null && !coleccionDTO.getFuentesIds().isEmpty()) {
+      reemplazarFuentesColeccion(response.getHandle(), coleccionDTO.getFuentesIds());
+    }
+
     return response;
   }
 
@@ -158,7 +163,6 @@ public class MetamapaApiService {
       throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
     }
 
-    reemplazarFuentesColeccion(handle, coleccionDTO.getFuentesIds());
 
     return response;
   }

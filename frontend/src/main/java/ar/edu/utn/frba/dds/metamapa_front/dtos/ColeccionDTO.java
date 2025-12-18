@@ -18,6 +18,7 @@ public class ColeccionDTO {
   private String descripcion;
   private String algoritmo;
   private Integer cantHechos;
+  private HechoFiltroDTO criterios;
   private List<FuenteOutputDTO> fuentes;
   private List<Long> fuentesIds;
 }

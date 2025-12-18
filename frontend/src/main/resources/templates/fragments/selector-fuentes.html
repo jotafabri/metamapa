@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="selector-fuentes(coleccion, todasLasFuentes)">
+        <div id="dualbox-bootstrap" style="margin-bottom:2rem;">
+            <div id="fuentesDualContainer">
+                <h3 style="color:#fff;font-size:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         style="width:1.2rem;height:1.2rem;">
+                        <path d="M4 19h16M4 15h16M4 11h16M4 7h16"/>
+                    </svg>
+                    Fuentes de la colección
+                </h3>
+
+                <select multiple="multiple" size="10"
+                        name="fuentesIds"
+                        id="fuentesDual">
+                    <option th:each="fuente : ${todasLasFuentes}"
+                            th:value="${fuente.id}"
+                            th:text="${fuente.nombre}"
+                            th:selected="${coleccion != null && coleccion.fuentesIds != null && coleccion.fuentesIds.contains(fuente.id)}">
+                    </option>
+                </select>
+
+                <p style="color:#aaa;font-size:0.8rem;margin-top:0.75rem;">
+                    Mueve las fuentes entre las listas para agregarlas o quitarlas de la colección.
+                </p>
+            </div>
+        </div>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox/dist/jquery.bootstrap-duallistbox.min.js"></script>
+
+        <style>
+            #fuentesDualContainer {
+                background-color: #1A1C1F;
+                border: 1px solid #2C2F33;
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+            }
+
+            #dualbox-bootstrap .bootstrap-duallistbox-container {
+                display: flex;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            #dualbox-bootstrap .box1,
+            #dualbox-bootstrap .box2 {
+                flex: 1;
+                background-color: #2C2F33;
+                border: 1px solid #444;
+                color: #fff;
+                border-radius: 0.5rem;
+            }
+
+            #dualbox-bootstrap .filter {
+                background-color: #1E2023;
+                border: 1px solid #444;
+                color: #fff;
+                border-radius: 0.5rem;
+            }
+
+            #dualbox-bootstrap .move,
+            #dualbox-bootstrap .remove,
+            #dualbox-bootstrap .moveall,
+            #dualbox-bootstrap .removeall {
+                background-color: #3A3F44;
+                border: 1px solid #555;
+                color: #fff;
+                border-radius: 0.5rem;
+                margin: 3px 0;
+                width: 3rem;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+            #dualbox-bootstrap .move:hover,
+            #dualbox-bootstrap .remove:hover,
+            #dualbox-bootstrap .moveall:hover,
+            #dualbox-bootstrap .removeall:hover {
+                background-color: #5A6168;
+            }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                $('#dualbox-bootstrap #fuentesDual').bootstrapDualListbox({
+                    nonSelectedListLabel: 'Fuentes disponibles',
+                    selectedListLabel: 'Fuentes en la colección',
+                    preserveSelectionOnMove: 'moved',
+                    moveOnSelect: false,
+                    infoText: 'Mostrando {0} fuentes',
+                    infoTextEmpty: 'Sin fuentes',
+                    filterPlaceHolder: 'Buscar...',
+                    filterTextClear: 'Mostrar todas'
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
+
