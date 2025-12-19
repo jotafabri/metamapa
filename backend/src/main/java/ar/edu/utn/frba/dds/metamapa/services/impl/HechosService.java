@@ -15,6 +15,7 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class HechosService implements IHechosService {
 
   @Autowired
   private IUsuarioRepository usuarioRepository;
+
+  @Autowired
+  private ISolicitudesEliminacionRepository solicitudesEliminacionRepository;
 
   private FuenteDinamica getFuenteDinamica() {
     // Buscamos la fuente dinámica
@@ -138,6 +142,10 @@ public class HechosService implements IHechosService {
   @Override
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
     Hecho hecho = realizarActualizacion(id, hechoDTO);
+
+    // Se establece el estado PENDIENTE luego de una actualización
+    hecho.setEstado(Estado.PENDIENTE);
+
     hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hecho);
   }
@@ -147,6 +155,9 @@ public class HechosService implements IHechosService {
     Hecho hecho = intentarRecuperarHecho(id);
     hecho.eliminar();
     hechosRepository.save(hecho);
+
+    // Eliminar solicitudes de eliminación asociadas
+    solicitudesEliminacionRepository.deleteAllByHecho_Id(hecho.getId());
   }
 
   @Override

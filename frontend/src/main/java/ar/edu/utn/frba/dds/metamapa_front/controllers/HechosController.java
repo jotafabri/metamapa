@@ -67,7 +67,7 @@ public class HechosController {
       Long currentUserId = null;
       boolean isAdmin = false;
       boolean puedeEditar = hecho.getFechaCarga() != null &&
-              ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
+          ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
 
       model.addAttribute("hecho", hecho);
       model.addAttribute("titulo", "Detalle del hecho");
@@ -106,13 +106,13 @@ public class HechosController {
     } catch (IllegalArgumentException ex) {
       if ("FECHA_FUTURA".equals(ex.getMessage())) {
         redirectAttributes.addFlashAttribute("toastMessage",
-                "No se pudo crear el hecho: la fecha es inválida (futura) ❌");
+            "No se pudo crear el hecho: la fecha es inválida (futura) ❌");
         redirectAttributes.addFlashAttribute("toastType", "error");
         return "redirect:/hechos/nuevo";
       }
 
       redirectAttributes.addFlashAttribute("toastMessage",
-              "No se pudo crear el hecho ❌");
+          "No se pudo crear el hecho ❌");
       redirectAttributes.addFlashAttribute("toastType", "error");
       return "redirect:/hechos/nuevo";
     }
@@ -144,7 +144,7 @@ public class HechosController {
     try {
       log.info("Intentando editar hecho con id: {}", id);
       HechoDTO hechoDTO = hechosService.getHechoById(id)
-              .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+          .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
 
       model.addAttribute("hecho", hechoDTO);
       model.addAttribute("titulo", "Editar hecho");
@@ -158,21 +158,25 @@ public class HechosController {
   @PostMapping("/{id}/actualizar")
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public String actualizarHecho(
-          @PathVariable Long id,
-          @ModelAttribute("hecho") HechoDTO hechoDTO,
-          @RequestParam(required = false) List<MultipartFile> archivos,
-          BindingResult bindingResult,
-          RedirectAttributes redirectAttributes,
-          Model model) {
+      @PathVariable Long id,
+      @ModelAttribute("hecho") HechoDTO hechoDTO,
+      @RequestParam(required = false) List<MultipartFile> archivos,
+      BindingResult bindingResult,
+      RedirectAttributes redirectAttributes,
+      @AuthenticationPrincipal UserDetails currentUser,
+      Model model) {
 
     try {
 
       HechoDTO hechoOriginal = hechosService.getHechoById(id)
-              .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+          .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+
+      Boolean isAdmin = currentUser.getAuthorities().stream()
+          .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
       // Verificación del plazo de 7 días
-      if (hechoOriginal.getFechaCarga() != null &&
-              ChronoUnit.DAYS.between(hechoOriginal.getFechaCarga(), LocalDateTime.now()) > 7) {
+      if (!isAdmin && hechoOriginal.getFechaCarga() != null &&
+          ChronoUnit.DAYS.between(hechoOriginal.getFechaCarga(), LocalDateTime.now()) > 7) {
         redirectAttributes.addFlashAttribute("toastMessage", "Este hecho ya no se puede editar ❌");
         redirectAttributes.addFlashAttribute("toastType", "error");
         return "redirect:/hechos/" + id;
@@ -192,7 +196,6 @@ public class HechosController {
       return "redirect:/hechos/" + id + "/editar";
     }
   }
-
 
 
 }
