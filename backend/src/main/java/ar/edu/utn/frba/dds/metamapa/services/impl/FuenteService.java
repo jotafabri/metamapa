@@ -39,6 +39,9 @@ public class FuenteService implements IFuenteService {
             case "PROXY" -> fuente = new FuenteProxy(dto.getRuta());
             default -> throw new IllegalArgumentException("Tipo de fuente no válido: " + dto.getTipo());
         }
+        if (dto.getTitulo() != null && !dto.getTitulo().isEmpty()) {
+            fuente.setTitulo(dto.getTitulo());
+        }
         return fuentesRepository.save(fuente);
     }
 

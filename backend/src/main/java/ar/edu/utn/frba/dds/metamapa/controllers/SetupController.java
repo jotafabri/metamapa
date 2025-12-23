@@ -26,7 +26,13 @@ public class SetupController {
             return "⚠️ El administrador ya existe: " + email;
         }
 
-        Usuario admin = new Usuario(email, encoder.encode("admin123"), Rol.ADMIN);
+        Usuario admin = Usuario.builder()
+                .email(email)
+                .password(encoder.encode("admin123"))
+                .rol(Rol.ADMIN)
+                .nombre("Admin")
+                .apellido("Sistema")
+                .build();
         usuarioRepository.save(admin);
         return "✅ Administrador creado correctamente.\nEmail: " + email + "\nContraseña: admin123";
     }

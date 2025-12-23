@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -72,6 +73,12 @@ public class AdminController {
     List<HechoDTO> hechosPendientes = hechosService.obtenerHechosPendientes();
     List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
     List<SolicitudEliminacionDTO> solicitudes = solicitudesService.obtenerSolicitudes();
+    List<FuenteDTO> fuentes = fuenteService.listarFuentes();
+
+    log.info("Fuentes obtenidas: {}", fuentes.size());
+    if (!fuentes.isEmpty()) {
+      log.info("Primera fuente - Tipo: {}, Ruta: {}", fuentes.get(0).getTipo(), fuentes.get(0).getRuta());
+    }
 
     // Pasar datos al modelo
     model.addAttribute("hechosPendientes", hechosPendientes);
@@ -80,6 +87,7 @@ public class AdminController {
     model.addAttribute("totalColecciones", colecciones.size());
     model.addAttribute("solicitudes", solicitudes);
     model.addAttribute("totalSolicitudes", solicitudes.size());
+    model.addAttribute("fuentes", fuentes);
     model.addAttribute("adminPanel", true);
 
     return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html
@@ -109,6 +117,11 @@ public class AdminController {
     model.addAttribute("coleccion", new ColeccionDTO());
     model.addAttribute("titulo", "Crear nueva colección");
     model.addAttribute("adminPanel", true);
+
+    // Obtener todas las fuentes disponibles
+    List<FuenteDTO> fuentesDisponibles = fuenteService.listarFuentes();
+    model.addAttribute("fuentesDisponibles", fuentesDisponibles);
+
     return "admin/colecciones/crear";
   }
 
@@ -316,6 +329,7 @@ public class AdminController {
     }
   }
 
+<<<<<<< HEAD
   private void convertirFuentesIdsAFuentes(ColeccionDTO coleccionDTO) {
     if (coleccionDTO.getFuentesIds() != null && !coleccionDTO.getFuentesIds().isEmpty()) {
       List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
@@ -323,6 +337,50 @@ public class AdminController {
           .filter(fuente -> coleccionDTO.getFuentesIds().contains(fuente.getId()))
           .toList();
       coleccionDTO.setFuentes(fuentesSeleccionadas);
+=======
+  @PostMapping("/fuentes/crear")
+  @PreAuthorize("hasRole('ADMIN')")
+  public String crearFuente(@ModelAttribute FuenteDTO fuenteDTO,
+                            RedirectAttributes redirectAttributes) {
+    try {
+      fuenteService.crearFuente(fuenteDTO);
+      redirectAttributes.addFlashAttribute("toastMessage", "Fuente creada con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
+      return "redirect:/admin";
+    } catch (IllegalArgumentException e) {
+      log.error("Error al crear fuente: {}", e.getMessage());
+      redirectAttributes.addFlashAttribute("toastMessage", "Datos de fuente inválidos ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    } catch (Exception e) {
+      log.error("Error al crear fuente", e);
+      redirectAttributes.addFlashAttribute("toastMessage", "Ocurrió un error al crear la fuente ⚠️");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    }
+  }
+
+  @PostMapping("/fuentes/crear-estatica")
+  @PreAuthorize("hasRole('ADMIN')")
+  public String crearFuenteEstatica(@RequestParam("archivo") org.springframework.web.multipart.MultipartFile archivo,
+                                    @RequestParam(value = "titulo", required = false) String titulo,
+                                    RedirectAttributes redirectAttributes) {
+    try {
+      fuenteService.crearFuenteEstatica(archivo, titulo);
+      redirectAttributes.addFlashAttribute("toastMessage", "Fuente estática creada con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
+      return "redirect:/admin";
+    } catch (IllegalArgumentException e) {
+      log.error("Error al crear fuente estática: {}", e.getMessage());
+      redirectAttributes.addFlashAttribute("toastMessage", "Archivo CSV inválido ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    } catch (Exception e) {
+      log.error("Error al crear fuente estática", e);
+      redirectAttributes.addFlashAttribute("toastMessage", "Ocurrió un error al subir el archivo ⚠️");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+>>>>>>> 7a22d1d (WIP: Mejoras en gestión de fuentes y UI)
     }
   }
 
