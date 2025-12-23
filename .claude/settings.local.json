@@ -17,7 +17,14 @@
       "Bash(./mvnw.cmd:*)",
       "Bash(timeout 30 bash:*)",
       "Bash(cmd.exe /c \"taskkill /F /PID 2200\")",
-      "Bash(timeout 60 bash:*)"
+      "Bash(timeout 60 bash:*)",
+      "Bash(git add:*)",
+      "Bash(cmd.exe /c \"cd backend && ..\\\\mvnw.cmd spring-boot:run\")",
+      "Bash(cmd.exe /c \"cd frontend && ..\\\\mvnw.cmd spring-boot:run\")",
+      "Bash(cmd.exe /c \"mvnw.cmd -f frontend\\\\pom.xml spring-boot:run\")",
+      "Bash(cmd.exe /c \"start /B mvnw.cmd -f backend\\\\pom.xml spring-boot:run\")",
+      "Bash(cmd.exe /c \"taskkill /F /PID 1404\")",
+      "Bash(cmd.exe /c \"taskkill /F /PID 1404 2>&1\")"
     ],
     "deny": [],
     "ask": []

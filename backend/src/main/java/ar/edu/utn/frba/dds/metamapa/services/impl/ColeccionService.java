@@ -116,21 +116,7 @@ public class ColeccionService implements IColeccionService {
     establecerDatos(coleccionDTO, coleccion);
     coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
 
-<<<<<<< HEAD
     coleccionesRepository.save(coleccion);
-=======
-    // Asociar fuentes si se proporcionaron
-    if (coleccionDTO.getFuenteIds() != null && !coleccionDTO.getFuenteIds().isEmpty()) {
-      for (Long fuenteId : coleccionDTO.getFuenteIds()) {
-        Fuente fuente = fuentesRepository.findById(fuenteId).orElse(null);
-        if (fuente != null) {
-          coleccion.agregarFuente(fuente);
-        }
-      }
-    }
-
-    this.coleccionesRepository.save(coleccion);
->>>>>>> 7a22d1d (WIP: Mejoras en gestión de fuentes y UI)
     return ColeccionDTO.fromColeccion(coleccion);
   }
 

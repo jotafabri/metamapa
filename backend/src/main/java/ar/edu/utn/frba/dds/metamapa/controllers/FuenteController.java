@@ -25,7 +25,6 @@ public class FuenteController {
     private final IFuenteService fuenteService;
     private static final String UPLOAD_DIR = "uploads/csv/";
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<FuenteOutputDTO> listar() {
         return fuenteService.listarFuentes().stream()

@@ -329,7 +329,6 @@ public class AdminController {
     }
   }
 
-<<<<<<< HEAD
   private void convertirFuentesIdsAFuentes(ColeccionDTO coleccionDTO) {
     if (coleccionDTO.getFuentesIds() != null && !coleccionDTO.getFuentesIds().isEmpty()) {
       List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
@@ -337,7 +336,9 @@ public class AdminController {
           .filter(fuente -> coleccionDTO.getFuentesIds().contains(fuente.getId()))
           .toList();
       coleccionDTO.setFuentes(fuentesSeleccionadas);
-=======
+    }
+  }
+
   @PostMapping("/fuentes/crear")
   @PreAuthorize("hasRole('ADMIN')")
   public String crearFuente(@ModelAttribute FuenteDTO fuenteDTO,
@@ -380,7 +381,6 @@ public class AdminController {
       redirectAttributes.addFlashAttribute("toastMessage", "Ocurrió un error al subir el archivo ⚠️");
       redirectAttributes.addFlashAttribute("toastType", "error");
       return "redirect:/admin";
->>>>>>> 7a22d1d (WIP: Mejoras en gestión de fuentes y UI)
     }
   }
 
