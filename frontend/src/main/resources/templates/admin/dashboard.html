@@ -191,11 +191,21 @@
                             </div>
                         </div>
                         <div class="collection-actions">
-                            <a th:href="@{/admin/colecciones/{handle}/editar(handle=${coleccion.handle})}" class="btn btn-outline">Editar</a>
-                            <form th:action="@{/admin/colecciones/{handle}/eliminar(handle=${coleccion.handle})}" method="post" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta colección?');">
+                            <a th:if="${coleccion.handle != null and !#strings.isEmpty(coleccion.handle)}"
+                               th:href="@{/admin/colecciones/{handle}/editar(handle=${coleccion.handle})}"
+                               class="btn btn-outline">Editar</a>
+                            <form th:if="${coleccion.handle != null and !#strings.isEmpty(coleccion.handle)}"
+                                  th:action="@{/admin/colecciones/{handle}/eliminar(handle=${coleccion.handle})}"
+                                  method="post"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta colección?');">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                 <button type="submit" class="btn btn-danger">Eliminar</button>
                             </form>
+                            <span th:if="${coleccion.handle == null or #strings.isEmpty(coleccion.handle)}"
+                                  style="color: #f59e0b; font-size: 0.875rem;">
+                                ⚠️ Colección sin handle (datos corruptos)
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -228,30 +238,42 @@
                     </div>
                 </div>
 
-                <div th:if="${not #lists.isEmpty(fuentes)}" class="cards-grid">
-                    <div th:each="fuente : ${fuentes}" class="card" style="border-left: 4px solid" th:style="${'border-left: 4px solid ' + (#strings.contains(fuente.tipo, 'Estatica') ? '#10b981' : (#strings.contains(fuente.tipo, 'Proxy') ? '#3b82f6' : '#f59e0b'))}">
-                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 16px;">
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <svg style="width: 20px; height: 20px; flex-shrink: 0;" th:if="${#strings.contains(fuente.tipo, 'Estatica')}" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-                                        <polyline points="13 2 13 9 20 9"/>
-                                    </svg>
-                                    <svg style="width: 20px; height: 20px; flex-shrink: 0;" th:if="${#strings.contains(fuente.tipo, 'Proxy')}" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <line x1="2" y1="12" x2="22" y2="12"/>
-                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                                    </svg>
-                                    <span class="badge" th:classappend="${#strings.contains(fuente.tipo, 'Estatica') ? 'badge-success' : (#strings.contains(fuente.tipo, 'Proxy') ? 'badge-info' : 'badge-warning')}">
-                                        <span th:if="${#strings.contains(fuente.tipo, 'Estatica')}">CSV</span>
-                                        <span th:if="${#strings.contains(fuente.tipo, 'Proxy')}">API</span>
-                                        <span th:if="${#strings.contains(fuente.tipo, 'Dinamica')}">Dinámica</span>
-                                    </span>
-                                </div>
-                                <h3 class="card-title" style="margin: 0 0 4px 0; font-size: 18px; font-weight: 600; color: #1f2937;" th:text="${fuente.titulo != null && !#strings.isEmpty(fuente.titulo) ? fuente.titulo : (#strings.contains(fuente.tipo, 'Estatica') ? 'Fuente Estática' : (#strings.contains(fuente.tipo, 'Proxy') ? 'Fuente Proxy' : 'Fuente Dinámica'))}">
-                                    Título de la fuente
-                                </h3>
-                                <p class="card-description" style="font-size: 13px; color: #6b7280; word-break: break-all; margin: 0;" th:text="${fuente.ruta}">Ruta de la fuente</p>
+                <div th:if="${not #lists.isEmpty(fuentes)}" class="sources-grid">
+                    <div th:each="fuente : ${fuentes}" class="source-card"
+                         th:classappend="${#strings.contains(fuente.tipo, 'Estatica') ? 'source-static' : (#strings.contains(fuente.tipo, 'Proxy') ? 'source-proxy' : 'source-dynamic')}">
+                        <div class="source-icon-container">
+                            <!-- Icono para CSV/Estática -->
+                            <svg th:if="${#strings.contains(fuente.tipo, 'Estatica')}" class="source-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                <polyline points="13 2 13 9 20 9"/>
+                            </svg>
+                            <!-- Icono para API/Proxy -->
+                            <svg th:if="${#strings.contains(fuente.tipo, 'Proxy')}" class="source-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                            <!-- Icono para Dinámica -->
+                            <svg th:if="${#strings.contains(fuente.tipo, 'Dinamica')}" class="source-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <div class="source-content">
+                            <div class="source-header">
+                                <span class="source-badge" th:classappend="${#strings.contains(fuente.tipo, 'Estatica') ? 'badge-static' : (#strings.contains(fuente.tipo, 'Proxy') ? 'badge-proxy' : 'badge-dynamic')}">
+                                    <span th:if="${#strings.contains(fuente.tipo, 'Estatica')}">CSV Estático</span>
+                                    <span th:if="${#strings.contains(fuente.tipo, 'Proxy')}">API Proxy</span>
+                                    <span th:if="${#strings.contains(fuente.tipo, 'Dinamica')}">Dinámica</span>
+                                </span>
+                            </div>
+                            <h3 class="source-title" th:text="${fuente.titulo != null && !#strings.isEmpty(fuente.titulo) ? fuente.titulo : (#strings.contains(fuente.tipo, 'Estatica') ? 'Fuente Estática' : (#strings.contains(fuente.tipo, 'Proxy') ? 'Fuente Proxy' : 'Fuente Dinámica'))}">
+                                Título de la fuente
+                            </h3>
+                            <div class="source-path">
+                                <svg class="path-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                                </svg>
+                                <span class="path-text" th:text="${fuente.ruta}">Ruta de la fuente</span>
                             </div>
                         </div>
                     </div>

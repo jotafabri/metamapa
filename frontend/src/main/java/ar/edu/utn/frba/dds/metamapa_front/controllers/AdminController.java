@@ -48,15 +48,18 @@ public class AdminController {
       var authResponse = usuarioService.autenticar(usuarioDTO);
 
       if (authResponse != null) {
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin";
       } else {
         model.addAttribute("error", "Credenciales inválidas o sin permisos de administrador.");
+        model.addAttribute("titulo", "Iniciar sesión como administrador");
+        model.addAttribute("usuario", new LoginRequest());
         return "admin/login";
       }
 
     } catch (Exception e) {
       log.error("Error al iniciar sesión como admin", e);
       model.addAttribute("titulo", "Iniciar sesión como administrador");
+      model.addAttribute("usuario", new LoginRequest());
       model.addAttribute("error", "Ocurrió un error al procesar el inicio de sesión.");
       return "admin/login";
     }

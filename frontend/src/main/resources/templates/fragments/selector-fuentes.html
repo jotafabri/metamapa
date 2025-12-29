@@ -86,8 +86,10 @@
         </style>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                $('#dualbox-bootstrap #fuentesDual').bootstrapDualListbox({
+            $(document).ready(function () {
+                const $fuentesDual = $('#fuentesDual');
+
+                $fuentesDual.bootstrapDualListbox({
                     nonSelectedListLabel: 'Fuentes disponibles',
                     selectedListLabel: 'Fuentes en la colección',
                     preserveSelectionOnMove: 'moved',
@@ -97,6 +99,39 @@
                     filterPlaceHolder: 'Buscar...',
                     filterTextClear: 'Mostrar todas'
                 });
+
+                // Al hacer submit del formulario, crear inputs hidden con los valores seleccionados
+                const $form = $fuentesDual.closest('form');
+                if ($form.length > 0) {
+                    $form.on('submit', function(e) {
+                        console.log('DEBUG: Formulario enviándose...');
+
+                        // Remover inputs hidden previos de fuentesIds
+                        $form.find('input[name="fuentesIds"]').remove();
+
+                        // El plugin bootstrap-duallistbox crea un select con la clase bootstrap-duallistbox-selected
+                        const $selectedBox = $('.bootstrap-duallistbox-selected');
+
+                        // Obtener todos los valores del lado derecho (seleccionados)
+                        const selectedValues = [];
+                        $selectedBox.find('option').each(function() {
+                            selectedValues.push($(this).val());
+                        });
+
+                        console.log('DEBUG: Valores seleccionados en duallistbox:', selectedValues);
+
+                        // Crear un input hidden por cada fuente seleccionada
+                        selectedValues.forEach(function(value) {
+                            $('<input>').attr({
+                                type: 'hidden',
+                                name: 'fuentesIds',
+                                value: value
+                            }).appendTo($form);
+                        });
+
+                        console.log('DEBUG: Inputs hidden agregados:', $form.find('input[name="fuentesIds"]').length);
+                    });
+                }
             });
         </script>
     </div>

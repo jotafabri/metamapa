@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.dds.metamapa.models.entities.fuentes;
 
-
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Origen;
@@ -27,11 +26,15 @@ public class FuenteEstatica extends Fuente {
   @PostPersist
   private void cargarHechos() {
     if (hechos.isEmpty() && ruta != null) {
-      this.hechos = new LectorCSV().leer(ruta);
-      for (Hecho hecho : this.hechos) {
-        hecho.aceptar();
-        hecho.setFuente(this);
-        hecho.setOrigen(Origen.DATASET);
+      try {
+        this.hechos = new LectorCSV().leer(ruta);
+        for (Hecho hecho : this.hechos) {
+          hecho.aceptar();
+          hecho.setFuente(this);
+          hecho.setOrigen(Origen.DATASET);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }

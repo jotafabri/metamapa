@@ -33,9 +33,8 @@ public class FuenteService implements IFuenteService {
 
     @Override
     public Fuente mostrarFuente(Long id) {
-        return fuentesRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Fuente no encontrada con ID: " + id)
-        );
+        return fuentesRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Fuente no encontrada con ID: " + id));
     }
 
     @Override
@@ -54,7 +53,7 @@ public class FuenteService implements IFuenteService {
                         hecho.setOrigen(Origen.DATASET);
                     }
                     // Agregar hechos a la fuente
-                    fuente.getHechos().addAll(hechos);
+                    fuente.setHechos(hechos);
                 }
             }
             case "DINAMICA" -> fuente = new FuenteDinamica();
@@ -65,19 +64,12 @@ public class FuenteService implements IFuenteService {
             fuente.setTitulo(dto.getTitulo());
         }
 
-        System.out.println("DEBUG: Antes de guardar fuente. Tipo: " + fuente.getClass().getSimpleName());
-        System.out.println("DEBUG: Hechos en memoria antes de guardar: " + fuente.getHechos().size());
-
         // Guardar la fuente PRIMERO
         fuente = fuentesRepository.save(fuente);
 
-        System.out.println("DEBUG: Después de guardar fuente. ID: " + fuente.getId());
-
         // Para fuentes estáticas, persistir los hechos
         if (fuente instanceof FuenteEstatica && !fuente.getHechos().isEmpty()) {
-            System.out.println("DEBUG: Guardando " + fuente.getHechos().size() + " hechos...");
             hechosRepository.saveAll(fuente.getHechos());
-            System.out.println("DEBUG: Hechos guardados correctamente");
         }
 
         return fuente;
@@ -86,5 +78,21 @@ public class FuenteService implements IFuenteService {
     @Override
     public void eliminarFuente(Long id) {
         fuentesRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public Fuente actualizarFuente(Long id, FuenteInputDTO dto) {
+        Fuente fuente = mostrarFuente(id);
+        if (dto.getTitulo() != null && !dto.getTitulo().isEmpty()) {
+            fuente.setTitulo(dto.getTitulo());
+        }
+        if (dto.getRuta() != null && !dto.getRuta().isEmpty()) {
+            fuente.setRuta(dto.getRuta());
+            // Si es estatica y cambia la ruta, deberiamos recargar?
+            // Por simplicidad, solo actualizamos ruta. El usuario puede refrescar
+            // coleccion.
+        }
+        return fuentesRepository.save(fuente);
     }
 }

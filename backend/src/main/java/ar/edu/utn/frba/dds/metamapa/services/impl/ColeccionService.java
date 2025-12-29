@@ -33,7 +33,7 @@ public class ColeccionService implements IColeccionService {
   @Autowired
   private IFuentesRepository fuentesRepository;
 
-  //ADMIN:Operacion C(R)UD
+  // ADMIN:Operacion C(R)UD
   @Override
   public List<ColeccionDTO> getAllColecciones(Integer limit) {
     return this.coleccionesRepository.findAllLimit(limit)
@@ -50,11 +50,11 @@ public class ColeccionService implements IColeccionService {
         .toList();
   }
 
-  //USUARIO: Navegacion filtrada sobre una coleccion , no muestra los RECHAZADOS y PENDIENTES.
+  // USUARIO: Navegacion filtrada sobre una coleccion , no muestra los RECHAZADOS
+  // y PENDIENTES.
   @Override
   public List<HechoDTO> getHechosByHandle(String handle,
-                                          HechoFiltroDTO filtros
-  ) {
+      HechoFiltroDTO filtros) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
     return coleccion
         .navegar(filtros.getList(), filtros.getCurado())
@@ -64,10 +64,11 @@ public class ColeccionService implements IColeccionService {
         .toList();
   }
 
-  //ADMIN: Muestra todos los hechos de la coleccion , los que no fueron ACEPTADOS tambien.
+  // ADMIN: Muestra todos los hechos de la coleccion , los que no fueron ACEPTADOS
+  // tambien.
   @Override
   public List<HechoDTO> getHechosByHandleAdmin(String handle,
-                                               HechoFiltroDTO filtros) {
+      HechoFiltroDTO filtros) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
     return coleccionesRepository.findColeccionByHandle(coleccion.getHandle())
         .navegar(filtros.getList(), false)
@@ -104,40 +105,41 @@ public class ColeccionService implements IColeccionService {
             .filter(Objects::nonNull)
             .filter(s -> !s.trim().isEmpty())
             .distinct()
-            .collect(Collectors.toList())
-    );
+            .collect(Collectors.toList()));
   }
 
-  //ADMIN:Operacion (C)RUD
+  // ADMIN:Operacion (C)RUD
   @Override
   @Transactional
   public ColeccionDTO crearDesdeDTO(ColeccionDTO coleccionDTO) {
     Coleccion coleccion = new Coleccion(coleccionDTO.getTitulo(), coleccionDTO.getDescripcion());
     establecerDatos(coleccionDTO, coleccion);
     coleccion.setHandle(generarHandleUnico(coleccion.getTitulo()));
-
-    coleccionesRepository.save(coleccion);
+    coleccion.actualizarColeccion();
+    // Guardar y forzar flush para persistir la relación coleccion-hecho
+    coleccionesRepository.saveAndFlush(coleccion);
     return ColeccionDTO.fromColeccion(coleccion);
   }
 
-  //ADMIN:Operacion C(R)UD
+  // ADMIN:Operacion C(R)UD
   @Override
   public Optional<ColeccionDTO> mostrarColeccion(String handle) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
     return Optional.of(ColeccionDTO.fromColeccion(coleccion));
   }
 
-  //ADMIN:Operacion CR(U)D
+  // ADMIN:Operacion CR(U)D
   @Override
   @Transactional
   public ColeccionDTO actualizarColeccion(String handle, ColeccionDTO coleccionDTO) {
     Coleccion coleccion = intentarRecuperarColeccion(handle);
     establecerDatos(coleccionDTO, coleccion);
+    coleccion.actualizarColeccion();
     coleccionesRepository.save(coleccion);
     return ColeccionDTO.fromColeccion(coleccion);
   }
 
-  //ADMIN:Operacion CRU(D)
+  // ADMIN:Operacion CRU(D)
   @Override
   @Transactional
   public void eliminarColeccion(String handle) {
@@ -182,7 +184,8 @@ public class ColeccionService implements IColeccionService {
       List<Long> fuenteIds = coleccionDTO.getFuentes().stream()
           .map(FuenteOutputDTO::getId)
           .toList();
-      List<Fuente> fuentes = fuentesRepository.findAllByIdIn(fuenteIds);
+      // Cargar fuentes con sus hechos para evitar lazy loading en actualizarColeccion()
+      List<Fuente> fuentes = fuentesRepository.findAllByIdInWithHechos(fuenteIds);
       coleccion.getFuentes().clear();
       coleccion.getFuentes().addAll(fuentes);
     }
@@ -206,14 +209,15 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
+  @Transactional
   public void agregarFuente(Long idColeccion, Long idFuente) {
 
   }
 
   @Override
+  @Transactional
   public void quitarFuente(Long idColeccion, Long idFuente) {
 
   }
-
 
 }
