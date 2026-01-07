@@ -27,8 +27,8 @@ public class NormalizadorFuerte implements NormalizadorHecho {
     @Override
     public Hecho normalizar(Hecho hecho) {
         // 1. Normalización ligera para campos que no requieren reglas fuertes
-        hecho.setTitulo(normalizadorLigero.normalizarCampo(hecho.getTitulo()));
-        hecho.setDescripcion(normalizadorLigero.normalizarCampo(hecho.getDescripcion()));
+        hecho.setTitulo(normalizadorLigero.normalizarTitulo(hecho.getTitulo()));
+        hecho.setDescripcion(normalizadorLigero.normalizarDescripcion(hecho.getDescripcion()));
 
         // 2. Normalización fuerte para campos específicos usando diccionarios o validaciones
         hecho.setCategoria(mapeadorCategorias.normalizar(hecho.getCategoria()));
