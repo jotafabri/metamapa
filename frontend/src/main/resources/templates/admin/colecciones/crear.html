@@ -6,104 +6,14 @@
             <a th:href="@{/admin}" class="btn btn-outline">Volver al Panel</a>
         </div>
 
-        <div class="facts-card">
-            <div class="card-header">
-                <h2 class="card-title">Crear Nueva Colección</h2>
-                <p class="card-description">Completa los detalles para crear una nueva colección</p>
-            </div>
-
-            <form th:action="@{/admin/colecciones/crear}"
-                  method="post"
-                  th:object="${coleccion}"
-                  style="padding: 1.5rem;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="titulo" style="display: block; color: #ffffff; font-weight: 500; margin-bottom: 0.5rem;">
-                        Título:
-                    </label>
-                    <input type="text"
-                           id="titulo"
-                           name="titulo"
-                           required
-                           style="width: 100%; padding: 0.75rem; background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; color: #ffffff; font-size: 0.875rem;">
-                </div>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="descripcion" style="display: block; color: #ffffff; font-weight: 500; margin-bottom: 0.5rem;">
-                        Descripción:
-                    </label>
-                    <textarea id="descripcion"
-                              name="descripcion"
-                              rows="4"
-                              style="width: 100%; padding: 0.75rem; background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; color: #ffffff; font-size: 0.875rem; resize: vertical;"></textarea>
-                </div>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="algoritmo" style="display: block; color: #ffffff; font-weight: 500; margin-bottom: 0.5rem;">
-                        Algoritmo de consenso:
-                    </label>
-                    <select id="algoritmo"
-                            name="algoritmo"
-                            style="width: 100%; padding: 0.75rem; background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; color: #ffffff; font-size: 0.875rem; cursor: pointer;">
-                        <option value="MAYORIA_SIMPLE">Mayoría simple</option>
-                        <option value="MAYORIA_ABSOLUTA">Mayoría absoluta</option>
-                        <option value="MULTIPLES_MENCIONES">Múltiples menciones</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; color: #ffffff; font-weight: 500; margin-bottom: 0.5rem;">
-                        Fuentes de datos:
-                    </label>
-                    <div th:if="${fuentesDisponibles != null && !fuentesDisponibles.isEmpty()}"
-                         style="background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; padding: 1rem; max-height: 250px; overflow-y: auto;">
-                        <div th:each="fuente : ${fuentesDisponibles}"
-                             style="margin-bottom: 0.75rem; padding: 0.5rem; background-color: #252628; border-radius: 0.375rem;">
-                            <label style="display: flex; align-items: center; cursor: pointer; color: #ffffff;">
-                                <input type="checkbox"
-                                       name="fuentesIds"
-                                       th:value="${fuente.id}"
-                                       style="margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer; accent-color: #3b82f6;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                        <span class="badge"
-                                              th:classappend="${#strings.contains(fuente.tipo, 'Estatica') ? 'badge-success' : (#strings.contains(fuente.tipo, 'Proxy') ? 'badge-info' : 'badge-warning')}"
-                                              style="font-size: 0.7rem; padding: 2px 8px;">
-                                            <span th:if="${#strings.contains(fuente.tipo, 'Estatica')}">CSV</span>
-                                            <span th:if="${#strings.contains(fuente.tipo, 'Proxy')}">API</span>
-                                            <span th:if="${#strings.contains(fuente.tipo, 'Dinamica')}">Dinámica</span>
-                                        </span>
-                                        <span th:text="${fuente.titulo != null && !#strings.isEmpty(fuente.titulo) ? fuente.titulo : (#strings.contains(fuente.tipo, 'Estatica') ? 'Fuente Estática' : (#strings.contains(fuente.tipo, 'Proxy') ? 'Fuente Proxy' : 'Fuente Dinámica'))}"
-                                              style="font-weight: 500; font-size: 0.875rem;">
-                                            Fuente
-                                        </span>
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: #9ca3af; word-break: break-all;"
-                                         th:text="${fuente.ruta}">
-                                        Ruta
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div th:if="${fuentesDisponibles == null || fuentesDisponibles.isEmpty()}"
-                         style="background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; padding: 1.5rem; text-align: center; color: #9ca3af;">
-                        <p style="margin: 0;">No hay fuentes disponibles. Crea una fuente primero desde el panel de administración.</p>
-                    </div>
-                </div>
-
-                <div class="collection-actions" style="margin-top: 2rem;">
-                    <button type="submit" class="btn btn-success">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Crear Colección
-                    </button>
-                    <a th:href="@{/admin}" class="btn btn-outline">Cancelar</a>
-                </div>
-            </form>
-        </div>
+        <div th:replace="~{fragments/formulario-coleccion :: formulario(
+            ${coleccion},
+            ${todasLasFuentes},
+            @{/admin/colecciones/crear},
+            'Crear Nueva Colección',
+            'Completa los detalles para crear una nueva colección',
+            'Crear Colección'
+        )}"></div>
     </div>
 </div>
 </html>

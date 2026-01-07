@@ -121,10 +121,6 @@ public class AdminController {
     model.addAttribute("titulo", "Crear nueva colección");
     model.addAttribute("adminPanel", true);
 
-    // Obtener todas las fuentes disponibles
-    List<FuenteDTO> fuentesDisponibles = fuenteService.listarFuentes();
-    model.addAttribute("fuentesDisponibles", fuentesDisponibles);
-
     return "admin/colecciones/crear";
   }
 
@@ -142,9 +138,15 @@ public class AdminController {
       return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al crear nueva colección", e);
-      redirectAttributes.addFlashAttribute("toastMessage", "Error al crear colección ❌");
-      redirectAttributes.addFlashAttribute("toastType", "error");
+
+      // Volver a cargar los datos necesarios para el formulario
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+      model.addAttribute("todasLasFuentes", todasLasFuentes);
       model.addAttribute("titulo", "Crear colección");
+      model.addAttribute("adminPanel", true);
+      model.addAttribute("toastMessage", "Error al crear colección: " + e.getMessage());
+      model.addAttribute("toastType", "error");
+
       return "admin/colecciones/crear";
     }
   }
@@ -194,9 +196,16 @@ public class AdminController {
       return "redirect:/404";
     } catch (Exception e) {
       log.error("Error al editar colección {}", handle, e);
+
+      // Volver a cargar los datos necesarios para el formulario
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+      model.addAttribute("todasLasFuentes", todasLasFuentes);
+      model.addAttribute("coleccion", coleccionDTO);
       model.addAttribute("titulo", "Editar colección");
-      model.addAttribute("toastMessage", "Ocurrió un error al actualizar la colección ⚠️");
+      model.addAttribute("adminPanel", true);
+      model.addAttribute("toastMessage", "Error al actualizar colección: " + e.getMessage());
       model.addAttribute("toastType", "error");
+
       return "admin/colecciones/editar";
     }
   }

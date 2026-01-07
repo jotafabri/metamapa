@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="selector-fuentes(coleccion, todasLasFuentes)">
-        <div id="dualbox-bootstrap" style="margin-bottom:2rem;">
-            <div id="fuentesDualContainer">
+        <div style="margin-bottom:2rem;">
+            <div id="fuentesContainer">
                 <h3 style="color:#fff;font-size:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          style="width:1.2rem;height:1.2rem;">
@@ -12,129 +12,48 @@
                     Fuentes de la colección
                 </h3>
 
-                <select multiple="multiple" size="10"
-                        name="fuentesIds"
-                        id="fuentesDual">
-                    <option th:each="fuente : ${todasLasFuentes}"
-                            th:value="${fuente.id}"
-                            th:text="${fuente.nombre}"
-                            th:selected="${coleccion != null && coleccion.fuentesIds != null && coleccion.fuentesIds.contains(fuente.id)}">
-                    </option>
-                </select>
-
-                <p style="color:#aaa;font-size:0.8rem;margin-top:0.75rem;">
-                    Mueve las fuentes entre las listas para agregarlas o quitarlas de la colección.
+                <div th:if="${todasLasFuentes != null && !todasLasFuentes.isEmpty()}"
+                     style="background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; padding: 1rem; max-height: 250px; overflow-y: auto;">
+                    <div th:each="fuente : ${todasLasFuentes}"
+                         style="margin-bottom: 0.75rem; padding: 0.5rem; background-color: #252628; border-radius: 0.375rem;">
+                        <label style="display: flex; align-items: center; cursor: pointer; color: #ffffff; margin: 0;">
+                            <input type="checkbox"
+                                   name="fuentesIds"
+                                   th:value="${fuente.id}"
+                                   th:checked="${coleccion != null && coleccion.fuentesIds != null && coleccion.fuentesIds.contains(fuente.id)}"
+                                   style="margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer; accent-color: #3b82f6;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <span class="badge"
+                                          th:classappend="${#strings.contains(fuente.tipo, 'Estatica') ? 'badge-success' : (#strings.contains(fuente.tipo, 'Proxy') ? 'badge-info' : 'badge-warning')}"
+                                          style="font-size: 0.7rem; padding: 2px 8px;">
+                                        <span th:if="${#strings.contains(fuente.tipo, 'Estatica')}">CSV</span>
+                                        <span th:if="${#strings.contains(fuente.tipo, 'Proxy')}">API</span>
+                                        <span th:if="${#strings.contains(fuente.tipo, 'Dinamica')}">Dinámica</span>
+                                    </span>
+                                    <span th:text="${fuente.nombre != null && !#strings.isEmpty(fuente.nombre) ? fuente.nombre : (#strings.contains(fuente.tipo, 'Estatica') ? 'Fuente Estática' : (#strings.contains(fuente.tipo, 'Proxy') ? 'Fuente Proxy' : 'Fuente Dinámica'))}"
+                                          style="font-weight: 500; font-size: 0.875rem;">
+                                        Fuente
+                                    </span>
+                                </div>
+                                <div style="font-size: 0.75rem; color: #9ca3af; word-break: break-all;"
+                                     th:text="${fuente.ruta}">
+                                    Ruta
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div th:if="${todasLasFuentes == null || todasLasFuentes.isEmpty()}"
+                     style="background-color: #1E2023; border: 1px solid #373738; border-radius: 0.5rem; padding: 1.5rem; text-align: center; color: #9ca3af;">
+                    <p style="margin: 0;">No hay fuentes disponibles. Crea una fuente primero desde el panel de administración.</p>
+                </div>
+                <p th:unless="${todasLasFuentes == null || todasLasFuentes.isEmpty()}"
+                   style="color:#aaa;font-size:0.8rem;margin-top:0.75rem;">
+                    Selecciona las fuentes que quieres incluir en esta colección haciendo click en cada una.
                 </p>
             </div>
         </div>
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox/dist/jquery.bootstrap-duallistbox.min.js"></script>
-
-        <style>
-            #fuentesDualContainer {
-                background-color: #1A1C1F;
-                border: 1px solid #2C2F33;
-                border-radius: 0.75rem;
-                padding: 1.25rem;
-            }
-
-            #dualbox-bootstrap .bootstrap-duallistbox-container {
-                display: flex;
-                gap: 1rem;
-                width: 100%;
-            }
-
-            #dualbox-bootstrap .box1,
-            #dualbox-bootstrap .box2 {
-                flex: 1;
-                background-color: #2C2F33;
-                border: 1px solid #444;
-                color: #fff;
-                border-radius: 0.5rem;
-            }
-
-            #dualbox-bootstrap .filter {
-                background-color: #1E2023;
-                border: 1px solid #444;
-                color: #fff;
-                border-radius: 0.5rem;
-            }
-
-            #dualbox-bootstrap .move,
-            #dualbox-bootstrap .remove,
-            #dualbox-bootstrap .moveall,
-            #dualbox-bootstrap .removeall {
-                background-color: #3A3F44;
-                border: 1px solid #555;
-                color: #fff;
-                border-radius: 0.5rem;
-                margin: 3px 0;
-                width: 3rem;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            }
-
-            #dualbox-bootstrap .move:hover,
-            #dualbox-bootstrap .remove:hover,
-            #dualbox-bootstrap .moveall:hover,
-            #dualbox-bootstrap .removeall:hover {
-                background-color: #5A6168;
-            }
-        </style>
-
-        <script>
-            $(document).ready(function () {
-                const $fuentesDual = $('#fuentesDual');
-
-                $fuentesDual.bootstrapDualListbox({
-                    nonSelectedListLabel: 'Fuentes disponibles',
-                    selectedListLabel: 'Fuentes en la colección',
-                    preserveSelectionOnMove: 'moved',
-                    moveOnSelect: false,
-                    infoText: 'Mostrando {0} fuentes',
-                    infoTextEmpty: 'Sin fuentes',
-                    filterPlaceHolder: 'Buscar...',
-                    filterTextClear: 'Mostrar todas'
-                });
-
-                // Al hacer submit del formulario, crear inputs hidden con los valores seleccionados
-                const $form = $fuentesDual.closest('form');
-                if ($form.length > 0) {
-                    $form.on('submit', function(e) {
-                        console.log('DEBUG: Formulario enviándose...');
-
-                        // Remover inputs hidden previos de fuentesIds
-                        $form.find('input[name="fuentesIds"]').remove();
-
-                        // El plugin bootstrap-duallistbox crea un select con la clase bootstrap-duallistbox-selected
-                        const $selectedBox = $('.bootstrap-duallistbox-selected');
-
-                        // Obtener todos los valores del lado derecho (seleccionados)
-                        const selectedValues = [];
-                        $selectedBox.find('option').each(function() {
-                            selectedValues.push($(this).val());
-                        });
-
-                        console.log('DEBUG: Valores seleccionados en duallistbox:', selectedValues);
-
-                        // Crear un input hidden por cada fuente seleccionada
-                        selectedValues.forEach(function(value) {
-                            $('<input>').attr({
-                                type: 'hidden',
-                                name: 'fuentesIds',
-                                value: value
-                            }).appendTo($form);
-                        });
-
-                        console.log('DEBUG: Inputs hidden agregados:', $form.find('input[name="fuentesIds"]').length);
-                    });
-                }
-            });
-        </script>
     </div>
 </body>
 </html>
-

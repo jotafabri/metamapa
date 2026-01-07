@@ -24,7 +24,9 @@
       "Bash(cmd.exe /c \"mvnw.cmd -f frontend\\\\pom.xml spring-boot:run\")",
       "Bash(cmd.exe /c \"start /B mvnw.cmd -f backend\\\\pom.xml spring-boot:run\")",
       "Bash(cmd.exe /c \"taskkill /F /PID 1404\")",
-      "Bash(cmd.exe /c \"taskkill /F /PID 1404 2>&1\")"
+      "Bash(cmd.exe /c \"taskkill /F /PID 1404 2>&1\")",
+      "Bash(../mvnw.cmd spring-boot:run)",
+      "Bash(powershell -Command \"Stop-Process -Id 10552 -Force\")"
     ],
     "deny": [],
     "ask": []
