@@ -42,42 +42,100 @@
         <div class="tabs-content">
             <!-- Dashboard Tab -->
             <div class="tab-content active" id="dashboard-content">
-                <div class="stats-grid">
-                    <div class="stat-card alert" th:classappend="${totalHechosPendientes > 0} ? 'alert' : ''">
-                        <div class="stat-header">
-                            <span class="stat-label">Pendientes de Revisión</span>
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.99-.833-2.76 0L3.054 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-                            </svg>
+
+                    <div class="dashboard-section">
+                        <h3 class="section-title">Estado del sistema</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card alert" th:classappend="${totalHechosPendientes > 0} ? 'alert' : ''">
+                                <div class="stat-header">
+                                    <span class="stat-label">Pendientes de Revisión</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.99-.833-2.76 0L3.054 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value alert-value" id="pendientesRevision" th:text="${totalHechosPendientes}">0</div>
+                                <div class="stat-subtitle">Requieren atención inmediata</div>
+                            </div>
+
+                            <div class="stat-card alert" th:classappend="${totalSolicitudes > 0} ? 'alert' : ''">
+                                <div class="stat-header">
+                                    <span class="stat-label">Solicitudes de Eliminación</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value alert-value" id="solicitudesEliminacion" th:text="${totalSolicitudes}">0</div>
+                                <div class="stat-subtitle">Pendientes de revisión</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">Colecciones</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value" id="coleccionesTotal" th:text="${totalColecciones}">0</div>
+                                <div class="stat-subtitle">Colecciones activas</div>
+                            </div>
                         </div>
-                        <div class="stat-value alert-value" id="pendientesRevision" th:text="${totalHechosPendientes}">0</div>
-                        <div class="stat-subtitle">Requieren atención inmediata</div>
                     </div>
 
-                    <div class="stat-card alert" th:classappend="${totalSolicitudes > 0} ? 'alert' : ''">
-                        <div class="stat-header">
-                            <span class="stat-label">Solicitudes de Eliminación</span>
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div class="stat-value alert-value" id="solicitudesEliminacion" th:text="${totalSolicitudes}">0</div>
-                        <div class="stat-subtitle">Pendientes de revisión</div>
-                    </div>
 
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-label">Colecciones</span>
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                        </div>
-                        <div class="stat-value" id="coleccionesTotal" th:text="${totalColecciones}">0</div>
-                        <div class="stat-subtitle">Colecciones activas</div>
-                    </div>
+                    <div class="dashboard-section">
+                        <h3 class="section-title">Estadísticas generales</h3>
+                        <div class="stats-grid">
+                            <!-- Categoría con más hechos -->
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">Categoría con más hechos</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 3h18v6H3zM3 9h18v6H3zM3 15h18v6H3z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-subtitle">Global</div>
+                            </div>
 
-                </div>
+                            <!-- Provincia con más hechos en colección -->
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">Provincia con más hechos</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 21s-6-5.686-6-10a6 6 0 1112 0c0 4.314-6 10-6 10z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-subtitle">En colección seleccionada</div>
+                            </div>
+
+                            <!-- Hora con más hechos -->
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">Hora con más hechos</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-subtitle">Por categoría</div>
+                            </div>
+
+                            <!-- Solicitudes Spam -->
+                            <div class="stat-card alert">
+                                <div class="stat-header">
+                                    <span class="stat-label">Solicitudes Spam</span>
+                                    <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-value alert-value">—</div>
+                                <div class="stat-subtitle">Marcadas como spam</div>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
             <!-- Facts Tab -->
