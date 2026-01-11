@@ -117,6 +117,7 @@ public class ColeccionesController {
 
   // Métodos del servicio agregador, utilizan graphQL
   @MutationMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> agregarFuenteAColeccion(@Argument FuenteInput fuenteInput, @Argument ColeccionInput coleccionInput) {
     try {
       agregacionService.agregarFuenteAColeccion(coleccionInput.handle(), fuenteInput.id());
@@ -127,6 +128,7 @@ public class ColeccionesController {
   }
 
   @MutationMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> eliminarFuenteDeColeccion(@Argument FuenteInput fuenteInput, @Argument ColeccionInput coleccionInput) {
     try {
       agregacionService.eliminarFuenteDeColeccion(coleccionInput.handle(), fuenteInput.id());
@@ -209,6 +211,7 @@ public class ColeccionesController {
   }
 
   @GetMapping("/refrescar")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Object> refrescarColeccion() {
     try {
       agregacionService.refrescarColecciones();

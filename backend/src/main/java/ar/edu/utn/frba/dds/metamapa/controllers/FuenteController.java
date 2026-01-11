@@ -33,11 +33,13 @@ public class FuenteController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public FuenteOutputDTO crear(@RequestBody FuenteInputDTO dto) {
         return FuenteOutputDTO.fromFuente(fuenteService.crearFuente(dto));
     }
 
     @PostMapping("/upload-csv")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FuenteOutputDTO> uploadCSV(
             @RequestParam("archivo") MultipartFile archivo,
             @RequestParam(value = "titulo", required = false) String titulo) {
@@ -74,6 +76,7 @@ public class FuenteController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void eliminar(@PathVariable Long id) {
         fuenteService.eliminarFuente(id);
     }
