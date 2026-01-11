@@ -272,7 +272,12 @@ public class MetamapaApiService {
   }
 
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
+
+
+    log.info("AccessToken en sesión: {}", webApiCallerService.debugGetAccessToken());
     HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString(), hechoDTO, HechoDTO.class);
+
+
     if (response == null) {
       throw new RuntimeException("Error al actualizar hecho en el servicio externo");
     }
@@ -355,6 +360,7 @@ public class MetamapaApiService {
     webApiCallerService.postPublic(metamapaServiceUrl + "/auth/registro", registroRequest, RegistroRequest.class);
   }
 
+  /*
   public AuthResponseDTO autenticar(LoginRequest loginRequest) {
     AuthResponseDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/auth/login", loginRequest, AuthResponseDTO.class);
     if (response == null) {
@@ -362,6 +368,7 @@ public class MetamapaApiService {
     }
     return response;
   }
+*/
 
   public void actualizarEstadisticas() {
     webApiCallerService.get(metamapaServiceUrl + "/estadisticas/actualizar", null);

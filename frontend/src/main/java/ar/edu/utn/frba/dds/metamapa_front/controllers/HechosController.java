@@ -163,7 +163,7 @@ public class HechosController {
       @RequestParam(required = false) List<MultipartFile> archivos,
       BindingResult bindingResult,
       RedirectAttributes redirectAttributes,
-      @AuthenticationPrincipal UserDetails currentUser,
+      org.springframework.security.core.Authentication authentication,
       Model model) {
 
     try {
@@ -171,7 +171,7 @@ public class HechosController {
       HechoDTO hechoOriginal = hechosService.getHechoById(id)
           .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
 
-      Boolean isAdmin = currentUser.getAuthorities().stream()
+      Boolean isAdmin = authentication.getAuthorities().stream()
           .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
       // Verificación del plazo de 7 días

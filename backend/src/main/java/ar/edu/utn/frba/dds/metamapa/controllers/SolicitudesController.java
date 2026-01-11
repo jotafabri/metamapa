@@ -54,7 +54,6 @@ public class SolicitudesController {
     }
   }
 
-  @PatchMapping("{id}/rechazar")
   @MutationMapping
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> rechazarSolicitud(@Argument SolicitudEliminacionOutput solicitud) {

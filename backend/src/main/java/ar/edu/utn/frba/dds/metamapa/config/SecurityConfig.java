@@ -43,10 +43,14 @@ public class SecurityConfig {
             // Configuración global de acceso
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.POST, "/auth/user").permitAll()
+
                     .requestMatchers("/hechos/me").hasAnyRole("USER","ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/hechos/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/hechos").permitAll()
+                    .requestMatchers(HttpMethod.PATCH, "/hechos/**").hasAnyRole("USER","ADMIN")
+
                     .requestMatchers("/colecciones/admin/**").hasRole("ADMIN")
                     .requestMatchers("/colecciones/refrescar").hasRole("ADMIN")
-                    .requestMatchers("/estadisticas/**").authenticated()
 
                     .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
 
@@ -56,6 +60,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.DELETE, "/colecciones/**").hasRole( "ADMIN")
                     .requestMatchers(HttpMethod.PATCH, "/colecciones/**").hasRole("ADMIN")
 
+                    .requestMatchers("/estadisticas/**").authenticated()
+
                     .requestMatchers(HttpMethod.GET, "/fuentes/**").permitAll()
 
                     .requestMatchers(
@@ -64,8 +70,7 @@ public class SecurityConfig {
                             "/register",
                             "/auth/login",
                             "/auth/registro",
-                            "/auth/refresh",
-                            "/hechos/**").permitAll()
+                            "/auth/refresh").permitAll()
 
                     .requestMatchers("/graphql").permitAll()
                     .anyRequest().authenticated()
