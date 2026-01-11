@@ -42,7 +42,7 @@ public class SecurityConfig {
 
             // Configuración global de acceso
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/user").hasRole( "ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/auth/user").permitAll()
                     .requestMatchers("/hechos/me").hasAnyRole("USER","ADMIN")
                     .requestMatchers("/colecciones/admin/**").hasRole("ADMIN")
                     .requestMatchers("/colecciones/refrescar").hasRole("ADMIN")

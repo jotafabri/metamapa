@@ -111,7 +111,6 @@ public class AuthController {
 
 
   @PostMapping("/user")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<UserDTO> getUserByEmail(@RequestBody Map<String, String> body) {
     try {
       String email = body.get("email");
