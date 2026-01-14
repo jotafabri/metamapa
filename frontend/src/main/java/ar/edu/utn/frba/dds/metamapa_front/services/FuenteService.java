@@ -37,19 +37,8 @@ public class FuenteService {
     this.metamapaServiceUrl = metamapaServiceUrl;
   }
 
-  public List<FuenteDTO> listarFuentes() {
-    try {
-      return webClient
-          .get()
-          .uri(metamapaServiceUrl + "/fuentes")
-          .retrieve()
-          .bodyToFlux(FuenteDTO.class)
-          .collectList()
-          .block();
-    } catch (WebClientResponseException e) {
-      log.error("Error al listar fuentes: {}", e.getMessage());
-      return List.of();
-    }
+  public List<FuenteOutputDTO> listarFuentes() {
+    return metamapaApiService.getTodasLasFuentes();
   }
 
   public void crearFuente(FuenteDTO fuenteDTO) {
