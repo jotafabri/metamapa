@@ -42,7 +42,7 @@ public class SecurityConfig {
 
             // Configuración global de acceso
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.POST, "/auth/user").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/auth/user").authenticated()
 
                     .requestMatchers("/hechos/me").hasAnyRole("USER","ADMIN")
                     .requestMatchers(HttpMethod.GET, "/hechos/**").permitAll()
@@ -62,6 +62,7 @@ public class SecurityConfig {
 
                     .requestMatchers("/estadisticas/**").authenticated()
 
+                    .requestMatchers(HttpMethod.POST, "/fuentes/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/fuentes/**").permitAll()
 
                     .requestMatchers(

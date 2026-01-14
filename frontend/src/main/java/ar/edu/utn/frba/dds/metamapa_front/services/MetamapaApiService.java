@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.UserInputDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.GraphQlCallerService;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
@@ -79,31 +80,63 @@ public class MetamapaApiService {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);
     }
   }
-
+/*
   public RolesPermisosDTO getRolesPermisos(String email) {
     try {
       // Llamar al nuevo endpoint /api/auth/user con el email
-      Map<String, Object> response = webClient.post().uri(metamapaServiceUrl + "/auth/user").bodyValue(Map.of("email", email)).retrieve().bodyToMono(Map.class).block();
+      Map<String, Object> response = webClient
+              .post()
+              .uri(metamapaServiceUrl + "/auth/user")
+              .bodyValue(Map.of("email", email)).retrieve().bodyToMono(Map.class)
+              .block();
 
       if (response == null) {
         throw new RuntimeException("Usuario no encontrado");
       }
 
-      // Convertir la respuesta a RolesPermisosDTO
       RolesPermisosDTO rolesPermisos = new RolesPermisosDTO();
-      // El rol viene como string del backend (ej: "ADMIN" o "USER")
+
+      rolesPermisos.setEmail((String) response.get("email"));
       String rolStr = (String) response.get("rol");
-      // Aquí asumimos que RolesPermisosDTO tiene un método setRol que acepta un enum
-      // Por ahora devolvemos un DTO simple sin permisos
       rolesPermisos.setRol(Rol.valueOf(rolStr));
-      rolesPermisos.setPermisos(List.of()); // Sin permisos por ahora
+      rolesPermisos.setPermisos(List.of());
 
       return rolesPermisos;
+
     } catch (Exception e) {
       log.error(e.getMessage());
       throw new RuntimeException("Error al obtener roles y permisos: " + e.getMessage(), e);
     }
   }
+  */
+
+  public RolesDTO getRoles(String accessToken) {
+    try {
+      UserInputDTO user = webClient
+              .get()
+              .uri(metamapaServiceUrl + "/auth/user")
+              .header("Authorization", "Bearer " + accessToken)
+              .retrieve()
+              .bodyToMono(UserInputDTO.class)
+              .block();
+
+      if (user == null) {
+        throw new RuntimeException("Usuario no encontrado");
+      }
+
+      return RolesDTO.builder()
+              .email(user.getEmail())
+              .rol(user.getRol())
+              .permisos(List.of())
+              .build();
+
+    } catch (Exception e) {
+      throw new RuntimeException("Error al obtener roles y permisos", e);
+    }
+  }
+
+
+
 
   public List<ColeccionDTO> getAllColecciones() {
     return retrieveColecciones("/colecciones");
