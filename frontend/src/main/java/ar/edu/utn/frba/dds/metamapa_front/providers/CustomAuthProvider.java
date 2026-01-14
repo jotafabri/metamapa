@@ -49,12 +49,14 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
       request.getSession().setAttribute("accessToken", authResponse.getAccessToken());
       request.getSession().setAttribute("refreshToken", authResponse.getRefreshToken());
-      request.getSession().setAttribute("username", username);
 
       log.info("Buscando rol del usuario");
       RolesDTO roles = externalAuthService.getRoles(authResponse.getAccessToken());
 
-      log.info("Cargando role del usuario en sesión");
+      log.info("Usuario autenticado. Guardando datos en sesión [email={}, rol={}]",
+              roles.getEmail(), roles.getRol());
+
+      request.getSession().setAttribute("username", roles.getEmail());
       request.getSession().setAttribute("rol", roles.getRol());
 
       List<GrantedAuthority> authorities = List.of(
