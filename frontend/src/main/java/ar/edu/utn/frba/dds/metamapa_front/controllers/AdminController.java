@@ -76,7 +76,7 @@ public class AdminController {
     List<HechoDTO> hechosPendientes = hechosService.obtenerHechosPendientes();
     List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
     List<SolicitudEliminacionDTO> solicitudes = solicitudesService.obtenerSolicitudes();
-    List<FuenteOutputDTO> fuentes = fuenteService.listarFuentes();
+    List<FuenteOutputDTO> fuentes = fuenteService.obtenerTodasLasFuentes();
 
     log.info("Fuentes obtenidas: {}", fuentes.size());
     if (!fuentes.isEmpty()) {

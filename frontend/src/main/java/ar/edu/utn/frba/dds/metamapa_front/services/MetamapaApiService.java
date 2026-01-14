@@ -536,7 +536,7 @@ public class MetamapaApiService {
         body.add("titulo", new HttpEntity<>(titulo, textHeaders));
       }
 
-      webApiCallerService.post(metamapaServiceUrl, body, Void.class);
+      webApiCallerService.postMultipart(metamapaServiceUrl + "/fuentes/upload-csv", body, Void.class);
 
       log.info("Fuente estática creada correctamente desde archivo: {}", archivo.getOriginalFilename());
     } catch (IOException e) {

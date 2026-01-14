@@ -324,7 +324,7 @@
                                     <span th:if="${#strings.contains(fuente.tipo, 'Dinamica')}">Dinámica</span>
                                 </span>
                             </div>
-                            <h3 class="source-title" th:text="${fuente.titulo != null && !#strings.isEmpty(fuente.titulo) ? fuente.titulo : (#strings.contains(fuente.tipo, 'Estatica') ? 'Fuente Estática' : (#strings.contains(fuente.tipo, 'Proxy') ? 'Fuente Proxy' : 'Fuente Dinámica'))}">
+                            <h3 class="source-title" th:text="${fuente.nombre != null && !#strings.isEmpty(fuente.nombre) ? fuente.nombre : (#strings.contains(fuente.tipo, 'Estatica') ? 'Fuente Estática' : (#strings.contains(fuente.tipo, 'Proxy') ? 'Fuente Proxy' : 'Fuente Dinámica'))}">
                                 Título de la fuente
                             </h3>
                             <div class="source-path">
