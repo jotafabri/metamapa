@@ -492,5 +492,63 @@ public class MetamapaApiService {
     return response != null ? response : List.of();
   }
 
+  public void crearFuente(FuenteDTO fuenteDTO) {
+    try {
+      Map<String, String> body = new java.util.HashMap<>();
+      body.put("tipo", fuenteDTO.getTipo());
+      body.put("ruta", fuenteDTO.getRuta());
+      if (fuenteDTO.getTitulo() != null && !fuenteDTO.getTitulo().isEmpty()) {
+        body.put("titulo", fuenteDTO.getTitulo());
+      }
+
+      webApiCallerService.post(metamapaServiceUrl + "/fuentes", body, Void.class);
+
+      log.info("Fuente {} creada correctamente", fuenteDTO.getTipo());
+    } catch (WebClientResponseException e) {
+      log.error("Error al crear fuente: {}", e.getMessage());
+      if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        throw new IllegalArgumentException("Datos de fuente inválidos");
+      }
+      throw new RuntimeException("Error al crear fuente");
+    }
+  }
+
+  public void crearFuenteEstatica(MultipartFile archivo, String titulo) {
+    try {
+      if (archivo.isEmpty()) {
+        throw new IllegalArgumentException("El archivo está vacío");
+      }
+
+      if (!archivo.getOriginalFilename().endsWith(".csv")) {
+        throw new IllegalArgumentException("El archivo debe ser un CSV");
+      }
+
+      MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
+
+      HttpHeaders fileHeaders = new HttpHeaders();
+      fileHeaders.setContentDispositionFormData("archivo", archivo.getOriginalFilename());
+      fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+      body.add("archivo", new HttpEntity<>(archivo.getBytes(), fileHeaders));
+
+      if (titulo != null && !titulo.isEmpty()) {
+        HttpHeaders textHeaders = new HttpHeaders();
+        textHeaders.setContentType(MediaType.TEXT_PLAIN);
+        body.add("titulo", new HttpEntity<>(titulo, textHeaders));
+      }
+
+      webApiCallerService.post(metamapaServiceUrl, body, Void.class);
+
+      log.info("Fuente estática creada correctamente desde archivo: {}", archivo.getOriginalFilename());
+    } catch (IOException e) {
+      log.error("Error al leer el archivo: {}", e.getMessage());
+      throw new RuntimeException("Error al procesar el archivo");
+    } catch (WebClientResponseException e) {
+      log.error("Error al crear fuente estática: {}", e.getMessage());
+      if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        throw new IllegalArgumentException("Archivo CSV inválido");
+      }
+      throw new RuntimeException("Error al crear fuente estática");
+    }
+  }
 
 }
