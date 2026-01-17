@@ -67,6 +67,27 @@ public class HechosController {
     }
   }
 
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<HechoDTO> crearHechoSinArchivos(
+          @RequestBody HechoDTO hechoDTO
+  ) {
+    try {
+      String emailUsuario = null;
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.isAuthenticated()
+              && !"anonymousUser".equals(authentication.getPrincipal())) {
+        emailUsuario = authentication.getName();
+      }
+
+      HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO, emailUsuario);
+      return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
+
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<HechoDTO> crearHecho(
       @RequestPart("hecho") HechoDTO hechoDTO,

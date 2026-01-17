@@ -48,9 +48,8 @@ public class WebApiCallerService {
     String accessToken = getAccessTokenFromSession();
     String refreshToken = getRefreshTokenFromSession();
 
+    log.info("Tokens en sesión → accessToken presente? {}, refreshToken presente? {}", accessToken != null, refreshToken != null);
 
-    // Log seguro: no mostramos el token completo
-    log.debug("Ejecutando API call. Token presente? {}", accessToken != null);
 
     if (accessToken == null) {
       throw new RuntimeException("No hay token de acceso disponible");
@@ -60,22 +59,36 @@ public class WebApiCallerService {
       // Primer intento con el token actual
       return apiCall.execute(accessToken);
     } catch (WebClientResponseException e) {
-      if ((e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.FORBIDDEN) && refreshToken != null) {
-        try {
-          // Token expirado, intentar refresh
-          AuthResponseDTO newTokens = refreshToken(refreshToken);
 
-          // Segundo intento con el nuevo token
+      log.warn(
+              "401 recibido (JWT expirado). Reintentando con refresh token. Body={}",
+              e.getResponseBodyAsString()
+      );
+
+      if (refreshToken != null &&
+              (e.getStatusCode() == HttpStatus.UNAUTHORIZED
+                      || e.getStatusCode() == HttpStatus.FORBIDDEN
+                      || e.getResponseBodyAsString().contains("expired"))) {
+
+        try {
+          log.info("Intentando refrescar token...");
+          AuthResponseDTO newTokens = refreshToken(refreshToken);
+          log.info("Token refrescado con éxito. Nuevo accessToken presente? {}", newTokens.getAccessToken() != null);
+
           return apiCall.execute(newTokens.getAccessToken());
         } catch (Exception refreshError) {
           throw new RuntimeException("Error al refrescar token y reintentar: " + refreshError.getMessage(), refreshError);
         }
       }
+
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new NotFoundException(e.getMessage());
       }
+
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
-    } catch (Exception e) {
+    }
+
+    catch (Exception e) {
       throw new RuntimeException("Error de conexión con el servicio: " + e.getMessage(), e);
     }
   }
@@ -212,23 +225,48 @@ public class WebApiCallerService {
   /**
    * Ejecuta una llamada HTTP POST multipart con autenticación
    */
-  public <T> T postMultipart(String url, MultiValueMap<String, HttpEntity<?>> body, Class<T> responseType) {
-    return executeWithTokenRetry(accessToken ->
-            webClient
-                    .post()
-                    .uri(url)
-                    .header("Authorization", "Bearer " + accessToken)
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(BodyInserters.fromMultipartData(body))
-                    .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, response ->
-                            response.bodyToMono(String.class)
-                                    .flatMap(errorBody -> Mono.error(new RuntimeException("Error 4xx: " + errorBody)))
-                    )
-                    .bodyToMono(responseType)
-                    .block()
-    );
+  public <T> T postMultipart(String url,
+                             MultiValueMap<String, HttpEntity<?>> body,
+                             Class<T> responseType) {
+        String accessToken = getAccessTokenFromSession();
+        String refreshToken = getRefreshTokenFromSession();
+
+                if (accessToken == null) {
+            throw new RuntimeException("No hay token de acceso");
+          }
+
+                try {
+            return doMultipart(url, body, responseType, accessToken);
+          } catch (WebClientResponseException e) {
+
+                    if (e.getStatusCode() == HttpStatus.UNAUTHORIZED && refreshToken != null) {
+
+                        log.info("JWT expirado en multipart → refrescando token");
+                AuthResponseDTO newTokens = refreshToken(refreshToken);
+
+                        return doMultipart(url, body, responseType, newTokens.getAccessToken());
+              }
+
+                    throw e;
+          }
+      }
+
+          private <T> T doMultipart(String url,
+                            MultiValueMap<String, HttpEntity<?>> body,
+                            Class<T> responseType,
+                            String accessToken) {
+
+                return webClient
+                        .post()
+                        .uri(url)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .body(BodyInserters.fromMultipartData(body))
+                        .retrieve()
+                        .bodyToMono(responseType)
+                        .block();
   }
+
 
   /**
    * Ejecuta una llamada HTTP POST multipart pública (sin autenticación)
@@ -251,6 +289,59 @@ public class WebApiCallerService {
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
     }
   }
+
+
+  public <T> T postOptionalAuth(String url, Object body, Class<T> responseType) {
+    String token = getAccessTokenFromSession();
+
+    if (token == null) {
+      // público
+      return postPublic(url, body, responseType);
+    }
+
+    return executeWithTokenRetry(accessToken ->
+            webClient
+                    .post()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(responseType)
+                    .block()
+    );
+  }
+
+
+
+  public <T> T postMultipartOptionalAuth(
+          String url,
+          MultiValueMap<String, HttpEntity<?>> multipartBody,
+          Class<T> responseType
+  ) {
+    String token = getAccessTokenFromSession();
+
+    if (token == null) {
+      return postPublicMultipart(url, multipartBody, responseType);
+    }
+
+    return executeWithTokenRetry(accessToken ->
+            webClient
+                    .post()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(multipartBody))
+                    .retrieve()
+                    .bodyToMono(responseType)
+                    .block()
+    );
+  }
+
+
+
+
+
+
 
   /**
    * Ejecuta una llamada HTTP PUT
@@ -373,5 +464,7 @@ public class WebApiCallerService {
     return getAccessTokenFromSession();
   }
 
-
+  public boolean tieneRefreshToken() {
+    return getRefreshTokenFromSession() != null;
+  }
 }

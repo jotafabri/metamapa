@@ -228,12 +228,22 @@ public class MetamapaApiService {
 
 
   public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
-    if (archivos == null || archivos.isEmpty()) {
-      return crearHechoSinArchivos(hechoDTO);
+    if (archivos == null || archivos.stream().allMatch(MultipartFile::isEmpty)) {
+      return webApiCallerService.postOptionalAuth(
+              metamapaServiceUrl + "/hechos",
+              hechoDTO,
+              HechoDTO.class
+      );
     }
-    return crearHechoConArchivos(hechoDTO, archivos);
+
+    return webApiCallerService.postMultipartOptionalAuth(
+            metamapaServiceUrl + "/hechos",
+            buildMultipart(hechoDTO, archivos),
+            HechoDTO.class
+    );
   }
 
+/*
   private HechoDTO crearHechoSinArchivos(HechoDTO hechoDTO) {
     // Verificar si hay sesión activa (usuario logeado)
     HechoDTO response;
@@ -303,6 +313,50 @@ public class MetamapaApiService {
 
     return response;
   }
+*/
+private MultiValueMap<String, HttpEntity<?>> buildMultipart(
+        HechoDTO hechoDTO,
+        List<MultipartFile> archivos
+) {
+  MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
+
+  HttpHeaders jsonHeaders = new HttpHeaders();
+  jsonHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+  try {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    String hechoJson = mapper.writeValueAsString(hechoDTO);
+    body.add("hecho", new HttpEntity<>(hechoJson, jsonHeaders));
+  } catch (JsonProcessingException e) {
+    throw new RuntimeException("Error serializando HechoDTO", e);
+  }
+
+  archivos.stream()
+          .filter(a -> !a.isEmpty())
+          .forEach(archivo -> {
+            try {
+              HttpHeaders fileHeaders = new HttpHeaders();
+              fileHeaders.setContentDispositionFormData(
+                      "archivos",
+                      archivo.getOriginalFilename()
+              );
+              fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+              body.add(
+                      "archivos",
+                      new HttpEntity<>(archivo.getBytes(), fileHeaders)
+              );
+            } catch (IOException e) {
+              throw new UncheckedIOException(e);
+            }
+          });
+
+  return body;
+}
+
+
+
+
 
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
 
