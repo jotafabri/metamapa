@@ -1,10 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa_front.providers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.UserDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.RateLimitExceededException;
 import ar.edu.utn.frba.dds.metamapa_front.services.MetamapaApiService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,7 +50,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
       request.getSession().setAttribute("refreshToken", authResponse.getRefreshToken());
 
       log.info("Buscando rol del usuario");
-      RolesDTO roles = externalAuthService.getRoles(authResponse.getAccessToken());
+      UserDTO roles = externalAuthService.getRoles(authResponse.getAccessToken());
 
       log.info("Usuario autenticado. Guardando datos en sesión [email={}, rol={}]",
               roles.getEmail(), roles.getRol());

@@ -110,7 +110,7 @@ public class MetamapaApiService {
   }
   */
 
-  public RolesDTO getRoles(String accessToken) {
+  public UserDTO getRoles(String accessToken) {
     try {
       UserInputDTO user = webClient
               .get()
@@ -124,7 +124,7 @@ public class MetamapaApiService {
         throw new RuntimeException("Usuario no encontrado");
       }
 
-      return RolesDTO.builder()
+      return UserDTO.builder()
               .email(user.getEmail())
               .rol(user.getRol())
               .permisos(List.of())
