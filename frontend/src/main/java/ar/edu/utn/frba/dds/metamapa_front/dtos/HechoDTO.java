@@ -29,4 +29,5 @@ public class HechoDTO {
   private Long contribuyenteId;
 
   private List<String> multimedia;
+  private String estado;
 }

@@ -26,6 +26,7 @@ public class HechoDTO {
 
   private List<String> multimedia;
   private Long usuarioId;
+  private String estado;
 
   public static HechoDTO fromHecho(Hecho hecho) {
     var dto = new HechoDTO();
@@ -46,6 +47,9 @@ public class HechoDTO {
     }
     if (hecho.getUsuario() != null) {
       dto.setUsuarioId(hecho.getUsuario().getId());
+    }
+    if (hecho.getEstado() != null) {
+      dto.setEstado(hecho.getEstado().name());
     }
 
     return dto;
