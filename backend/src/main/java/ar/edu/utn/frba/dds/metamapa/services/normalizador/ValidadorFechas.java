@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa.services.normalizador;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.FechaInvalidaException;
+
 import java.time.LocalDateTime;
 
 public class ValidadorFechas {
@@ -9,7 +11,7 @@ public class ValidadorFechas {
 
     public ValidadorFechas() {
         this.fechaMinima = LocalDateTime.of(1900, 1, 1, 0, 0);
-        this.fechaMaxima = LocalDateTime.now().plusYears(1); // por ejemplo
+        this.fechaMaxima = LocalDateTime.now();
     }
 
     public ValidadorFechas(LocalDateTime fechaMinima, LocalDateTime fechaMaxima) {
@@ -23,13 +25,16 @@ public class ValidadorFechas {
             return null;
         }
 
-        // Asegurar que la fecha esté dentro del rango permitido
         if (fecha.isBefore(fechaMinima)) {
-            return fechaMinima;
+            throw new FechaInvalidaException(
+                    "La fecha no puede ser anterior a " + fechaMinima
+            );
         }
 
         if (fecha.isAfter(fechaMaxima)) {
-            return fechaMaxima;
+            throw new FechaInvalidaException(
+                    "La fecha no puede ser futura"
+            );
         }
 
         // Opcional: redondear a segundos para uniformidad

@@ -18,6 +18,7 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorFuerte;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,10 @@ public class HechosService implements IHechosService {
 
   @Autowired
   private ISolicitudesEliminacionRepository solicitudesEliminacionRepository;
+
+  @Autowired
+  private NormalizadorFuerte normalizadorFuerte;
+
 
   private FuenteDinamica getFuenteDinamica() {
     // Buscamos la fuente dinámica
@@ -125,6 +130,8 @@ public class HechosService implements IHechosService {
       usuario.ifPresent(hecho::setUsuario);
     }
 
+    hecho = normalizadorFuerte.normalizar(hecho);
+
     Hecho hechoGuardado = hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
   }
@@ -203,6 +210,8 @@ public class HechosService implements IHechosService {
     hecho.setLatitud(hechoDTO.getLatitud());
     hecho.setLongitud(hechoDTO.getLongitud());
     hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
+
+    hecho = normalizadorFuerte.normalizar(hecho);
 
     return hecho;
   }
