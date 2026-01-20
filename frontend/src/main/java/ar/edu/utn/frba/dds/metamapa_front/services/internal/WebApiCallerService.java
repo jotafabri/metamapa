@@ -48,36 +48,42 @@ public class WebApiCallerService {
     String accessToken = getAccessTokenFromSession();
     String refreshToken = getRefreshTokenFromSession();
 
-    log.info("Tokens en sesión → accessToken presente? {}, refreshToken presente? {}", accessToken != null, refreshToken != null);
-
+    log.info("Tokens en sesión → accessToken presente? {}, refreshToken presente? {}",
+            accessToken != null, refreshToken != null);
 
     if (accessToken == null) {
       throw new RuntimeException("No hay token de acceso disponible");
     }
 
     try {
-      // Primer intento con el token actual
       return apiCall.execute(accessToken);
+
     } catch (WebClientResponseException e) {
 
-      log.warn(
-              "401 recibido (JWT expirado). Reintentando con refresh token. Body={}",
-              e.getResponseBodyAsString()
+      log.error("""
+    🔥 Error HTTP
+    ├─ Status      : {} {}
+    ├─ Body        : {}
+    ├─ AccessToken : {}
+    ├─ RefreshToken: {}
+    """,
+              e.getStatusCode().value(),
+              e.getStatusText(),
+              e.getResponseBodyAsString(),
+              accessToken != null,
+              refreshToken != null
       );
 
-      if (refreshToken != null &&
-              (e.getStatusCode() == HttpStatus.UNAUTHORIZED
-                      || e.getStatusCode() == HttpStatus.FORBIDDEN
-                      || e.getResponseBodyAsString().contains("expired"))) {
+      if (e.getStatusCode() == HttpStatus.UNAUTHORIZED && refreshToken != null) {
+        log.warn("🔄 401 detectado → intentando refresh token");
 
         try {
-          log.info("Intentando refrescar token...");
           AuthResponseDTO newTokens = refreshToken(refreshToken);
-          log.info("Token refrescado con éxito. Nuevo accessToken presente? {}", newTokens.getAccessToken() != null);
+          log.info("✅ Refresh OK → reintentando request");
 
           return apiCall.execute(newTokens.getAccessToken());
         } catch (Exception refreshError) {
-          throw new RuntimeException("Error al refrescar token y reintentar: " + refreshError.getMessage(), refreshError);
+          throw new RuntimeException("❌ Falló el refresh token", refreshError);
         }
       }
 
@@ -85,13 +91,13 @@ public class WebApiCallerService {
         throw new NotFoundException(e.getMessage());
       }
 
-      throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
-    }
+      throw new RuntimeException("Error en llamada al API", e);
 
-    catch (Exception e) {
-      throw new RuntimeException("Error de conexión con el servicio: " + e.getMessage(), e);
+    } catch (Exception e) {
+      throw new RuntimeException("Error ejecutando llamada al API", e);
     }
   }
+
 
   /**
    * Ejecuta una llamada HTTP GET

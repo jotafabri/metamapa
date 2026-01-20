@@ -113,6 +113,8 @@ public class HechosService implements IHechosService {
         hechoDTO.getFechaAcontecimiento().atStartOfDay()
     );
 
+    hecho.setFechaCarga(LocalDateTime.now().withNano(0));
+
     Ubicacion ubicacion = Ubicacion.builder()
         .pais(hechoDTO.getPais())
         .provincia(hechoDTO.getProvincia())

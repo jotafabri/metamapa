@@ -243,77 +243,7 @@ public class MetamapaApiService {
     );
   }
 
-/*
-  private HechoDTO crearHechoSinArchivos(HechoDTO hechoDTO) {
-    // Verificar si hay sesión activa (usuario logeado)
-    HechoDTO response;
-    try {
-      // Intentar con autenticación (sesión activa)
-      response = webApiCallerService.post(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
-    } catch (RuntimeException e) {
-      // Si falla porque no hay token, usar versión pública (anónimo)
-      if (e.getMessage().contains("No hay token de acceso")) {
-        response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
-      } else {
-        throw e;
-      }
-    }
 
-    if (response == null) {
-      throw new RuntimeException("Error al crear hecho en el servicio externo");
-    }
-    return response;
-  }
-
-  private HechoDTO crearHechoConArchivos(HechoDTO hechoDTO, List<MultipartFile> archivos) {
-    MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
-
-    // Parte JSON - asegurarse que se serialice correctamente
-    HttpHeaders jsonHeaders = new HttpHeaders();
-    jsonHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-    try {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.registerModule(new JavaTimeModule());
-      String hechoJson = mapper.writeValueAsString(hechoDTO);
-      body.add("hecho", new HttpEntity<>(hechoJson, jsonHeaders));
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Error serializando HechoDTO", e);
-    }
-
-    // Archivos
-    archivos.stream().filter(archivo -> !archivo.isEmpty()).forEach(archivo -> {
-      try {
-        HttpHeaders fileHeaders = new HttpHeaders();
-        fileHeaders.setContentDispositionFormData("archivos", archivo.getOriginalFilename());
-        fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        body.add("archivos", new HttpEntity<>(archivo.getBytes(), fileHeaders));
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-    });
-
-    // Verificar si hay sesión activa (usuario logeado)
-    HechoDTO response;
-    try {
-      // Intentar con autenticación (sesión activa)
-      response = webApiCallerService.postMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
-    } catch (RuntimeException e) {
-      // Si falla porque no hay token, usar versión pública (anónimo)
-      if (e.getMessage().contains("No hay token de acceso")) {
-        response = webApiCallerService.postPublicMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
-      } else {
-        throw e;
-      }
-    }
-
-    if (response == null) {
-      throw new RuntimeException("Error al crear hecho en el servicio externo");
-    }
-
-    return response;
-  }
-*/
 private MultiValueMap<String, HttpEntity<?>> buildMultipart(
         HechoDTO hechoDTO,
         List<MultipartFile> archivos
