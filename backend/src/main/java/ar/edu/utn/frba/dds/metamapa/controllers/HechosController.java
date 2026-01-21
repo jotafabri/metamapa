@@ -165,9 +165,9 @@ public class HechosController {
 
   @PatchMapping("/{id}/aprobar")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<HechoDTO> aprobarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoActualizado) {
+  public ResponseEntity<HechoDTO> aprobarHecho(@PathVariable Long id) {
     try {
-      HechoDTO hecho = hechosService.aprobarHecho(id, hechoActualizado);
+      HechoDTO hecho = hechosService.aprobarHecho(id);
       return ResponseEntity.ok(hecho);
     } catch (NotFoundException e) {
       return ResponseEntity.notFound().build();
@@ -177,6 +177,7 @@ public class HechosController {
       return ResponseEntity.badRequest().build();
     }
   }
+
 
   @PatchMapping("/{id}/rechazar")
   @PreAuthorize("hasRole('ADMIN')")

@@ -169,9 +169,10 @@ public class HechosService implements IHechosService {
     solicitudesEliminacionRepository.deleteAllByHecho_Id(hecho.getId());
   }
 
+
   @Override
-  public HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado) {
-    Hecho hecho = realizarActualizacion(id, hechoActualizado);
+  public HechoDTO aprobarHecho(Long id) {
+    Hecho hecho = intentarRecuperarHecho(id);
     if (hecho.getEstado() != Estado.PENDIENTE) {
       throw new IllegalStateException("El hecho no se encuentra en estado PENDIENTE");
     }
@@ -179,6 +180,7 @@ public class HechosService implements IHechosService {
     hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hecho);
   }
+
 
   @Override
   public HechoDTO rechazarHecho(Long id) {
