@@ -3,8 +3,10 @@ package ar.edu.utn.frba.dds.metamapa.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.FechaInvalidaException;
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ErrorDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IFileStorageService;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
@@ -68,7 +70,7 @@ public class HechosController {
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<HechoDTO> crearHechoSinArchivos(
+  public ResponseEntity<?> crearHechoSinArchivos(
           @RequestBody HechoDTO hechoDTO
   ) {
     try {
@@ -82,6 +84,12 @@ public class HechosController {
       HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO, emailUsuario);
       return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
 
+    } catch (FechaInvalidaException e) {
+      return ResponseEntity
+              .badRequest()
+              .body(new ErrorDTO(e.getMessage()));
+
+
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
@@ -89,7 +97,7 @@ public class HechosController {
 
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<HechoDTO> crearHecho(
+  public ResponseEntity<?> crearHecho(
       @RequestPart("hecho") HechoDTO hechoDTO,
       @RequestPart(value = "archivos", required = false) List<MultipartFile> archivos
   ) {
@@ -108,6 +116,9 @@ public class HechosController {
 
       HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO, emailUsuario);
       return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
+
+    }catch (FechaInvalidaException e) {
+        return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
     } catch (IOException e) {
       return ResponseEntity.badRequest().build();
     } catch (Exception e) {

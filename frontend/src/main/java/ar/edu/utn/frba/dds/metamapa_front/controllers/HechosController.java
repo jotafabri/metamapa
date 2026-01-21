@@ -92,33 +92,23 @@ public class HechosController {
 
   @PostMapping("/crear")
   public String crearHecho(
-      @ModelAttribute("hecho") HechoDTO hechoDTO,
-      @RequestParam(required = false) List<MultipartFile> archivos,
-      BindingResult bindingResult,
-      Model model,
-      RedirectAttributes redirectAttributes) {
-
+          @ModelAttribute("hecho") HechoDTO hechoDTO,
+          @RequestParam(required = false) List<MultipartFile> archivos,
+          Model model
+  ) {
     try {
       HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO, archivos);
+      model.addAttribute("hechoCreado", hechoCreado);
+      return "hechos/exito";
 
-      redirectAttributes.addFlashAttribute("hechoCreado", hechoCreado);
-      return "redirect:/hechos/exito";
     } catch (IllegalArgumentException ex) {
-      if ("FECHA_FUTURA".equals(ex.getMessage())) {
-        redirectAttributes.addFlashAttribute("toastMessage",
-            "No se pudo crear el hecho: la fecha es inválida (futura) ❌");
-        redirectAttributes.addFlashAttribute("toastType", "error");
-        return "redirect:/hechos/nuevo";
-      }
-
-      redirectAttributes.addFlashAttribute("toastMessage",
-          "No se pudo crear el hecho ❌");
-      redirectAttributes.addFlashAttribute("toastType", "error");
-      return "redirect:/hechos/nuevo";
+      model.addAttribute("error", ex.getMessage());
+      model.addAttribute("hecho", hechoDTO); // para no perder datos
+      model.addAttribute("titulo", "Contribuir");
+      return "hechos/contribuir";
     }
-
-
   }
+
 
   @GetMapping("/exito")
   public String mostrarExito(Model model, RedirectAttributes redirectAttributes) {

@@ -4,7 +4,9 @@ import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.RefreshTokenDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.ErrorDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,22 @@ public class WebApiCallerService {
               accessToken != null,
               refreshToken != null
       );
+
+      // 🔴 MANEJO DE ERROR 400 CON ERRORDTO
+      if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        try {
+          ObjectMapper mapper = new ObjectMapper();
+          ErrorDTO error = mapper.readValue(
+                  e.getResponseBodyAsString(),
+                  ErrorDTO.class
+          );
+          throw new IllegalArgumentException(error.getMensaje());
+        } catch (Exception parseError) {
+          throw new IllegalArgumentException(
+                  "Error de validación: " + e.getResponseBodyAsString()
+          );
+        }
+      }
 
       if (e.getStatusCode() == HttpStatus.UNAUTHORIZED && refreshToken != null) {
         log.warn("🔄 401 detectado → intentando refresh token");
@@ -223,10 +241,28 @@ public class WebApiCallerService {
               .retrieve()
               .bodyToMono(responseType)
               .block();
-    } catch (Exception e) {
-      throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
+
+    } catch (WebClientResponseException e) {
+
+      if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        try {
+          ObjectMapper mapper = new ObjectMapper();
+          ErrorDTO error = mapper.readValue(
+                  e.getResponseBodyAsString(),
+                  ErrorDTO.class
+          );
+          throw new IllegalArgumentException(error.getMensaje());
+        } catch (Exception parseError) {
+          throw new IllegalArgumentException(
+                  "Error de validación: " + e.getResponseBodyAsString()
+          );
+        }
+      }
+
+      throw new RuntimeException("Error en llamada al API", e);
     }
   }
+
 
   /**
    * Ejecuta una llamada HTTP POST multipart con autenticación
