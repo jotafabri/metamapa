@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa.controllers;
 
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.EstadisticasDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IEstadisticasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@RequestMapping("/estadisticas")
+@RequestMapping("/admin/estadisticas")
 @PreAuthorize("hasRole('ADMIN')")
 public class EstadisticasController {
 
@@ -27,6 +28,47 @@ public class EstadisticasController {
     return ResponseEntity.ok(java.util.Map.of("mensaje", "Estadísticas actualizadas correctamente"));
   }
 
+
+
+
+  @GetMapping("/dashboard")
+  public ResponseEntity<EstadisticasDTO> obtenerEstadisticasDashboard() {
+
+    EstadisticasDTO dto = new EstadisticasDTO();
+
+    dto.setCategoriaMasHechos(
+            estadisticasService.obtenerCategoriaConMasHechos()
+    );
+
+    dto.setSolicitudesSpam(
+            estadisticasService.obtenerCantidadSolicitudesSpam()
+    );
+
+    dto.setProvinciaMasHechos(
+            estadisticasService.obtenerProvinciaConMasHechosGlobal()
+    );
+
+    dto.setHoraMasHechos(
+            estadisticasService.obtenerHoraConMasHechosGlobal()
+    );
+
+
+
+    return ResponseEntity.ok(dto);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
   @GetMapping("/provincia-mas-hechos-coleccion")
   public ResponseEntity<Object> obtenerProvinciaConMasHechosEnColeccion(
       @RequestParam String coleccionHandle) {
@@ -77,5 +119,5 @@ public class EstadisticasController {
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=estadisticas_metamapa.csv")
         .contentType(MediaType.parseMediaType("application/csv"))
         .body(resource);
-  }
+  }*/
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.EstadisticasDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.input.UserInputDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.GraphQlCallerService;
@@ -391,6 +392,14 @@ private MultiValueMap<String, HttpEntity<?>> buildMultipart(
     webApiCallerService.get(metamapaServiceUrl + "/estadisticas/actualizar", null);
   }
 
+  public EstadisticasDTO obtenerEstadisticasDashboard() {
+    return webApiCallerService.get(
+            metamapaServiceUrl + "/admin/estadisticas/dashboard",
+            EstadisticasDTO.class
+    );
+  }
+
+/*
   public String obtenerProvinciaConMasHechosEnColeccion(String coleccionHandle) {
     String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-coleccion?coleccionHandle=" + coleccionHandle, String.class);
     if (response == null) {
@@ -430,7 +439,7 @@ private MultiValueMap<String, HttpEntity<?>> buildMultipart(
     }
     return response;
   }
-
+*/
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
     Boolean curado = filtros.getCurado();

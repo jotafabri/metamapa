@@ -80,6 +80,21 @@ public class EstadisticasService implements IEstadisticasService {
     return this.solicitudesRepository.countByEsSpamTrue();
   }
 
+
+
+  public String obtenerProvinciaConMasHechosGlobal() {
+    return hechosRepository.findProvinciaConMasHechosGlobal();
+  }
+
+  public Integer obtenerHoraConMasHechosGlobal() {
+    return hechosRepository.findHoraMasComunGlobal();
+  }
+
+
+
+
+
+
   @Override
   public Resource exportarEstadisticasCSV() {
     try {

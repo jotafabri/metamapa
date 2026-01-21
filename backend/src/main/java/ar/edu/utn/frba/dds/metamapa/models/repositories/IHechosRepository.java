@@ -52,6 +52,24 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
       "GROUP BY h.ubicacion.provincia " +
       "ORDER BY COUNT(h) DESC LIMIT 1")
   String findProvinciaConMasHechosPorCategoria(@Param("categoria") String categoria);
+
+
+
+  @Query("SELECT h.ubicacion.provincia FROM Hecho h " +
+          "WHERE h.eliminado = false AND LOWER(h.estado) = 'aceptada' " +
+          "AND h.ubicacion.provincia IS NOT NULL " +
+          "GROUP BY h.ubicacion.provincia " +
+          "ORDER BY COUNT(h) DESC LIMIT 1")
+  String findProvinciaConMasHechosGlobal();
+
+  @Query("SELECT EXTRACT(HOUR FROM h.fechaAcontecimiento) FROM Hecho h " +
+          "WHERE h.eliminado = false AND LOWER(h.estado) = 'aceptada' " +
+          "GROUP BY EXTRACT(HOUR FROM h.fechaAcontecimiento) " +
+          "ORDER BY COUNT(h) DESC LIMIT 1")
+  Integer findHoraMasComunGlobal();
+
+
+
 }
 
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.EstadisticasDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.*;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ public class AdminController {
   private final SolicitudesService solicitudesService;
   private final HechosService hechosService;
   private final FuenteService fuenteService;
+  private final EstadisticasService estadisticasService;
+
 
   // --- LOGIN ADMIN ---
 
@@ -78,6 +81,14 @@ public class AdminController {
     List<SolicitudEliminacionDTO> solicitudes = solicitudesService.obtenerSolicitudes();
     List<FuenteOutputDTO> fuentes = fuenteService.obtenerTodasLasFuentes();
 
+
+    //Estadisticas
+
+    EstadisticasDTO stats =
+            estadisticasService.obtenerEstadisticasDashboard();
+
+
+
     log.info("Fuentes obtenidas: {}", fuentes.size());
     if (!fuentes.isEmpty()) {
       log.info("Primera fuente - Tipo: {}, Ruta: {}", fuentes.get(0).getTipo(), fuentes.get(0).getRuta());
@@ -91,6 +102,13 @@ public class AdminController {
     model.addAttribute("solicitudes", solicitudes);
     model.addAttribute("totalSolicitudes", solicitudes.size());
     model.addAttribute("fuentes", fuentes);
+
+    //estadisticas
+    model.addAttribute("categoriaMasHechos", stats.getCategoriaMasHechos());
+    model.addAttribute("solicitudesSpam", stats.getSolicitudesSpam());
+    model.addAttribute("provinciaMasHechosColeccion", stats.getProvinciaMasHechos());
+    model.addAttribute("horaMasHechosCategoria", stats.getHoraMasHechos());
+
     model.addAttribute("adminPanel", true);
 
     return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html
