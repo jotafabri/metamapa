@@ -13,6 +13,9 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.utils.LectorCSV;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IFuenteService;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorLigero;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,13 @@ public class FuenteService implements IFuenteService {
 
     @Autowired
     private IHechosRepository hechosRepository;
+
+    @Autowired
+    private NormalizadorLigero normalizadorLigero;
+
+
+    private static final Logger log = LoggerFactory.getLogger(FuenteService.class);
+
 
     @Override
     public List<Fuente> listarFuentes() {
@@ -48,6 +58,10 @@ public class FuenteService implements IFuenteService {
                 if (dto.getRuta() != null && !dto.getRuta().isEmpty()) {
                     List<Hecho> hechos = new LectorCSV().leer(dto.getRuta());
                     for (Hecho hecho : hechos) {
+
+                        normalizadorLigero.normalizar(hecho);
+
+                        log.info("Normalizando hecho de fuente: {}", hecho.getTitulo());
                         hecho.aceptar();
                         hecho.setFuente(fuente);
                         hecho.setOrigen(Origen.DATASET);
