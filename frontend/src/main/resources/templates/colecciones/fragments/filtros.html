@@ -3,8 +3,12 @@
         <h3 class="results-title">Filtros</h3>
     </div>
     <div class="hechos-list">
-        <form th:action="@{/colecciones/{handle}(handle=${handle})}" th:object="${filtros}" method="post">
-            <div class="curated-container" id="curatedContainer"
+        <form th:action="@{/colecciones/{handle}(handle=${handle})}"
+              th:object="${filtros}"
+              method="get"
+              id="filterForm">
+
+        <div class="curated-container" id="curatedContainer"
                  th:classappend="${filtros.curado != null && filtros.curado} ? 'active' : ''">
                 <div class="curated-label">
                     <label for="curado" class="curated-label-text">Búsqueda curada</label>
