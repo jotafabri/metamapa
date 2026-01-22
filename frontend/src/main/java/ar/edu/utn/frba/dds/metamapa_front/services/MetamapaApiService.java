@@ -340,20 +340,21 @@ private MultiValueMap<String, HttpEntity<?>> buildMultipart(
   }
 
 
-  public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
+  public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
     String razonEscapada = solicitudDTO.getRazon()
-        .replace("\\", "\\\\")
-        .replace("\"", "\\\"")
-        .replace("\n", "\\n");
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n");
 
     String query = String.format(
-        "mutation { crearSolicitud(solicitud: { idHecho: %s, razon: \"\"\"%s\"\"\" }) { id razon idHecho estado } }",
-        solicitudDTO.getIdHecho().toString(),
-        razonEscapada
+            "mutation { crearSolicitud(solicitud: { idHecho: %s, razon: \"\"\"%s\"\"\" }) { id razon idHecho estado } }",
+            solicitudDTO.getIdHecho(),
+            razonEscapada
     );
 
-    graphQlCallerService.executePublicQuery(query, SolicitudEliminacionDTO.class);
+    return graphQlCallerService.executePublicQuery(query, SolicitudEliminacionDTO.class);
   }
+
 
   public void aceptarSolicitudEliminacion(Long id) {
     String query = "mutation { aceptarSolicitud(solicitud: { id: \"" + id.toString() + "\" }) { id razon idHecho estado } }";

@@ -25,4 +25,6 @@ public interface IAgregacionService {
   void aprobarSolicitudById(Long id);
 
   void rechazarSolicitudById(Long id);
+
+  Long contarSolicitudesSpam();
 }

@@ -70,6 +70,12 @@ public class AgregacionService implements IAgregacionService {
     return SolicitudEliminacionOutputDTO.fromSolicitud(solicitud);
   }
 
+  @Override
+  public Long contarSolicitudesSpam() {
+    return solicitudesRepository.countByEsSpamTrue();
+  }
+
+
   @Transactional
   public void refrescarColecciones() {
     List<Coleccion> colecciones = coleccionesRepository.findAll();

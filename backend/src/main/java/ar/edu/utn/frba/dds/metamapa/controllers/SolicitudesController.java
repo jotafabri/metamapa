@@ -25,16 +25,15 @@ public class SolicitudesController {
   private IAgregacionService agregacionService;
 
   @MutationMapping
-  public ResponseEntity<SolicitudEliminacionOutputDTO> crearSolicitud(@Argument SolicitudEliminacionInput solicitud) {
-    try {
-      SolicitudEliminacionOutputDTO solicitudCreada = agregacionService.crearSolicitud(solicitud.idHecho(), solicitud.razon());
-      return ResponseEntity.status(HttpStatus.CREATED).body(solicitudCreada);
-    } catch (NotFoundException e) {
-      return ResponseEntity.notFound().build();
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().build();
-    }
+  public SolicitudEliminacionOutputDTO crearSolicitud(
+          @Argument SolicitudEliminacionInput solicitud) {
+
+    return agregacionService.crearSolicitud(
+            solicitud.idHecho(),
+            solicitud.razon()
+    );
   }
+
 
 
   @QueryMapping
