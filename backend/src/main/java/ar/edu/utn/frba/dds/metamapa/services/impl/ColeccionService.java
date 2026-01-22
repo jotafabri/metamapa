@@ -60,6 +60,7 @@ public class ColeccionService implements IColeccionService {
         .navegar(filtros.getList(), filtros.getCurado())
         .stream()
         .filter(h -> h.getEstado().equals(Estado.ACEPTADA))
+        .filter(h -> Boolean.FALSE.equals(h.getEliminado()))
         .map(HechoDTO::fromHecho)
         .toList();
   }
