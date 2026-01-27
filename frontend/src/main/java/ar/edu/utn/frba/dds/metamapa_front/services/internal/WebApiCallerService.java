@@ -78,20 +78,27 @@ public class WebApiCallerService {
 
       // 🔴 MANEJO DE ERROR 400 CON ERRORDTO
       if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
-        try {
-          ObjectMapper mapper = new ObjectMapper();
-          ErrorDTO error = mapper.readValue(
-                  e.getResponseBodyAsString(),
-                  ErrorDTO.class
-          );
-          throw new IllegalArgumentException(error.getMensaje());
-        } catch (Exception parseError) {
-          throw new IllegalArgumentException(
-                  "Error de validación: " + e.getResponseBodyAsString()
-          );
-        }
+        throw new IllegalArgumentException(
+                extraerMensaje(
+                        e.getResponseBodyAsString(),
+                        "Error de validación en los datos ingresados"
+                )
+        );
       }
 
+
+      // 🔴 409 CONFLICT (duplicados, conflictos de negocio)
+      if (e.getStatusCode() == HttpStatus.CONFLICT) {
+        throw new IllegalArgumentException(
+                extraerMensaje(
+                        e.getResponseBodyAsString(),
+                        "Conflicto con los datos enviados"
+                )
+        );
+      }
+
+
+      // 🔴 401 UNAUTHORIZED → refresh
       if (e.getStatusCode() == HttpStatus.UNAUTHORIZED && refreshToken != null) {
         log.warn("🔄 401 detectado → intentando refresh token");
 
@@ -105,6 +112,7 @@ public class WebApiCallerService {
         }
       }
 
+      // 🔴 404 NOT FOUND
       if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
         throw new NotFoundException(e.getMessage());
       }
@@ -245,21 +253,27 @@ public class WebApiCallerService {
     } catch (WebClientResponseException e) {
 
       if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
-        try {
-          ObjectMapper mapper = new ObjectMapper();
-          ErrorDTO error = mapper.readValue(
-                  e.getResponseBodyAsString(),
-                  ErrorDTO.class
-          );
-          throw new IllegalArgumentException(error.getMensaje());
-        } catch (Exception parseError) {
-          throw new IllegalArgumentException(
-                  "Error de validación: " + e.getResponseBodyAsString()
-          );
-        }
+        throw new IllegalArgumentException(
+                extraerMensaje(
+                        e.getResponseBodyAsString(),
+                        "Error de validación en los datos ingresados"
+                )
+        );
       }
 
+
+      if (e.getStatusCode() == HttpStatus.CONFLICT) {
+        throw new IllegalArgumentException(
+                extraerMensaje(
+                        e.getResponseBodyAsString(),
+                        "Conflicto con los datos enviados"
+                )
+        );
+      }
+
+
       throw new RuntimeException("Error en llamada al API", e);
+
     }
   }
 
@@ -509,4 +523,20 @@ public class WebApiCallerService {
   public boolean tieneRefreshToken() {
     return getRefreshTokenFromSession() != null;
   }
+
+
+  private String extraerMensaje(String responseBody, String fallback) {
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      ErrorDTO error = mapper.readValue(responseBody, ErrorDTO.class);
+      if (error.getMensaje() != null && !error.getMensaje().isBlank()) {
+        return error.getMensaje();
+      }
+    } catch (Exception ignored) {
+    }
+    return fallback;
+  }
+
+
+
 }

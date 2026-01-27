@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -67,6 +69,21 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
           "GROUP BY EXTRACT(HOUR FROM h.fechaAcontecimiento) " +
           "ORDER BY COUNT(h) DESC LIMIT 1")
   Integer findHoraMasComunGlobal();
+
+
+  @Query("""
+    SELECT h FROM Hecho h 
+    WHERE LOWER(h.titulo) = LOWER(:titulo)
+    AND h.fuente = :fuente
+    AND h.eliminado = false
+    """)
+  Optional<Hecho> findDuplicadoEnFuente(
+          @Param("titulo") String titulo,
+          @Param("fuente") Fuente fuente
+  );
+
+
+
 
 
 

@@ -102,11 +102,27 @@ public class HechosController {
       return "hechos/exito";
 
     } catch (IllegalArgumentException ex) {
-      model.addAttribute("error", ex.getMessage());
-      model.addAttribute("hecho", hechoDTO); // para no perder datos
+
+      String mensaje = ex.getMessage();
+
+      if (mensaje == null || mensaje.isBlank()) {
+        mensaje = "Ocurrió un error al crear el hecho. Intentá nuevamente.";
+      }
+
+      else if (mensaje.contains("Ya existe un hecho con ese título")) {
+        mensaje = "Ya existe un hecho con ese título en esta fuente. Probá con otro título o revisá si ya fue reportado.";
+      }
+
+      else if (mensaje.contains("constraint") || mensaje.contains("null") || mensaje.contains("SQL")) {
+        mensaje = "Error interno al procesar el hecho. Revisá los datos ingresados.";
+      }
+
+      model.addAttribute("error", mensaje);
+      model.addAttribute("hecho", hechoDTO);
       model.addAttribute("titulo", "Contribuir");
       return "hechos/contribuir";
     }
+
   }
 
 
@@ -177,6 +193,18 @@ public class HechosController {
       redirectAttributes.addFlashAttribute("toastMessage", "Hecho actualizado correctamente ✅");
       redirectAttributes.addFlashAttribute("toastType", "success");
       return "redirect:/hechos/me";
+    } catch (IllegalArgumentException e) {
+      String mensaje = e.getMessage();
+
+      if (mensaje != null && mensaje.contains("Ya existe un hecho con ese título")) {
+        mensaje = "Ya existe un hecho con ese título en esta fuente. Usá otro título.";
+      } else {
+        mensaje = "Error al actualizar el hecho.";
+      }
+
+      redirectAttributes.addFlashAttribute("toastMessage", mensaje);
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/hechos/" + id + "/editar";
     } catch (NotFoundException e) {
       return "redirect:/404";
     } catch (Exception e) {
@@ -186,6 +214,5 @@ public class HechosController {
       return "redirect:/hechos/" + id + "/editar";
     }
   }
-
 
 }

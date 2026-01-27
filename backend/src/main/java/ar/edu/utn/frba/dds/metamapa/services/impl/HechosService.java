@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.FechaInvalidaException;
+import ar.edu.utn.frba.dds.metamapa.exceptions.HechoDuplicadoException;
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
@@ -104,6 +106,11 @@ public class HechosService implements IHechosService {
   }
 
   public HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO, String emailUsuario) {
+
+    if (hechoDTO.getFechaAcontecimiento() == null) {
+      throw new FechaInvalidaException("La fecha de acontecimiento es obligatoria");
+    }
+
     Hecho hecho = this.crearHecho(
         hechoDTO.getTitulo(),
         hechoDTO.getDescripcion(),
@@ -134,8 +141,20 @@ public class HechosService implements IHechosService {
 
     hecho = normalizadorFuerte.normalizar(hecho);
 
+    Optional<Hecho> duplicado = hechosRepository.findDuplicadoEnFuente(
+            hecho.getTitulo(),
+            hecho.getFuente()   // funciona para cualquier subtipo de Fuente
+    );
+
+    if (duplicado.isPresent()) {
+      throw new HechoDuplicadoException(
+              "Ya existe un hecho con ese título en esta fuente"
+      );
+    }
+
     Hecho hechoGuardado = hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
+
   }
 
   @Override
@@ -208,6 +227,11 @@ public class HechosService implements IHechosService {
   private Hecho realizarActualizacion(Long id, HechoDTO hechoDTO) {
     Hecho hecho = intentarRecuperarHecho(id);
 
+    if (hechoDTO.getFechaAcontecimiento() == null) {
+      throw new FechaInvalidaException("La fecha de acontecimiento es obligatoria");
+    }
+
+
     hecho.setTitulo(hechoDTO.getTitulo());
     hecho.setDescripcion(hechoDTO.getDescripcion());
     hecho.setCategoria(hechoDTO.getCategoria());
@@ -216,6 +240,16 @@ public class HechosService implements IHechosService {
     hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
 
     hecho = normalizadorFuerte.normalizar(hecho);
+
+    Optional<Hecho> duplicado = hechosRepository.findDuplicadoEnFuente(
+            hecho.getTitulo(),
+            hecho.getFuente()
+    );
+
+    if (duplicado.isPresent() && !duplicado.get().getId().equals(hecho.getId())) {
+      throw new HechoDuplicadoException("Ya existe otro hecho con ese título en esta fuente");
+    }
+
 
     return hecho;
   }

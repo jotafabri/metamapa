@@ -105,15 +105,5 @@ public class Coleccion extends Persistente {
 
   public void actualizarCurados() {
     this.hechosConsensuados = this.algoritmoDeConsenso.filtrarConsensuados(this.hechos, this.fuentes);
-    // Set<Hecho> nuevosConsensuados = this.hechos.stream()
-    // .filter(h -> this.algoritmoDeConsenso.cumple(h, this.fuentes))
-    // .collect(Collectors.toSet());
-    //
-    // Set<Hecho> actuales = new HashSet<>(this.hechosConsensuados);
-    //
-    // if (!actuales.equals(nuevosConsensuados)) {
-    // this.hechosConsensuados.clear();
-    // this.hechosConsensuados.addAll(nuevosConsensuados);
-    // }
   }
 }
