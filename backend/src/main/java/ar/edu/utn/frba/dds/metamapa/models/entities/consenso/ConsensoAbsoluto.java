@@ -8,26 +8,29 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 
 public class ConsensoAbsoluto implements EstrategiaConsenso {
+
   @Override
   public boolean cumple(Hecho hecho, List<Fuente> fuentes) {
-    return fuentes.stream().allMatch(f -> f.getHechos().contains(hecho)); // TODO revisar que el hecho sea parecido
+    return fuentes.stream()
+            .allMatch(f ->
+                    f.getHechos().stream()
+                            .anyMatch(h -> sonMismoHecho(h, hecho))
+            );
   }
 
   @Override
   public List<Hecho> filtrarConsensuados(List<Hecho> hechos, List<Fuente> fuentes) {
-    Set<String> titulosEnTodasFuentes = fuentes.stream()
-        .map(f -> f.getHechos().stream()
-            .map(h -> h.getTitulo().toLowerCase())
-            .collect(Collectors.toSet()))
-        .reduce((set1, set2) -> {
-          set1.retainAll(set2);
-          return set1;
-        })
-        .orElse(Set.of());
-
     return hechos.stream()
-        .filter(h -> titulosEnTodasFuentes.contains(h.getTitulo().toLowerCase()))
-        .toList();
+            .filter(h -> cumple(h, fuentes))
+            .toList();
+  }
+
+  private boolean sonMismoHecho(Hecho h1, Hecho h2) {
+    if (h1.getTitulo() == null || h2.getTitulo() == null) return false;
+    if (h1.getCategoria() == null || h2.getCategoria() == null) return false;
+
+    return h1.getTitulo().equalsIgnoreCase(h2.getTitulo())
+            && h1.getCategoria().equalsIgnoreCase(h2.getCategoria());
   }
 
   @Override

@@ -165,16 +165,24 @@ public class ColeccionesController {
 
   // localhost:8080/colecciones/AccidentesDeTransito/hechos?=...
   @GetMapping("/{handle}/hechos")
-  public ResponseEntity<List<HechoDTO>> getHechosByHandle(@PathVariable String handle, @ModelAttribute HechoFiltroDTO filtros) {
+  public ResponseEntity<List<HechoDTO>> getHechosByHandle(
+          @PathVariable String handle,
+          @ModelAttribute HechoFiltroDTO filtros) {
     try {
+      log.info("💻 Request GET /colecciones/{}/hechos recibida con filtros: {}", handle, filtros);
+
       List<HechoDTO> todosLosHechos = coleccionService.getHechosByHandle(handle, filtros);
+      log.info("🌐 Coleccion '{}' devuelve {} hechos antes de paginar", handle, todosLosHechos.size());
+
       List<HechoDTO> hechosPaginados = paginarHechos(todosLosHechos, filtros.getPage(), filtros.getSize());
+      log.info("📄 Hechos paginados (page={}, size={}): {} elementos", filtros.getPage(), filtros.getSize(), hechosPaginados.size());
+
       return ResponseEntity.ok(hechosPaginados);
     } catch (NotFoundException e) {
-      log.error(e.getMessage());
+      log.error("❌ Coleccion '{}' no encontrada: {}", handle, e.getMessage());
       return ResponseEntity.notFound().build();
     } catch (Exception e) {
-      log.error(e.getMessage());
+      log.error("⚠ Error al obtener hechos de la coleccion '{}': {}", handle, e.getMessage(), e);
       return ResponseEntity.badRequest().build();
     }
   }
@@ -182,16 +190,25 @@ public class ColeccionesController {
   @GetMapping("/{handle}/ubicaciones")
   public ResponseEntity<DatosGeograficosDTO> getDatosGeograficosByHandle(@PathVariable String handle) {
     try {
+      log.info("💻 Request GET /colecciones/{}/ubicaciones recibida", handle);
+
       DatosGeograficosDTO ubicaciones = coleccionService.obtenerDatosGeograficos(handle);
+      log.info("🌐 Datos geográficos de '{}': paises={}, provincias={}, localidades={}",
+              handle,
+              ubicaciones.getPaises().size(),
+              ubicaciones.getProvincias().size(),
+              ubicaciones.getLocalidades().size());
+
       return ResponseEntity.ok(ubicaciones);
     } catch (NotFoundException e) {
-      log.error(e.getMessage());
+      log.error("❌ Coleccion '{}' no encontrada: {}", handle, e.getMessage());
       return ResponseEntity.notFound().build();
     } catch (Exception e) {
-      log.error(e.getMessage());
+      log.error("⚠ Error al obtener datos geograficos de la coleccion '{}': {}", handle, e.getMessage(), e);
       return ResponseEntity.badRequest().build();
     }
   }
+
 
   // localhost:8080/colecciones/admin/{handle}/hechos
   @GetMapping("/admin/{handle}/hechos")

@@ -3,6 +3,8 @@ package ar.edu.utn.frba.dds.metamapa_front.services;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -81,35 +83,7 @@ public class MetamapaApiService {
       throw new RuntimeException("Error de conexión con el servicio de autenticación: " + e.getMessage(), e);
     }
   }
-/*
-  public RolesPermisosDTO getRolesPermisos(String email) {
-    try {
-      // Llamar al nuevo endpoint /api/auth/user con el email
-      Map<String, Object> response = webClient
-              .post()
-              .uri(metamapaServiceUrl + "/auth/user")
-              .bodyValue(Map.of("email", email)).retrieve().bodyToMono(Map.class)
-              .block();
 
-      if (response == null) {
-        throw new RuntimeException("Usuario no encontrado");
-      }
-
-      RolesPermisosDTO rolesPermisos = new RolesPermisosDTO();
-
-      rolesPermisos.setEmail((String) response.get("email"));
-      String rolStr = (String) response.get("rol");
-      rolesPermisos.setRol(Rol.valueOf(rolStr));
-      rolesPermisos.setPermisos(List.of());
-
-      return rolesPermisos;
-
-    } catch (Exception e) {
-      log.error(e.getMessage());
-      throw new RuntimeException("Error al obtener roles y permisos: " + e.getMessage(), e);
-    }
-  }
-  */
 
   public UserDTO getRoles(String accessToken) {
     try {
@@ -379,15 +353,6 @@ private MultiValueMap<String, HttpEntity<?>> buildMultipart(
     webApiCallerService.postPublic(metamapaServiceUrl + "/auth/registro", registroRequest, RegistroRequest.class);
   }
 
-  /*
-  public AuthResponseDTO autenticar(LoginRequest loginRequest) {
-    AuthResponseDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/auth/login", loginRequest, AuthResponseDTO.class);
-    if (response == null) {
-      throw new RuntimeException("Error al iniciar sesión en el servicio externo");
-    }
-    return response;
-  }
-*/
 
   public void actualizarEstadisticas() {
     webApiCallerService.get(metamapaServiceUrl + "/estadisticas/actualizar", null);
@@ -400,74 +365,39 @@ private MultiValueMap<String, HttpEntity<?>> buildMultipart(
     );
   }
 
-/*
-  public String obtenerProvinciaConMasHechosEnColeccion(String coleccionHandle) {
-    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-coleccion?coleccionHandle=" + coleccionHandle, String.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public String obtenerCategoriaConMasHechos() {
-    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/categoria-mas-hechos", String.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public String obtenerProvinciaConMasHechosDeCategoria(String categoria) {
-    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-categoria?categoria=" + categoria, String.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public Integer obtenerHoraConMasHechosDeCategoria(String categoria) {
-    Integer response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/hora-mas-hechos-categoria?categoria=" + categoria, Integer.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public Long obtenerCantidadSolicitudesSpam() {
-    Long response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/solicitudes-spam", Long.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-*/
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
-    Boolean curado = filtros.getCurado();
-    Integer page = filtros.getPage();
-    Integer size = filtros.getSize();
+    // URL base con el parámetro curado
+    Boolean curado = filtros.getCurado() != null ? filtros.getCurado() : false;
+    StringBuilder url = new StringBuilder(metamapaServiceUrl)
+            .append("/colecciones/")
+            .append(handle)
+            .append("/hechos")
+            .append("?curado=").append(curado);
 
-    String baseUrl = metamapaServiceUrl + "/colecciones/" + handle + "/hechos" + "?curado=" + curado.toString();
-    StringBuilder url = new StringBuilder(baseUrl);
-
-    // Agregar parámetros de paginación
-    if (page != null) {
-      url.append("&page=").append(page);
+    // Paginación
+    if (filtros.getPage() != null) {
+      url.append("&page=").append(filtros.getPage());
     }
-    if (size != null) {
-      url.append("&size=").append(size);
+    if (filtros.getSize() != null) {
+      url.append("&size=").append(filtros.getSize());
     }
 
+    // Campos de filtros adicionales (evitando duplicados)
     for (Field field : HechoFiltroDTO.class.getDeclaredFields()) {
       field.setAccessible(true);
       try {
         Object value = field.get(filtros);
-        if (value != null) {
-          url.append("&").append(field.getName()).append("=").append(value);
+        String name = field.getName();
+        if (value != null && !name.equals("curado") && !name.equals("page") && !name.equals("size")) {
+          String encodedValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+          url.append("&").append(name).append("=").append(encodedValue);
         }
       } catch (IllegalAccessException ignored) {
       }
     }
+
+    log.info("💻 Front enviando GET a: {}", url);
     return url.toString();
   }
 

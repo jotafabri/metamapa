@@ -42,9 +42,11 @@ function navigatePage(direction) {
     if (provincia) url.searchParams.set('provincia', provincia);
     if (localidad) url.searchParams.set('localidad', localidad);
 
-    if (curado) url.searchParams.set('curado', true);
-    if (soloConMultimedia) url.searchParams.set('soloConMultimedia', true);
-    if (soloConContribuyente) url.searchParams.set('soloConContribuyente', true);
+
+    url.searchParams.set('curado', curado);
+    url.searchParams.set('soloConMultimedia', soloConMultimedia);
+    url.searchParams.set('soloConContribuyente', soloConContribuyente);
+
 
     // Navegar
     window.location.href = url.toString();

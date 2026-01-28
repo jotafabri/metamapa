@@ -199,24 +199,30 @@ public class WebApiCallerService {
    * Ejecuta una llamada HTTP GET pública que retorna una lista (sin autenticación)
    */
   public <T> java.util.List<T> getListPublic(String url, Class<T> responseType) {
+    log.info("🌐 Enviando GET al backend: {}", url); // log de envío
     try {
+      List<T> result;
       if (responseType == String.class) {
-        return (List<T>) webClient
+        result = (List<T>) webClient
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<String>>() {
-                })
+                .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
+                .block();
+      } else {
+        result = webClient
+                .get()
+                .uri(url)
+                .retrieve()
+                .bodyToFlux(responseType)
+                .collectList()
                 .block();
       }
-      return webClient
-              .get()
-              .uri(url)
-              .retrieve()
-              .bodyToFlux(responseType)
-              .collectList()
-              .block();
+
+      log.info("✅ Respuesta recibida del backend: {} elementos", result != null ? result.size() : 0);
+      return result;
     } catch (Exception e) {
+      log.error("❌ Error en llamada al API: {}", e.getMessage(), e);
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
     }
   }
