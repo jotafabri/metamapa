@@ -390,8 +390,9 @@ private MultiValueMap<String, HttpEntity<?>> buildMultipart(
         Object value = field.get(filtros);
         String name = field.getName();
         if (value != null && !name.equals("curado") && !name.equals("page") && !name.equals("size")) {
-          String encodedValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
-          url.append("&").append(name).append("=").append(encodedValue);
+          //String encodedValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+          //url.append("&").append(name).append("=").append(encodedValue);
+          url.append("&").append(name).append("=").append(value.toString());
         }
       } catch (IllegalAccessException ignored) {
       }
