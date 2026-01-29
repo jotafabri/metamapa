@@ -18,7 +18,7 @@ public class AlgorithmScheduler {
   }
 
   // Ejecuta cada 30 segundos pero desfasado 15s para no coincidir
-  @Scheduled(cron = "15/30 * * * * *")
+  //@Scheduled(cron = "15/30 * * * * *")
   public void ejecutarAlgoritmos() {
     log.info("Scheduler2 - Ejecutando Algoritmo de Consenso.");
     this.algoritmoConsensoService.ejecutarAlgoritmos();
