@@ -18,7 +18,7 @@ public class RefreshScheduler {
   }
 
   // Se ejecuta cada 1 minuto
-  @Scheduled(cron = "0 * * * * *")
+  //@Scheduled(cron = "0 * * * * *")
   public void refrescarColecciones() {
     log.info("Scheduler1 - Refrescando colecciones automáticamente...");
     servicioDeAgregacion.refrescarColecciones();
