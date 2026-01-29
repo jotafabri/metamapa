@@ -21,7 +21,7 @@ public class MasterScheduller {
         this.algoritmoConsensoService = algoritmoConsensoService;
     }
 
-    @Scheduled(cron = "0 */5 * * * *") // cada 5 minutos, por ejemplo
+    @Scheduled(cron = "0 */3 * * * *") // cada 3 minutos, por ejemplo
     public void ejecutarTodo() {
         log.info("MasterScheduler - Iniciando refresco de colecciones");
         agregacionService.refrescarColecciones();
