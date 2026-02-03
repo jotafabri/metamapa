@@ -18,9 +18,10 @@ public class SolicitudesService {
     return metamapaApiService.obtenerSolicitudes();
   }
 
-  public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
-    metamapaApiService.crearSolicitudEliminacion(solicitudDTO);
+  public SolicitudEliminacionDTO crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
+    return metamapaApiService.crearSolicitudEliminacion(solicitudDTO);
   }
+
 
   public void aceptarSolicitud(Long id) {
     metamapaApiService.aceptarSolicitudEliminacion(id);

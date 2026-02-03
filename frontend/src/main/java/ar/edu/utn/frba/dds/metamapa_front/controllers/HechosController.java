@@ -8,7 +8,6 @@ import ar.edu.utn.frba.dds.metamapa_front.dtos.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa_front.dtos.SolicitudEliminacionDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.HechosService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,7 @@ public class HechosController {
       Long currentUserId = null;
       boolean isAdmin = false;
       boolean puedeEditar = hecho.getFechaCarga() != null &&
-              ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
+          ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
 
       model.addAttribute("hecho", hecho);
       model.addAttribute("titulo", "Detalle del hecho");
@@ -93,33 +92,55 @@ public class HechosController {
 
   @PostMapping("/crear")
   public String crearHecho(
-      @ModelAttribute("hecho") HechoDTO hechoDTO,
-      @RequestParam(required = false) List<MultipartFile> archivos,
-      BindingResult bindingResult,
-      Model model,
-      RedirectAttributes redirectAttributes) {
-
+          @ModelAttribute("hecho") HechoDTO hechoDTO,
+          @RequestParam(required = false) List<MultipartFile> archivos,
+          Model model
+  ) {
     try {
-      hechosService.crearHecho(hechoDTO, archivos);
+      HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO, archivos);
+      model.addAttribute("hechoCreado", hechoCreado);
+      return "hechos/exito";
 
-      redirectAttributes.addFlashAttribute("toastMessage", "Hecho creado con éxito ✅");
-      redirectAttributes.addFlashAttribute("toastType", "success");
-      return "redirect:/colecciones";
     } catch (IllegalArgumentException ex) {
-      if ("FECHA_FUTURA".equals(ex.getMessage())) {
-        redirectAttributes.addFlashAttribute("toastMessage",
-                "No se pudo crear el hecho: la fecha es inválida (futura) ❌");
-        redirectAttributes.addFlashAttribute("toastType", "error");
-        return "redirect:/hechos/nuevo";
+
+      String mensaje = ex.getMessage();
+
+      if (mensaje == null || mensaje.isBlank()) {
+        mensaje = "Ocurrió un error al crear el hecho. Intentá nuevamente.";
       }
 
-      redirectAttributes.addFlashAttribute("toastMessage",
-              "No se pudo crear el hecho ❌");
-      redirectAttributes.addFlashAttribute("toastType", "error");
-      return "redirect:/hechos/nuevo";
+      else if (mensaje.contains("Ya existe un hecho con ese título")) {
+        mensaje = "Ya existe un hecho con ese título en esta fuente. Probá con otro título o revisá si ya fue reportado.";
+      }
+
+      else if (mensaje.contains("constraint") || mensaje.contains("null") || mensaje.contains("SQL")) {
+        mensaje = "Error interno al procesar el hecho. Revisá los datos ingresados.";
+      }
+
+      model.addAttribute("error", mensaje);
+      model.addAttribute("hecho", hechoDTO);
+      model.addAttribute("titulo", "Contribuir");
+      return "hechos/contribuir";
     }
 
+  }
 
+
+  @GetMapping("/exito")
+  public String mostrarExito(Model model, RedirectAttributes redirectAttributes) {
+    if (!model.containsAttribute("hechoCreado")) {
+      redirectAttributes.addFlashAttribute("toastMessage", "No hay hecho para mostrar");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/";
+    }
+
+    HechoDTO hechoCreado = (HechoDTO) model.getAttribute("hechoCreado");
+
+    model.addAttribute("hecho", hechoCreado);
+    model.addAttribute("titulo", "Hecho creado con éxito");
+    model.addAttribute("backendUrl", backendUrl);
+
+    return "hechos/exito";
   }
 
 
@@ -129,7 +150,7 @@ public class HechosController {
     try {
       log.info("Intentando editar hecho con id: {}", id);
       HechoDTO hechoDTO = hechosService.getHechoById(id)
-              .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+          .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
 
       model.addAttribute("hecho", hechoDTO);
       model.addAttribute("titulo", "Editar hecho");
@@ -143,21 +164,25 @@ public class HechosController {
   @PostMapping("/{id}/actualizar")
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   public String actualizarHecho(
-          @PathVariable Long id,
-          @ModelAttribute("hecho") HechoDTO hechoDTO,
-          @RequestParam(required = false) List<MultipartFile> archivos,
-          BindingResult bindingResult,
-          RedirectAttributes redirectAttributes,
-          Model model) {
+      @PathVariable Long id,
+      @ModelAttribute("hecho") HechoDTO hechoDTO,
+      @RequestParam(required = false) List<MultipartFile> archivos,
+      BindingResult bindingResult,
+      RedirectAttributes redirectAttributes,
+      org.springframework.security.core.Authentication authentication,
+      Model model) {
 
     try {
 
       HechoDTO hechoOriginal = hechosService.getHechoById(id)
-              .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+          .orElseThrow(() -> new NotFoundException("Hecho no encontrado"));
+
+      Boolean isAdmin = authentication.getAuthorities().stream()
+          .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
       // Verificación del plazo de 7 días
-      if (hechoOriginal.getFechaCarga() != null &&
-              ChronoUnit.DAYS.between(hechoOriginal.getFechaCarga(), LocalDateTime.now()) > 7) {
+      if (!isAdmin && hechoOriginal.getFechaCarga() != null &&
+          ChronoUnit.DAYS.between(hechoOriginal.getFechaCarga(), LocalDateTime.now()) > 7) {
         redirectAttributes.addFlashAttribute("toastMessage", "Este hecho ya no se puede editar ❌");
         redirectAttributes.addFlashAttribute("toastType", "error");
         return "redirect:/hechos/" + id;
@@ -168,6 +193,18 @@ public class HechosController {
       redirectAttributes.addFlashAttribute("toastMessage", "Hecho actualizado correctamente ✅");
       redirectAttributes.addFlashAttribute("toastType", "success");
       return "redirect:/hechos/me";
+    } catch (IllegalArgumentException e) {
+      String mensaje = e.getMessage();
+
+      if (mensaje != null && mensaje.contains("Ya existe un hecho con ese título")) {
+        mensaje = "Ya existe un hecho con ese título en esta fuente. Usá otro título.";
+      } else {
+        mensaje = "Error al actualizar el hecho.";
+      }
+
+      redirectAttributes.addFlashAttribute("toastMessage", mensaje);
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/hechos/" + id + "/editar";
     } catch (NotFoundException e) {
       return "redirect:/404";
     } catch (Exception e) {
@@ -177,7 +214,5 @@ public class HechosController {
       return "redirect:/hechos/" + id + "/editar";
     }
   }
-
-
 
 }

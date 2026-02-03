@@ -3,11 +3,15 @@ package ar.edu.utn.frba.dds.metamapa_front.services;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.EstadisticasDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.UserInputDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.GraphQlCallerService;
 import ar.edu.utn.frba.dds.metamapa_front.services.internal.WebApiCallerService;
@@ -80,30 +84,34 @@ public class MetamapaApiService {
     }
   }
 
-  public RolesPermisosDTO getRolesPermisos(String email) {
-    try {
-      // Llamar al nuevo endpoint /api/auth/user con el email
-      Map<String, Object> response = webClient.post().uri(metamapaServiceUrl + "/auth/user").bodyValue(Map.of("email", email)).retrieve().bodyToMono(Map.class).block();
 
-      if (response == null) {
+  public UserDTO getRoles(String accessToken) {
+    try {
+      UserInputDTO user = webClient
+              .get()
+              .uri(metamapaServiceUrl + "/auth/user")
+              .header("Authorization", "Bearer " + accessToken)
+              .retrieve()
+              .bodyToMono(UserInputDTO.class)
+              .block();
+
+      if (user == null) {
         throw new RuntimeException("Usuario no encontrado");
       }
 
-      // Convertir la respuesta a RolesPermisosDTO
-      RolesPermisosDTO rolesPermisos = new RolesPermisosDTO();
-      // El rol viene como string del backend (ej: "ADMIN" o "USER")
-      String rolStr = (String) response.get("rol");
-      // Aquí asumimos que RolesPermisosDTO tiene un método setRol que acepta un enum
-      // Por ahora devolvemos un DTO simple sin permisos
-      rolesPermisos.setRol(Rol.valueOf(rolStr));
-      rolesPermisos.setPermisos(List.of()); // Sin permisos por ahora
+      return UserDTO.builder()
+              .email(user.getEmail())
+              .rol(user.getRol())
+              .permisos(List.of())
+              .build();
 
-      return rolesPermisos;
     } catch (Exception e) {
-      log.error(e.getMessage());
-      throw new RuntimeException("Error al obtener roles y permisos: " + e.getMessage(), e);
+      throw new RuntimeException("Error al obtener roles y permisos", e);
     }
   }
+
+
+
 
   public List<ColeccionDTO> getAllColecciones() {
     return retrieveColecciones("/colecciones");
@@ -144,6 +152,11 @@ public class MetamapaApiService {
     if (response == null) {
       throw new RuntimeException("Error al crear coleccion en el servicio externo");
     }
+
+    if (coleccionDTO.getFuentesIds() != null && !coleccionDTO.getFuentesIds().isEmpty()) {
+      reemplazarFuentesColeccion(response.getHandle(), coleccionDTO.getFuentesIds());
+    }
+
     return response;
   }
 
@@ -158,7 +171,6 @@ public class MetamapaApiService {
       throw new RuntimeException("Error al actualizar coleccion en el servicio externo");
     }
 
-    reemplazarFuentesColeccion(handle, coleccionDTO.getFuentesIds());
 
     return response;
   }
@@ -191,84 +203,73 @@ public class MetamapaApiService {
 
 
   public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
-    if (archivos == null || archivos.isEmpty()) {
-      return crearHechoSinArchivos(hechoDTO);
+    if (archivos == null || archivos.stream().allMatch(MultipartFile::isEmpty)) {
+      return webApiCallerService.postOptionalAuth(
+              metamapaServiceUrl + "/hechos",
+              hechoDTO,
+              HechoDTO.class
+      );
     }
-    return crearHechoConArchivos(hechoDTO, archivos);
+
+    return webApiCallerService.postMultipartOptionalAuth(
+            metamapaServiceUrl + "/hechos",
+            buildMultipart(hechoDTO, archivos),
+            HechoDTO.class
+    );
   }
 
-  private HechoDTO crearHechoSinArchivos(HechoDTO hechoDTO) {
-    // Verificar si hay sesión activa (usuario logeado)
-    HechoDTO response;
-    try {
-      // Intentar con autenticación (sesión activa)
-      response = webApiCallerService.post(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
-    } catch (RuntimeException e) {
-      // Si falla porque no hay token, usar versión pública (anónimo)
-      if (e.getMessage().contains("No hay token de acceso")) {
-        response = webApiCallerService.postPublic(metamapaServiceUrl + "/hechos", hechoDTO, HechoDTO.class);
-      } else {
-        throw e;
-      }
-    }
 
-    if (response == null) {
-      throw new RuntimeException("Error al crear hecho en el servicio externo");
-    }
-    return response;
+private MultiValueMap<String, HttpEntity<?>> buildMultipart(
+        HechoDTO hechoDTO,
+        List<MultipartFile> archivos
+) {
+  MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
+
+  HttpHeaders jsonHeaders = new HttpHeaders();
+  jsonHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+  try {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    String hechoJson = mapper.writeValueAsString(hechoDTO);
+    body.add("hecho", new HttpEntity<>(hechoJson, jsonHeaders));
+  } catch (JsonProcessingException e) {
+    throw new RuntimeException("Error serializando HechoDTO", e);
   }
 
-  private HechoDTO crearHechoConArchivos(HechoDTO hechoDTO, List<MultipartFile> archivos) {
-    MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
+  archivos.stream()
+          .filter(a -> !a.isEmpty())
+          .forEach(archivo -> {
+            try {
+              HttpHeaders fileHeaders = new HttpHeaders();
+              fileHeaders.setContentDispositionFormData(
+                      "archivos",
+                      archivo.getOriginalFilename()
+              );
+              fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+              body.add(
+                      "archivos",
+                      new HttpEntity<>(archivo.getBytes(), fileHeaders)
+              );
+            } catch (IOException e) {
+              throw new UncheckedIOException(e);
+            }
+          });
 
-    // Parte JSON - asegurarse que se serialice correctamente
-    HttpHeaders jsonHeaders = new HttpHeaders();
-    jsonHeaders.setContentType(MediaType.APPLICATION_JSON);
+  return body;
+}
 
-    try {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.registerModule(new JavaTimeModule());
-      String hechoJson = mapper.writeValueAsString(hechoDTO);
-      body.add("hecho", new HttpEntity<>(hechoJson, jsonHeaders));
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Error serializando HechoDTO", e);
-    }
 
-    // Archivos
-    archivos.stream().filter(archivo -> !archivo.isEmpty()).forEach(archivo -> {
-      try {
-        HttpHeaders fileHeaders = new HttpHeaders();
-        fileHeaders.setContentDispositionFormData("archivos", archivo.getOriginalFilename());
-        fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        body.add("archivos", new HttpEntity<>(archivo.getBytes(), fileHeaders));
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-    });
 
-    // Verificar si hay sesión activa (usuario logeado)
-    HechoDTO response;
-    try {
-      // Intentar con autenticación (sesión activa)
-      response = webApiCallerService.postMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
-    } catch (RuntimeException e) {
-      // Si falla porque no hay token, usar versión pública (anónimo)
-      if (e.getMessage().contains("No hay token de acceso")) {
-        response = webApiCallerService.postPublicMultipart(metamapaServiceUrl + "/hechos", body, HechoDTO.class);
-      } else {
-        throw e;
-      }
-    }
 
-    if (response == null) {
-      throw new RuntimeException("Error al crear hecho en el servicio externo");
-    }
-
-    return response;
-  }
 
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
+
+
+    log.info("AccessToken en sesión: {}", webApiCallerService.debugGetAccessToken());
     HechoDTO response = webApiCallerService.patch(metamapaServiceUrl + "/hechos/" + id.toString(), hechoDTO, HechoDTO.class);
+
+
     if (response == null) {
       throw new RuntimeException("Error al actualizar hecho en el servicio externo");
     }
@@ -313,20 +314,21 @@ public class MetamapaApiService {
   }
 
 
-  public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
+  public SolicitudEliminacionDTO crearSolicitudEliminacion(SolicitudEliminacionDTO solicitudDTO) {
     String razonEscapada = solicitudDTO.getRazon()
-        .replace("\\", "\\\\")
-        .replace("\"", "\\\"")
-        .replace("\n", "\\n");
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n");
 
     String query = String.format(
-        "mutation { crearSolicitud(solicitud: { idHecho: %s, razon: \"\"\"%s\"\"\" }) { id razon idHecho estado } }",
-        solicitudDTO.getIdHecho().toString(),
-        razonEscapada
+            "mutation { crearSolicitud(solicitud: { idHecho: %s, razon: \"\"\"%s\"\"\" }) { id razon idHecho estado } }",
+            solicitudDTO.getIdHecho(),
+            razonEscapada
     );
 
-    graphQlCallerService.executePublicQuery(query, SolicitudEliminacionDTO.class);
+    return graphQlCallerService.executePublicQuery(query, SolicitudEliminacionDTO.class);
   }
+
 
   public void aceptarSolicitudEliminacion(Long id) {
     String query = "mutation { aceptarSolicitud(solicitud: { id: \"" + id.toString() + "\" }) { id razon idHecho estado } }";
@@ -351,85 +353,52 @@ public class MetamapaApiService {
     webApiCallerService.postPublic(metamapaServiceUrl + "/auth/registro", registroRequest, RegistroRequest.class);
   }
 
-  public AuthResponseDTO autenticar(LoginRequest loginRequest) {
-    AuthResponseDTO response = webApiCallerService.postPublic(metamapaServiceUrl + "/auth/login", loginRequest, AuthResponseDTO.class);
-    if (response == null) {
-      throw new RuntimeException("Error al iniciar sesión en el servicio externo");
-    }
-    return response;
-  }
 
   public void actualizarEstadisticas() {
     webApiCallerService.get(metamapaServiceUrl + "/estadisticas/actualizar", null);
   }
 
-  public String obtenerProvinciaConMasHechosEnColeccion(String coleccionHandle) {
-    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-coleccion?coleccionHandle=" + coleccionHandle, String.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public String obtenerCategoriaConMasHechos() {
-    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/categoria-mas-hechos", String.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public String obtenerProvinciaConMasHechosDeCategoria(String categoria) {
-    String response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/provincia-mas-hechos-categoria?categoria=" + categoria, String.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public Integer obtenerHoraConMasHechosDeCategoria(String categoria) {
-    Integer response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/hora-mas-hechos-categoria?categoria=" + categoria, Integer.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
-  }
-
-  public Long obtenerCantidadSolicitudesSpam() {
-    Long response = webApiCallerService.get(metamapaServiceUrl + "/estadisticas/solicitudes-spam", Long.class);
-    if (response == null) {
-      throw new RuntimeException("Error al obtener estadistica en el servicio externo");
-    }
-    return response;
+  public EstadisticasDTO obtenerEstadisticasDashboard() {
+    return webApiCallerService.get(
+            metamapaServiceUrl + "/admin/estadisticas/dashboard",
+            EstadisticasDTO.class
+    );
   }
 
 
   private String generarUrl(String handle, HechoFiltroDTO filtros) {
-    Boolean curado = filtros.getCurado();
-    Integer page = filtros.getPage();
-    Integer size = filtros.getSize();
+    // URL base con el parámetro curado
+    Boolean curado = filtros.getCurado() != null ? filtros.getCurado() : false;
+    StringBuilder url = new StringBuilder(metamapaServiceUrl)
+            .append("/colecciones/")
+            .append(handle)
+            .append("/hechos")
+            .append("?curado=").append(curado);
 
-    String baseUrl = metamapaServiceUrl + "/colecciones/" + handle + "/hechos" + "?curado=" + curado.toString();
-    StringBuilder url = new StringBuilder(baseUrl);
-
-    // Agregar parámetros de paginación
-    if (page != null) {
-      url.append("&page=").append(page);
+    // Paginación
+    if (filtros.getPage() != null) {
+      url.append("&page=").append(filtros.getPage());
     }
-    if (size != null) {
-      url.append("&size=").append(size);
+    if (filtros.getSize() != null) {
+      url.append("&size=").append(filtros.getSize());
     }
 
+    // Campos de filtros adicionales (evitando duplicados)
     for (Field field : HechoFiltroDTO.class.getDeclaredFields()) {
       field.setAccessible(true);
       try {
         Object value = field.get(filtros);
-        if (value != null) {
-          url.append("&").append(field.getName()).append("=").append(value);
+        String name = field.getName();
+        if (value != null && !name.equals("curado") && !name.equals("page") && !name.equals("size")) {
+          //String encodedValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+          //url.append("&").append(name).append("=").append(encodedValue);
+          url.append("&").append(name).append("=").append(value.toString());
         }
       } catch (IllegalAccessException ignored) {
       }
     }
+
+    log.info("💻 Front enviando GET a: {}", url);
     return url.toString();
   }
 
@@ -448,5 +417,63 @@ public class MetamapaApiService {
     return response != null ? response : List.of();
   }
 
+  public void crearFuente(FuenteDTO fuenteDTO) {
+    try {
+      Map<String, String> body = new java.util.HashMap<>();
+      body.put("tipo", fuenteDTO.getTipo());
+      body.put("ruta", fuenteDTO.getRuta());
+      if (fuenteDTO.getTitulo() != null && !fuenteDTO.getTitulo().isEmpty()) {
+        body.put("titulo", fuenteDTO.getTitulo());
+      }
+
+      webApiCallerService.post(metamapaServiceUrl + "/fuentes", body, Void.class);
+
+      log.info("Fuente {} creada correctamente", fuenteDTO.getTipo());
+    } catch (WebClientResponseException e) {
+      log.error("Error al crear fuente: {}", e.getMessage());
+      if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        throw new IllegalArgumentException("Datos de fuente inválidos");
+      }
+      throw new RuntimeException("Error al crear fuente");
+    }
+  }
+
+  public void crearFuenteEstatica(MultipartFile archivo, String titulo) {
+    try {
+      if (archivo.isEmpty()) {
+        throw new IllegalArgumentException("El archivo está vacío");
+      }
+
+      if (!archivo.getOriginalFilename().endsWith(".csv")) {
+        throw new IllegalArgumentException("El archivo debe ser un CSV");
+      }
+
+      MultiValueMap<String, HttpEntity<?>> body = new LinkedMultiValueMap<>();
+
+      HttpHeaders fileHeaders = new HttpHeaders();
+      fileHeaders.setContentDispositionFormData("archivo", archivo.getOriginalFilename());
+      fileHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+      body.add("archivo", new HttpEntity<>(archivo.getBytes(), fileHeaders));
+
+      if (titulo != null && !titulo.isEmpty()) {
+        HttpHeaders textHeaders = new HttpHeaders();
+        textHeaders.setContentType(MediaType.TEXT_PLAIN);
+        body.add("titulo", new HttpEntity<>(titulo, textHeaders));
+      }
+
+      webApiCallerService.postMultipart(metamapaServiceUrl + "/fuentes/upload-csv", body, Void.class);
+
+      log.info("Fuente estática creada correctamente desde archivo: {}", archivo.getOriginalFilename());
+    } catch (IOException e) {
+      log.error("Error al leer el archivo: {}", e.getMessage());
+      throw new RuntimeException("Error al procesar el archivo");
+    } catch (WebClientResponseException e) {
+      log.error("Error al crear fuente estática: {}", e.getMessage());
+      if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        throw new IllegalArgumentException("Archivo CSV inválido");
+      }
+      throw new RuntimeException("Error al crear fuente estática");
+    }
+  }
 
 }

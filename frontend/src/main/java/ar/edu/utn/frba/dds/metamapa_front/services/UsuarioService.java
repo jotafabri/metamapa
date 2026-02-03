@@ -17,6 +17,6 @@ public class UsuarioService {
     }
 
     public AuthResponseDTO autenticar(LoginRequest loginRequest) {
-      return metamapaApiService.autenticar(loginRequest);
+        return metamapaApiService.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 }

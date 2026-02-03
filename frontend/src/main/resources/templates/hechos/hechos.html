@@ -18,7 +18,13 @@
             <div th:each="hecho : ${hechos}" class="card">
                 <div th:replace="~{fragments/carousel :: carousel(hecho=${hecho})}"></div>
             <div class="hecho-header">
-                <h4 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h4>
+                <div class="hecho-titulo-container">
+                    <h4 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h4>
+                    <span th:if="${hecho.estado != null}"
+                          th:text="${hecho.estado}"
+                          th:class="'estado-badge estado-' + ${hecho.estado.toLowerCase()}">
+                    </span>
+                </div>
                 <div class="hecho-header-right">
                 <span class="hecho-fecha" th:if="${hecho.fechaAcontecimiento != null}"
                       th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">2024-01-01</span>

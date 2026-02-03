@@ -1,10 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa_front.providers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.AuthResponseDTO;
-import ar.edu.utn.frba.dds.metamapa_front.dtos.RolesPermisosDTO;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.UserDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.RateLimitExceededException;
 import ar.edu.utn.frba.dds.metamapa_front.services.MetamapaApiService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,20 +48,19 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
       request.getSession().setAttribute("accessToken", authResponse.getAccessToken());
       request.getSession().setAttribute("refreshToken", authResponse.getRefreshToken());
-      request.getSession().setAttribute("username", username);
 
-      log.info("Buscando roles y permisos del usuario");
-      RolesPermisosDTO rolesPermisos = externalAuthService.getRolesPermisos(username);
+      log.info("Buscando rol del usuario");
+      UserDTO roles = externalAuthService.getRoles(authResponse.getAccessToken());
 
-      log.info("Cargando roles y permisos del usuario en sesión");
-      request.getSession().setAttribute("rol", rolesPermisos.getRol());
-      request.getSession().setAttribute("permisos", rolesPermisos.getPermisos());
+      log.info("Usuario autenticado. Guardando datos en sesión [email={}, rol={}]",
+              roles.getEmail(), roles.getRol());
 
-      List<GrantedAuthority> authorities = new ArrayList<>();
-      rolesPermisos.getPermisos().forEach(permiso -> {
-        authorities.add(new SimpleGrantedAuthority(permiso.name()));
-      });
-      authorities.add(new SimpleGrantedAuthority("ROLE_" + rolesPermisos.getRol().name()));
+      request.getSession().setAttribute("username", roles.getEmail());
+      request.getSession().setAttribute("rol", roles.getRol());
+
+      List<GrantedAuthority> authorities = List.of(
+              new SimpleGrantedAuthority("ROLE_" + roles.getRol().name())
+      );
 
       return new UsernamePasswordAuthenticationToken(username, password, authorities);
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.utn.frba.dds.metamapa_front.dtos.*;
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.EstadisticasDTO;
 import ar.edu.utn.frba.dds.metamapa_front.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa_front.services.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -31,6 +33,8 @@ public class AdminController {
   private final SolicitudesService solicitudesService;
   private final HechosService hechosService;
   private final FuenteService fuenteService;
+  private final EstadisticasService estadisticasService;
+
 
   // --- LOGIN ADMIN ---
 
@@ -47,15 +51,18 @@ public class AdminController {
       var authResponse = usuarioService.autenticar(usuarioDTO);
 
       if (authResponse != null) {
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin";
       } else {
         model.addAttribute("error", "Credenciales inválidas o sin permisos de administrador.");
+        model.addAttribute("titulo", "Iniciar sesión como administrador");
+        model.addAttribute("usuario", new LoginRequest());
         return "admin/login";
       }
 
     } catch (Exception e) {
       log.error("Error al iniciar sesión como admin", e);
       model.addAttribute("titulo", "Iniciar sesión como administrador");
+      model.addAttribute("usuario", new LoginRequest());
       model.addAttribute("error", "Ocurrió un error al procesar el inicio de sesión.");
       return "admin/login";
     }
@@ -72,6 +79,20 @@ public class AdminController {
     List<HechoDTO> hechosPendientes = hechosService.obtenerHechosPendientes();
     List<ColeccionDTO> colecciones = coleccionService.getAllColecciones();
     List<SolicitudEliminacionDTO> solicitudes = solicitudesService.obtenerSolicitudes();
+    List<FuenteOutputDTO> fuentes = fuenteService.obtenerTodasLasFuentes();
+
+
+    //Estadisticas
+
+    EstadisticasDTO stats =
+            estadisticasService.obtenerEstadisticasDashboard();
+
+
+
+    log.info("Fuentes obtenidas: {}", fuentes.size());
+    if (!fuentes.isEmpty()) {
+      log.info("Primera fuente - Tipo: {}, Ruta: {}", fuentes.get(0).getTipo(), fuentes.get(0).getRuta());
+    }
 
     // Pasar datos al modelo
     model.addAttribute("hechosPendientes", hechosPendientes);
@@ -80,6 +101,14 @@ public class AdminController {
     model.addAttribute("totalColecciones", colecciones.size());
     model.addAttribute("solicitudes", solicitudes);
     model.addAttribute("totalSolicitudes", solicitudes.size());
+    model.addAttribute("fuentes", fuentes);
+
+    //estadisticas
+    model.addAttribute("categoriaMasHechos", stats.getCategoriaMasHechos());
+    model.addAttribute("solicitudesSpam", stats.getSolicitudesSpam());
+    model.addAttribute("provinciaMasHechosColeccion", stats.getProvinciaMasHechos());
+    model.addAttribute("horaMasHechosCategoria", stats.getHoraMasHechos());
+
     model.addAttribute("adminPanel", true);
 
     return "admin/dashboard"; // Template: src/main/resources/templates/admin/dashboard.html
@@ -104,9 +133,12 @@ public class AdminController {
   @GetMapping("/colecciones/crear")
   @PreAuthorize("hasRole('ADMIN')")
   public String mostrarFormularioCrear(Model model) {
+    List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+    model.addAttribute("todasLasFuentes", todasLasFuentes);
     model.addAttribute("coleccion", new ColeccionDTO());
     model.addAttribute("titulo", "Crear nueva colección");
     model.addAttribute("adminPanel", true);
+
     return "admin/colecciones/crear";
   }
 
@@ -117,11 +149,22 @@ public class AdminController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
     try {
+      convertirFuentesIdsAFuentes(coleccionDTO);
       ColeccionDTO coleccionCreada = coleccionService.crearColeccion(coleccionDTO);
+      redirectAttributes.addFlashAttribute("toastMessage", "Colección creada con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
       return "redirect:/admin";
     } catch (Exception e) {
       log.error("Error al crear nueva colección", e);
+
+      // Volver a cargar los datos necesarios para el formulario
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+      model.addAttribute("todasLasFuentes", todasLasFuentes);
       model.addAttribute("titulo", "Crear colección");
+      model.addAttribute("adminPanel", true);
+      model.addAttribute("toastMessage", "Error al crear colección: " + e.getMessage());
+      model.addAttribute("toastType", "error");
+
       return "admin/colecciones/crear";
     }
   }
@@ -160,6 +203,7 @@ public class AdminController {
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
     try {
+      convertirFuentesIdsAFuentes(coleccionDTO);
       ColeccionDTO coleccionActualizada = coleccionService.actualizarColeccion(handle, coleccionDTO);
       redirectAttributes.addFlashAttribute("toastMessage", "Colección actualizada con éxito ✅");
       redirectAttributes.addFlashAttribute("toastType", "success");
@@ -170,9 +214,16 @@ public class AdminController {
       return "redirect:/404";
     } catch (Exception e) {
       log.error("Error al editar colección {}", handle, e);
+
+      // Volver a cargar los datos necesarios para el formulario
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+      model.addAttribute("todasLasFuentes", todasLasFuentes);
+      model.addAttribute("coleccion", coleccionDTO);
       model.addAttribute("titulo", "Editar colección");
-      model.addAttribute("toastMessage", "Ocurrió un error al actualizar la colección ⚠️");
+      model.addAttribute("adminPanel", true);
+      model.addAttribute("toastMessage", "Error al actualizar colección: " + e.getMessage());
       model.addAttribute("toastType", "error");
+
       return "admin/colecciones/editar";
     }
   }
@@ -308,5 +359,59 @@ public class AdminController {
     }
   }
 
+  private void convertirFuentesIdsAFuentes(ColeccionDTO coleccionDTO) {
+    if (coleccionDTO.getFuentesIds() != null && !coleccionDTO.getFuentesIds().isEmpty()) {
+      List<FuenteOutputDTO> todasLasFuentes = fuenteService.obtenerTodasLasFuentes();
+      List<FuenteOutputDTO> fuentesSeleccionadas = todasLasFuentes.stream()
+          .filter(fuente -> coleccionDTO.getFuentesIds().contains(fuente.getId()))
+          .toList();
+      coleccionDTO.setFuentes(fuentesSeleccionadas);
+    }
+  }
+
+  @PostMapping("/fuentes/crear")
+  @PreAuthorize("hasRole('ADMIN')")
+  public String crearFuente(@ModelAttribute FuenteDTO fuenteDTO,
+                            RedirectAttributes redirectAttributes) {
+    try {
+      fuenteService.crearFuente(fuenteDTO);
+      redirectAttributes.addFlashAttribute("toastMessage", "Fuente creada con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
+      return "redirect:/admin";
+    } catch (IllegalArgumentException e) {
+      log.error("Error al crear fuente: {}", e.getMessage());
+      redirectAttributes.addFlashAttribute("toastMessage", "Datos de fuente inválidos ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    } catch (Exception e) {
+      log.error("Error al crear fuente", e);
+      redirectAttributes.addFlashAttribute("toastMessage", "Ocurrió un error al crear la fuente ⚠️");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    }
+  }
+
+  @PostMapping("/fuentes/crear-estatica")
+  @PreAuthorize("hasRole('ADMIN')")
+  public String crearFuenteEstatica(@RequestParam("archivo") org.springframework.web.multipart.MultipartFile archivo,
+                                    @RequestParam(value = "titulo", required = false) String titulo,
+                                    RedirectAttributes redirectAttributes) {
+    try {
+      fuenteService.crearFuenteEstatica(archivo, titulo);
+      redirectAttributes.addFlashAttribute("toastMessage", "Fuente estática creada con éxito ✅");
+      redirectAttributes.addFlashAttribute("toastType", "success");
+      return "redirect:/admin";
+    } catch (IllegalArgumentException e) {
+      log.error("Error al crear fuente estática: {}", e.getMessage());
+      redirectAttributes.addFlashAttribute("toastMessage", "Archivo CSV inválido ❌");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    } catch (Exception e) {
+      log.error("Error al crear fuente estática", e);
+      redirectAttributes.addFlashAttribute("toastMessage", "Ocurrió un error al subir el archivo ⚠️");
+      redirectAttributes.addFlashAttribute("toastType", "error");
+      return "redirect:/admin";
+    }
+  }
 
 }

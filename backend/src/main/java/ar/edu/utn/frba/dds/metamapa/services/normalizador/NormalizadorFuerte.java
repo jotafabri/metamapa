@@ -2,15 +2,21 @@ package ar.edu.utn.frba.dds.metamapa.services.normalizador;
 
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class NormalizadorFuerte implements NormalizadorHecho {
 
-    private NormalizadorLigero normalizadorLigero; // para campos que solo requieren normalización ligera
-    private MapeadorTexto mapeadorCategorias;
-    private MapeadorTexto mapeadorUbicaciones;
-    private ValidadorFechas validadorFechas;
+    private final NormalizadorLigero normalizadorLigero;
+    private final MapeadorTexto mapeadorCategorias;
+    private final MapeadorTexto mapeadorUbicaciones;
+    private final ValidadorFechas validadorFechas;
+
+    private static final Logger log = LoggerFactory.getLogger(NormalizadorFuerte.class);
 
     public NormalizadorFuerte(NormalizadorLigero normalizadorLigero,
                               MapeadorTexto mapeadorCategorias,
@@ -60,10 +66,20 @@ public class NormalizadorFuerte implements NormalizadorHecho {
             hecho.setLongitud(Math.round(hecho.getLongitud() * 1_000_000d) / 1_000_000d);
         }
 
+
+        log.info("""
+                Fechas recibidas en normalización
+                ├─ fechaAcontecimiento: {}
+                ├─ fechaCarga         : {}
+                """,
+                hecho.getFechaAcontecimiento(),
+                hecho.getFechaCarga()
+        );
+
+
+
         // 4. Normalización de fechas
         hecho.setFechaAcontecimiento(validadorFechas.normalizar(hecho.getFechaAcontecimiento()));
-        hecho.setFechaCarga(validadorFechas.normalizar(hecho.getFechaCarga()));
-
         return hecho;
     }
 

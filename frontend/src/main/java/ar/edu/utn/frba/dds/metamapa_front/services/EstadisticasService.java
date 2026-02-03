@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.metamapa_front.services;
 
+import ar.edu.utn.frba.dds.metamapa_front.dtos.input.EstadisticasDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,13 @@ public class EstadisticasService {
   @Autowired
   private MetamapaApiService metamapaApiService;
 
+  public EstadisticasDTO obtenerEstadisticasDashboard() {
+    return metamapaApiService.obtenerEstadisticasDashboard();
+  }
+
+
+
+/*
   public String obtenerProvinciaConMasHechosEnColeccion(String coleccionHandle) {
     return metamapaApiService.obtenerProvinciaConMasHechosEnColeccion(coleccionHandle);
   }
@@ -27,4 +35,7 @@ public class EstadisticasService {
   public Long obtenerCantidadSolicitudesSpam() {
     return metamapaApiService.obtenerCantidadSolicitudesSpam();
   }
+
+  */
+
 }

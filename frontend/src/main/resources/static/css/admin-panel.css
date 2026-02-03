@@ -803,3 +803,175 @@
     align-items: center;
     justify-content: center;
 }
+
+
+/* ============================================
+   SOURCE CARDS - Estilos profesionales sobrios
+   ============================================ */
+
+.sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.source-card {
+    background: #1E2023;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    transition: all 0.2s ease;
+    border: 1px solid #373738;
+    position: relative;
+}
+
+.source-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 12px 0 0 12px;
+}
+
+.source-card.source-static::before {
+    background: #10b981;
+}
+
+.source-card.source-proxy::before {
+    background: #3b82f6;
+}
+
+.source-card.source-dynamic::before {
+    background: #f59e0b;
+}
+
+.source-card:hover {
+    background: #252628;
+    border-color: #4a4a4a;
+}
+
+/* Icon Container */
+.source-icon-container {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.source-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.source-card.source-static .source-icon {
+    stroke: #10b981;
+}
+
+.source-card.source-proxy .source-icon {
+    stroke: #3b82f6;
+}
+
+.source-card.source-dynamic .source-icon {
+    stroke: #f59e0b;
+}
+
+/* Content Area */
+.source-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    min-width: 0;
+}
+
+.source-header {
+    display: flex;
+    align-items: center;
+}
+
+/* Badges */
+.source-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.source-badge.badge-static {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+
+.source-badge.badge-proxy {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+}
+
+.source-badge.badge-dynamic {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+}
+
+/* Title */
+.source-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Path */
+.source-path {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.path-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    stroke: #9ca3af;
+    margin-top: 2px;
+}
+
+.path-text {
+    font-size: 0.8125rem;
+    color: #b5b8bd;
+    word-break: break-all;
+    line-height: 1.5;
+    flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sources-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .source-card {
+        padding: 1.25rem;
+    }
+}

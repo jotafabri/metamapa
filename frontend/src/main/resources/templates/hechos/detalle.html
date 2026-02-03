@@ -8,7 +8,6 @@
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
 
-    <div th:replace="~{fragments/modal :: modal-eliminacion}"></div>
     <!-- Botón para volver -->
     <div th:replace="~{fragments/go-back :: go-back}"></div>
 
@@ -36,25 +35,6 @@
             </div>
 
             <div class="detalle-actions">
-                <!-- Solicitar eliminación: solo si NO es ADMIN -->
-                <button th:if="${!isAdmin}"
-                        class="menu-item"
-                        th:data-id="${hecho.id}"
-                        th:data-titulo="${hecho.titulo}"
-                        th:data-descripcion="${hecho.descripcion != null ? hecho.descripcion : 'Sin descripción'}"
-                        th:data-categoria="${hecho.categoria != null ? hecho.categoria : ''}"
-                        th:data-fecha="${hecho.fechaAcontecimiento != null ? #temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy') : ''}"
-                        onclick="abrirModalEliminacion(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="12" y1="8" x2="12" y2="12"/>
-                        <line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
-                    Solicitar eliminación
-                </button>
-
-
                 <!-- Editar: si es ADMIN o si es el contribuyente -->
                 <button th:if="${isAdmin or (currentUserId != null and hecho.contribuyente != null and currentUserId == hecho.contribuyente.id) and puedeEditar}"
                         class="btn btn-primary"

@@ -9,6 +9,7 @@ public class FuenteOutputDTO {
     private String nombre;
     private String tipo;
     private String ruta;
+    private String titulo;
 
     public static FuenteOutputDTO fromFuente(Fuente fuente) {
         var dto = new FuenteOutputDTO();
@@ -16,6 +17,7 @@ public class FuenteOutputDTO {
         dto.setNombre(fuente.getNombre());
         dto.setTipo(fuente.getClass().getSimpleName());
         dto.setRuta(fuente.getRuta());
+        dto.setTitulo(fuente.getTitulo());
         return dto;
     }
 }

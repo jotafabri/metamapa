@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HechoFiltroDTO {
+  private String titulo;
   private String categoria;
   private String fechaReporteDesde;
   private String fechaReporteHasta;

@@ -1,51 +1,58 @@
-/*<![CDATA[*/
 function navigatePage(direction) {
     const url = new URL(window.location.href);
-    const currentPage = parseInt(url.searchParams.get('page') || /*[[${currentPage}]]*/ 0);
-    const pageSize = parseInt(url.searchParams.get('size') || /*[[${pageSize}]]*/ 10);
+
+    // Página actual
+    const currentPage = parseInt(url.searchParams.get('page') || 0);
+    const pageSize = parseInt(url.searchParams.get('size') || 10);
+
     const newPage = currentPage + direction;
     url.searchParams.set('page', newPage);
     url.searchParams.set('size', pageSize);
 
-    // Leer del servidor SI existe, sino del DOM
-    const categoria = /*[[${filtros.categoria}]]*/ null || document.getElementById('categoria')?.value;
-    const fechaReporteDesde = /*[[${filtros.fechaReporteDesde}]]*/ null;
-    const fechaReporteHasta = /*[[${filtros.fechaReporteHasta}]]*/ null;
-    const fechaAcontecimientoDesde = /*[[${filtros.fechaAcontecimientoDesde}]]*/ null;
-    const fechaAcontecimientoHasta = /*[[${filtros.fechaAcontecimientoHasta}]]*/ null;
+    // Tomar los filtros directamente del DOM
+    const categoria = document.getElementById('categoria')?.value;
+    const fechaReporteDesde = document.getElementById('fechaReporteDesde')?.value;
+    const fechaReporteHasta = document.getElementById('fechaReporteHasta')?.value;
+    const fechaAcontecimientoDesde = document.getElementById('fechaAcontecimientoDesde')?.value;
+    const fechaAcontecimientoHasta = document.getElementById('fechaAcontecimientoHasta')?.value;
 
-    // LEER DIRECTAMENTE DEL DOM
     const tipoUbicacion = document.getElementById('tipo-ubicacion')?.value;
-
     let pais = null, provincia = null, localidad = null;
     if (tipoUbicacion === 'pais') {
-        pais = document.querySelector('select[name="pais"]')?.value;
+        pais = document.getElementById('pais')?.value;
     } else if (tipoUbicacion === 'provincia') {
-        provincia = document.querySelector('select[name="provincia"]')?.value;
+        provincia = document.getElementById('provincia')?.value;
     } else if (tipoUbicacion === 'localidad') {
-        localidad = document.querySelector('select[name="localidad"]')?.value;
+        localidad = document.getElementById('localidad')?.value;
     }
 
     const curado = document.getElementById('curado')?.checked;
     const soloConMultimedia = document.getElementById('soloConMultimedia')?.checked;
     const soloConContribuyente = document.getElementById('soloConContribuyente')?.checked;
 
-    if (categoria && categoria !== '') url.searchParams.set('categoria', categoria);
+    // Setear solo los filtros que existen
+    if (categoria) url.searchParams.set('categoria', categoria);
     if (fechaReporteDesde) url.searchParams.set('fechaReporteDesde', fechaReporteDesde);
     if (fechaReporteHasta) url.searchParams.set('fechaReporteHasta', fechaReporteHasta);
     if (fechaAcontecimientoDesde) url.searchParams.set('fechaAcontecimientoDesde', fechaAcontecimientoDesde);
     if (fechaAcontecimientoHasta) url.searchParams.set('fechaAcontecimientoHasta', fechaAcontecimientoHasta);
-    if (tipoUbicacion) url.searchParams.set('tipoUbicacion', tipoUbicacion);
-    if (pais && pais !== '') url.searchParams.set('pais', pais);
-    if (provincia && provincia !== '') url.searchParams.set('provincia', provincia);
-    if (localidad && localidad !== '') url.searchParams.set('localidad', localidad);
-    if (curado) url.searchParams.set('curado', true);
-    if (soloConMultimedia) url.searchParams.set('soloConMultimedia', true);
-    if (soloConContribuyente) url.searchParams.set('soloConContribuyente', true);
 
+    if (tipoUbicacion) url.searchParams.set('tipoUbicacion', tipoUbicacion);
+    if (pais) url.searchParams.set('pais', pais);
+    if (provincia) url.searchParams.set('provincia', provincia);
+    if (localidad) url.searchParams.set('localidad', localidad);
+
+
+    url.searchParams.set('curado', curado);
+    url.searchParams.set('soloConMultimedia', soloConMultimedia);
+    url.searchParams.set('soloConContribuyente', soloConContribuyente);
+
+
+    // Navegar
     window.location.href = url.toString();
 }
 
+// Manejo de toggles (curado, multimedia, contribuyente)
 function setupToggle(toggleId, checkboxId) {
     const toggle = document.getElementById(toggleId);
     const checkbox = document.getElementById(checkboxId);
@@ -65,20 +72,21 @@ function setupCuratedToggle() {
         toggle.classList.toggle('active', checkbox.checked);
         container.classList.toggle('active', checkbox.checked);
     });
-    const curatedParam = /*[[${filtros.curado}]]*/ null;
-    if (curatedParam !== null && curatedParam) {
-        checkbox.checked = true;
+
+    // Si ya venía marcado en la URL
+    const curatedParam = checkbox.checked;
+    if (curatedParam) {
         toggle.classList.add('active');
         container.classList.add('active');
     }
 }
 
+// Inicializar toggles
 setupCuratedToggle();
 setupToggle('toggleMultimedia', 'soloConMultimedia');
 setupToggle('toggleContribuyente', 'soloConContribuyente');
 
+// Enviar formulario con GET
 document.getElementById('filterForm')?.addEventListener('submit', function (e) {
-    e.preventDefault();
-    navigatePage(0);
+    // no es necesario preventDefault porque el form ya hace GET
 });
-/*]]>*/

@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolesPermisosDTO {
-  private String username;
+public class UserDTO {
+
+  private String email;
   private Rol rol;
   private List<Permiso> permisos;
 }

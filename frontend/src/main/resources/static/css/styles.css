@@ -119,3 +119,18 @@ button {
     background-color: #1a2a3a;
     color: #7dd9ff;
 }
+
+
+
+
+
+.dashboard-section {
+    margin-bottom: 32px;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f59e0b;
+    margin-bottom: 16px;
+}

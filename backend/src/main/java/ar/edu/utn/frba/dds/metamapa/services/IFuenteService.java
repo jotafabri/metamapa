@@ -15,4 +15,6 @@ public interface IFuenteService {
 
     void eliminarFuente(Long id);
 
+    Fuente actualizarFuente(Long id, FuenteInputDTO fuenteDTO);
+
 }

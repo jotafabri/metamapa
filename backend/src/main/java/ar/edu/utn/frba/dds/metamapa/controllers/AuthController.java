@@ -20,11 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -109,14 +108,11 @@ public class AuthController {
   }
 
 
-  @PostMapping("/user")
-  public ResponseEntity<UserDTO> getUserByEmail(@RequestBody Map<String, String> body) {
-    try {
-      String email = body.get("email");
-      UserDTO user = usuarioService.getUserByEmail(email);
-      return ResponseEntity.ok(user);
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(404).build();
-    }
+  @GetMapping("/user")
+  public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
+    String email = authentication.getName(); // viene del JWT (subject)
+    UserDTO user = usuarioService.getUserByEmail(email);
+    return ResponseEntity.ok(user);
   }
+
 }

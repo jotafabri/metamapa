@@ -16,8 +16,8 @@ public class JwtUtil {
 
   public static String generarAccessToken(String username, String rol) {
     return Jwts.builder()
-        .setSubject(username)
-            .claim("rol", rol) //
+            .setSubject(username)
+            .claim("rol", rol)
         .setIssuer("metamapa")
         .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
         .signWith(key)

@@ -28,7 +28,7 @@ public class HechosService {
 
   public HechoDTO crearHecho(HechoDTO hechoDTO, List<MultipartFile> archivos) {
     if (hechoDTO.getFechaAcontecimiento() != null && hechoDTO.getFechaAcontecimiento().isAfter(LocalDate.now())) {
-      throw new IllegalArgumentException("FECHA_FUTURA");
+      throw new IllegalArgumentException("Ingrese una fecha valida para el hecho (Fecha futura)");
     }
 
     return metamapaApiService.crearHecho(hechoDTO, archivos);

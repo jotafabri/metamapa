@@ -13,6 +13,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frba.dds.metamapa.services.IFileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,9 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileStorageService implements IFileStorageService {
 
   private final Path uploadPath;
+  private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
 
   public FileStorageService(@Value("${upload.path}") String uploadDir) {
     this.uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+    log.info("Upload path configurado en: {}", this.uploadPath);
     try {
       Files.createDirectories(this.uploadPath);
     } catch (IOException e) {
@@ -37,6 +41,13 @@ public class FileStorageService implements IFileStorageService {
     String nombreOriginal = archivo.getOriginalFilename();
     String nombreUnico = UUID.randomUUID().toString() + "_" + nombreOriginal;
     Path destino = this.uploadPath.resolve(nombreUnico);
+
+    log.info("   Guardando archivo:");
+    log.info("   Nombre original: {}", nombreOriginal);
+    log.info("   Nombre final: {}", nombreUnico);
+    log.info("   Path destino: {}", destino);
+
+
     Files.copy(archivo.getInputStream(), destino, StandardCopyOption.REPLACE_EXISTING);
     return nombreUnico;
   }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOG_PATH" value="C:/logs/backend.log"/>
+
+    <!-- Appender de archivo JSON compatible con Datadog -->
+    <appender name="FILE_JSON" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_PATH}</file>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <loggerName/>
+                <threadName/>
+                <logLevel/>
+                <message/>
+                <mdc/>
+                <logstashMarkers/>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- Appender de consola -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE_JSON"/>
+    </root>
+
+</configuration>

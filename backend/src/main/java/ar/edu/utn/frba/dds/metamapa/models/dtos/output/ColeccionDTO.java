@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.metamapa.models.dtos.output;
 
+import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa.models.entities.enums.Estado;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Coleccion;
 import lombok.Data;
 
@@ -14,6 +16,7 @@ public class ColeccionDTO {
   private String algoritmo;
   private Integer cantHechos;
   private List<FuenteOutputDTO> fuentes;
+  private HechoFiltroDTO criterios;
 
   // Mapper
   public static ColeccionDTO fromColeccion(Coleccion coleccion) {
@@ -26,12 +29,20 @@ public class ColeccionDTO {
                     ? coleccion.getAlgoritmoDeConsenso().getNombre().toUpperCase()
                     : "-"
     );
-    dto.setCantHechos(coleccion.getHechos().size());
+    dto.setCantHechos(
+            (int) coleccion.getHechos().stream()
+                    .filter(h -> h.getEstado() == Estado.ACEPTADA)
+                    .filter(h -> Boolean.FALSE.equals(h.getEliminado()))
+                    .count()
+    );
     dto.setFuentes(
             coleccion.getFuentes().stream()
                     .map(FuenteOutputDTO::fromFuente)
                     .collect(Collectors.toList())
     ); // ✅ mapeamos las fuentes
+    dto.setCriterios(
+            HechoFiltroDTO.fromCriterios(coleccion.getCriterios())
+    );
 
     return dto;
   }

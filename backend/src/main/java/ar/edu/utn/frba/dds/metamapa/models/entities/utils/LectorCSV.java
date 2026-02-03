@@ -39,9 +39,9 @@ public class LectorCSV {
     }
 
     CsvToBean<Hecho> csvToBean = new CsvToBeanBuilder<Hecho>(reader)
-            .withType(Hecho.class)
-            .withIgnoreLeadingWhiteSpace(true)
-            .build();
+        .withType(Hecho.class)
+        .withIgnoreLeadingWhiteSpace(true)
+        .build();
 
     List<Hecho> hechos = csvToBean.parse();
     reader.close();

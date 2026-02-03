@@ -15,4 +15,7 @@ public interface IFuentesRepository extends JpaRepository<Fuente, Long> {
   Optional<FuenteDinamica> findFirstBy();
 
   List<Fuente> findAllByIdIn(Collection<Long> ids);
+
+  @Query("SELECT DISTINCT f FROM Fuente f LEFT JOIN FETCH f.hechos WHERE f.id IN :ids")
+  List<Fuente> findAllByIdInWithHechos(Collection<Long> ids);
 }

@@ -20,7 +20,7 @@ public interface IHechosService {
 
   void marcarEliminado(Long id);
 
-  HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado);
+  HechoDTO aprobarHecho(Long id);
 
   HechoDTO rechazarHecho(Long id);
 

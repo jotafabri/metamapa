@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
+
 
 @Configuration
 @EnableWebSecurity
@@ -40,13 +42,40 @@ public class SecurityConfig {
 
             // Configuración global de acceso
             .authorizeHttpRequests(auth -> auth
-                    // Endpoints completamente públicos (recursos estáticos, login, registro, etc.)
-                    .requestMatchers("/", "/login", "/register").permitAll()
-                    .requestMatchers("/hechos/me").hasAnyRole("USER", "ADMIN")
-                    // Lo demás también público, excepto donde se use @PreAuthorize
-                    .anyRequest().permitAll()
-            )
+                    .requestMatchers(HttpMethod.GET, "/auth/user").authenticated()
 
+                    .requestMatchers("/hechos/me").hasAnyRole("USER","ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/hechos/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/hechos").permitAll()
+                    .requestMatchers(HttpMethod.PATCH, "/hechos/**").hasAnyRole("USER","ADMIN")
+
+                    .requestMatchers("/colecciones/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/colecciones/refrescar").hasRole("ADMIN")
+
+                    .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+
+                    .requestMatchers(HttpMethod.GET, "/colecciones/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/colecciones/**").hasRole( "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/colecciones/**").hasRole( "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/colecciones/**").hasRole( "ADMIN")
+                    .requestMatchers(HttpMethod.PATCH, "/colecciones/**").hasRole("ADMIN")
+
+                    .requestMatchers("/estadisticas/**").authenticated()
+
+                    .requestMatchers(HttpMethod.POST, "/fuentes/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/fuentes/**").permitAll()
+
+                    .requestMatchers(
+                            "/",
+                            "/login",
+                            "/register",
+                            "/auth/login",
+                            "/auth/registro",
+                            "/auth/refresh").permitAll()
+
+                    .requestMatchers("/graphql").permitAll()
+                    .anyRequest().authenticated()
+            )
             // Filtro JWT (se aplica si hay token, pero no obliga a tenerlo)
             .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

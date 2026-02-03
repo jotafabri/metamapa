@@ -24,26 +24,47 @@ public class SolicitudesController {
   private final SolicitudesService solicitudesService;
 
   @PostMapping
-  public String crearSolicitudEliminacion(@ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
-                                          BindingResult bindingResult,
-                                          Model model,
-                                          RedirectAttributes redirectAttributes
+  public String crearSolicitudEliminacion(
+          @ModelAttribute("solicitudEliminacion") SolicitudEliminacionDTO solicitudEliminacionDTO,
+          BindingResult bindingResult,
+          Model model,
+          RedirectAttributes redirectAttributes
   ) {
     try {
-      solicitudesService.crearSolicitud(solicitudEliminacionDTO);
-      // Toast de éxito
-      redirectAttributes.addFlashAttribute("toastMessage", "Solicitud enviada correctamente");
-      redirectAttributes.addFlashAttribute("toastType", "success");
-      return "redirect:/hechos/" + solicitudEliminacionDTO.getIdHecho().toString();
-      //return "redirect:/";
+      SolicitudEliminacionDTO respuesta =
+              solicitudesService.crearSolicitud(solicitudEliminacionDTO);
+
+      log.info("Estado de la solicitud recibida: {}",
+              respuesta != null ? respuesta.getEstado() : "respuesta null");
+
+
+      if (respuesta != null && "RECHAZADA".equals(respuesta.getEstado())) {
+        redirectAttributes.addFlashAttribute(
+                "toastMessage",
+                "La solicitud fue rechazada automáticamente por el sistema"
+        );
+        redirectAttributes.addFlashAttribute("toastType", "error");
+      } else {
+        redirectAttributes.addFlashAttribute(
+                "toastMessage",
+                "Solicitud enviada correctamente"
+        );
+        redirectAttributes.addFlashAttribute("toastType", "success");
+      }
+
+      return "redirect:/hechos/" + solicitudEliminacionDTO.getIdHecho();
+
     } catch (Exception e) {
       log.error("Error al crear solicitud de eliminación", e);
-      // Toast de error
-      redirectAttributes.addFlashAttribute("toastMessage", "Error al enviar la solicitud");
+      redirectAttributes.addFlashAttribute(
+              "toastMessage",
+              "Error al enviar la solicitud"
+      );
       redirectAttributes.addFlashAttribute("toastType", "error");
       return "redirect:/hechos/me";
     }
   }
+
 
   @PostMapping("/{id}/aceptar")
   @PreAuthorize("hasRole('ADMIN')")

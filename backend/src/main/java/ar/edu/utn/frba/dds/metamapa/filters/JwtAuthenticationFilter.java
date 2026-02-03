@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
@@ -46,13 +48,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         log.info("Autenticación asignada al contexto de seguridad para {}", username);
 
-      } catch (Exception e) {
-        log.error("Error al validar token: {}", e.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+      } catch (ExpiredJwtException e) {
+        log.warn("JWT expirado: {}", e.getMessage());
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"JWT expired\"}");
+        return;
+
+      } catch (JwtException e) {
+        log.warn("JWT inválido: {}", e.getMessage());
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"Invalid JWT\"}");
         return;
       }
     } else {
-      log.warn("Solicitud a '{}' no tiene token de autorización. Si el endpoint requiere auth, se denegará acceso.", request.getRequestURI());
+
+      String query = request.getQueryString();
+      String fullPath = request.getRequestURI() + (query != null ? "?" + query : "");
+
+      log.warn("Solicitud {} '{}' no tiene token de autorización. Si el endpoint requiere auth, se denegará acceso.",
+              request.getMethod(),
+              fullPath);
 
     }
 
@@ -63,6 +82,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected boolean shouldNotFilter(HttpServletRequest request) {
     String path = request.getRequestURI();
     // Ignorar todos los endpoints de autenticación pública
-    return path.startsWith("/auth");
+    return path.equals("/auth/login")
+            || path.equals("/auth/registro")
+            || path.equals("/auth/refresh");
   }
 }

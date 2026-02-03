@@ -16,6 +16,7 @@ import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionR
 import ar.edu.utn.frba.dds.metamapa.services.IAgregacionService;
 import ar.edu.utn.frba.dds.metamapa.services.IDetectorSpam;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ public class AgregacionService implements IAgregacionService {
       throw new IllegalArgumentException("Coleccion o fuente no encontrada");
     }
     coleccion.agregarFuente(fuente);
+    coleccion.actualizarColeccion();
     this.coleccionesRepository.save(coleccion);
   }
 
@@ -49,12 +51,14 @@ public class AgregacionService implements IAgregacionService {
     Coleccion coleccion = this.coleccionesRepository.findColeccionByHandle(handleColeccion);
     Fuente fuente = this.fuentesRepository.findFuenteById(idFuente);
     coleccion.eliminarFuente(fuente);
+    coleccion.actualizarColeccion();
     this.coleccionesRepository.save(coleccion);
   }
 
   @Override
   public SolicitudEliminacionOutputDTO crearSolicitud(Long hechoId, String razon) {
-    Hecho hecho = hechosRepository.findById(hechoId).orElseThrow(() -> new NotFoundException("Hecho", hechoId.toString()));
+    Hecho hecho = hechosRepository.findById(hechoId)
+        .orElseThrow(() -> new NotFoundException("Hecho", hechoId.toString()));
     var solicitud = new SolicitudEliminacion(
         hecho,
         razon);
@@ -66,10 +70,16 @@ public class AgregacionService implements IAgregacionService {
     return SolicitudEliminacionOutputDTO.fromSolicitud(solicitud);
   }
 
+  @Override
+  public Long contarSolicitudesSpam() {
+    return solicitudesRepository.countByEsSpamTrue();
+  }
+
+
+  @Transactional
   public void refrescarColecciones() {
-    List<Coleccion> colecciones = this.coleccionesRepository.findAll();
+    List<Coleccion> colecciones = coleccionesRepository.findAll();
     colecciones.forEach(Coleccion::actualizarColeccion);
-    this.coleccionesRepository.saveAll(colecciones);
   }
 
   @Override
@@ -77,7 +87,8 @@ public class AgregacionService implements IAgregacionService {
     this.solicitudesRepository.findById(id)
         .ifPresent(solicitud -> {
           if (solicitud.getEstado() != Estado.PENDIENTE) {
-            throw new IllegalStateException("Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
+            throw new IllegalStateException(
+                "Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
           }
           if (solicitud.getHecho() == null) {
             throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
@@ -88,13 +99,13 @@ public class AgregacionService implements IAgregacionService {
         });
   }
 
-
   @Override
   public void rechazarSolicitudById(Long id) {
     this.solicitudesRepository.findById(id)
         .ifPresent(solicitud -> {
           if (solicitud.getEstado() != Estado.PENDIENTE) {
-            throw new IllegalStateException("Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
+            throw new IllegalStateException(
+                "Solo se pueden aprobar solicitudes pendientes. Estado actual: " + solicitud.getEstado());
           }
           if (solicitud.getHecho() == null) {
             throw new IllegalStateException("La solicitud no tiene un hecho asociado válido");
@@ -109,7 +120,6 @@ public class AgregacionService implements IAgregacionService {
     return solicitudes.stream().map(SolicitudEliminacionOutputDTO::fromSolicitud).toList();
   }
 
-
   @Override
   @Transactional
   public void sincronizarFuentesColeccion(String handleColeccion, List<Long> idsFuentesDeseadas) {
@@ -122,11 +132,11 @@ public class AgregacionService implements IAgregacionService {
     coleccionesRepository.deleteAllFuentesByColeccionId(coleccion.getId());
 
     // Insert manual en tabla join
-    idsFuentesDeseadas.forEach(fuenteId ->
-        coleccionesRepository.insertFuenteForColeccion(coleccion.getId(), fuenteId)
-    );
+    idsFuentesDeseadas.forEach(fuenteId -> coleccionesRepository.insertFuenteForColeccion(coleccion.getId(), fuenteId));
+
+    // Recargar para tener las fuentes actualizadas
+    coleccion.actualizarColeccion();
+    coleccionesRepository.save(coleccion);
   }
 
-
 }
-

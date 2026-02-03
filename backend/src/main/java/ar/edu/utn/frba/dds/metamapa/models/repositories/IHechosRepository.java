@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.dds.metamapa.models.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
+import ar.edu.utn.frba.dds.metamapa.models.entities.fuentes.Fuente;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
-  @Query("SELECT h FROM Hecho h WHERE h.usuario.email = :email")
+  @Query("SELECT h FROM Hecho h WHERE h.usuario.email = :email AND h.eliminado = FALSE")
   List<Hecho> findAllByEmail(@Param("email") String email);
 
   // Lista solo los hechos pendientes
@@ -52,6 +54,39 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
       "GROUP BY h.ubicacion.provincia " +
       "ORDER BY COUNT(h) DESC LIMIT 1")
   String findProvinciaConMasHechosPorCategoria(@Param("categoria") String categoria);
+
+
+
+  @Query("SELECT h.ubicacion.provincia FROM Hecho h " +
+          "WHERE h.eliminado = false AND LOWER(h.estado) = 'aceptada' " +
+          "AND h.ubicacion.provincia IS NOT NULL " +
+          "GROUP BY h.ubicacion.provincia " +
+          "ORDER BY COUNT(h) DESC LIMIT 1")
+  String findProvinciaConMasHechosGlobal();
+
+  @Query("SELECT EXTRACT(HOUR FROM h.fechaAcontecimiento) FROM Hecho h " +
+          "WHERE h.eliminado = false AND LOWER(h.estado) = 'aceptada' " +
+          "GROUP BY EXTRACT(HOUR FROM h.fechaAcontecimiento) " +
+          "ORDER BY COUNT(h) DESC LIMIT 1")
+  Integer findHoraMasComunGlobal();
+
+
+  @Query("""
+    SELECT h FROM Hecho h 
+    WHERE LOWER(h.titulo) = LOWER(:titulo)
+    AND h.fuente = :fuente
+    AND h.eliminado = false
+    """)
+  Optional<Hecho> findDuplicadoEnFuente(
+          @Param("titulo") String titulo,
+          @Param("fuente") Fuente fuente
+  );
+
+
+
+
+
+
 }
 
 

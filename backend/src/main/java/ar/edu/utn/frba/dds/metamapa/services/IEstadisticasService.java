@@ -17,4 +17,8 @@ public interface IEstadisticasService {
   Long obtenerCantidadSolicitudesSpam();
   
   Resource exportarEstadisticasCSV();
+
+  Integer obtenerHoraConMasHechosGlobal();
+
+  String obtenerProvinciaConMasHechosGlobal();
 }

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.FechaInvalidaException;
+import ar.edu.utn.frba.dds.metamapa.exceptions.HechoDuplicadoException;
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
@@ -15,8 +17,10 @@ import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Hecho;
 import ar.edu.utn.frba.dds.metamapa.models.entities.hechos.Ubicacion;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IFuentesRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IHechosRepository;
+import ar.edu.utn.frba.dds.metamapa.models.repositories.ISolicitudesEliminacionRepository;
 import ar.edu.utn.frba.dds.metamapa.models.repositories.IUsuarioRepository;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
+import ar.edu.utn.frba.dds.metamapa.services.normalizador.NormalizadorFuerte;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,13 @@ public class HechosService implements IHechosService {
 
   @Autowired
   private IUsuarioRepository usuarioRepository;
+
+  @Autowired
+  private ISolicitudesEliminacionRepository solicitudesEliminacionRepository;
+
+  @Autowired
+  private NormalizadorFuerte normalizadorFuerte;
+
 
   private FuenteDinamica getFuenteDinamica() {
     // Buscamos la fuente dinámica
@@ -95,6 +106,11 @@ public class HechosService implements IHechosService {
   }
 
   public HechoDTO crearHechoDesdeDTO(HechoDTO hechoDTO, String emailUsuario) {
+
+    if (hechoDTO.getFechaAcontecimiento() == null) {
+      throw new FechaInvalidaException("La fecha de acontecimiento es obligatoria");
+    }
+
     Hecho hecho = this.crearHecho(
         hechoDTO.getTitulo(),
         hechoDTO.getDescripcion(),
@@ -103,6 +119,8 @@ public class HechosService implements IHechosService {
         hechoDTO.getLongitud(),
         hechoDTO.getFechaAcontecimiento().atStartOfDay()
     );
+
+    hecho.setFechaCarga(LocalDateTime.now().withNano(0));
 
     Ubicacion ubicacion = Ubicacion.builder()
         .pais(hechoDTO.getPais())
@@ -121,8 +139,22 @@ public class HechosService implements IHechosService {
       usuario.ifPresent(hecho::setUsuario);
     }
 
+    hecho = normalizadorFuerte.normalizar(hecho);
+
+    Optional<Hecho> duplicado = hechosRepository.findDuplicadoEnFuente(
+            hecho.getTitulo(),
+            hecho.getFuente()   // funciona para cualquier subtipo de Fuente
+    );
+
+    if (duplicado.isPresent()) {
+      throw new HechoDuplicadoException(
+              "Ya existe un hecho con ese título en esta fuente"
+      );
+    }
+
     Hecho hechoGuardado = hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hechoGuardado);
+
   }
 
   @Override
@@ -138,6 +170,10 @@ public class HechosService implements IHechosService {
   @Override
   public HechoDTO actualizarHecho(Long id, HechoDTO hechoDTO) {
     Hecho hecho = realizarActualizacion(id, hechoDTO);
+
+    // Se establece el estado PENDIENTE luego de una actualización
+    hecho.setEstado(Estado.PENDIENTE);
+
     hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hecho);
   }
@@ -147,11 +183,15 @@ public class HechosService implements IHechosService {
     Hecho hecho = intentarRecuperarHecho(id);
     hecho.eliminar();
     hechosRepository.save(hecho);
+
+    // Eliminar solicitudes de eliminación asociadas
+    solicitudesEliminacionRepository.deleteAllByHecho_Id(hecho.getId());
   }
 
+
   @Override
-  public HechoDTO aprobarHecho(Long id, HechoDTO hechoActualizado) {
-    Hecho hecho = realizarActualizacion(id, hechoActualizado);
+  public HechoDTO aprobarHecho(Long id) {
+    Hecho hecho = intentarRecuperarHecho(id);
     if (hecho.getEstado() != Estado.PENDIENTE) {
       throw new IllegalStateException("El hecho no se encuentra en estado PENDIENTE");
     }
@@ -159,6 +199,7 @@ public class HechosService implements IHechosService {
     hechosRepository.save(hecho);
     return HechoDTO.fromHecho(hecho);
   }
+
 
   @Override
   public HechoDTO rechazarHecho(Long id) {
@@ -186,12 +227,29 @@ public class HechosService implements IHechosService {
   private Hecho realizarActualizacion(Long id, HechoDTO hechoDTO) {
     Hecho hecho = intentarRecuperarHecho(id);
 
+    if (hechoDTO.getFechaAcontecimiento() == null) {
+      throw new FechaInvalidaException("La fecha de acontecimiento es obligatoria");
+    }
+
+
     hecho.setTitulo(hechoDTO.getTitulo());
     hecho.setDescripcion(hechoDTO.getDescripcion());
     hecho.setCategoria(hechoDTO.getCategoria());
     hecho.setLatitud(hechoDTO.getLatitud());
     hecho.setLongitud(hechoDTO.getLongitud());
     hecho.setFechaAcontecimiento(hechoDTO.getFechaAcontecimiento().atStartOfDay());
+
+    hecho = normalizadorFuerte.normalizar(hecho);
+
+    Optional<Hecho> duplicado = hechosRepository.findDuplicadoEnFuente(
+            hecho.getTitulo(),
+            hecho.getFuente()
+    );
+
+    if (duplicado.isPresent() && !duplicado.get().getId().equals(hecho.getId())) {
+      throw new HechoDuplicadoException("Ya existe otro hecho con ese título en esta fuente");
+    }
+
 
     return hecho;
   }

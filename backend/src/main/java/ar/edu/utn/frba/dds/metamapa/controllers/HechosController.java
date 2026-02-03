@@ -3,8 +3,11 @@ package ar.edu.utn.frba.dds.metamapa.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import ar.edu.utn.frba.dds.metamapa.exceptions.FechaInvalidaException;
+import ar.edu.utn.frba.dds.metamapa.exceptions.HechoDuplicadoException;
 import ar.edu.utn.frba.dds.metamapa.exceptions.NotFoundException;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.input.HechoFiltroDTO;
+import ar.edu.utn.frba.dds.metamapa.models.dtos.output.ErrorDTO;
 import ar.edu.utn.frba.dds.metamapa.models.dtos.output.HechoDTO;
 import ar.edu.utn.frba.dds.metamapa.services.IFileStorageService;
 import ar.edu.utn.frba.dds.metamapa.services.IHechosService;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -66,8 +70,38 @@ public class HechosController {
     }
   }
 
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> crearHechoSinArchivos(
+          @RequestBody HechoDTO hechoDTO
+  ) {
+    try {
+      String emailUsuario = null;
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.isAuthenticated()
+              && !"anonymousUser".equals(authentication.getPrincipal())) {
+        emailUsuario = authentication.getName();
+      }
+
+      HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO, emailUsuario);
+      return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
+
+    } catch (FechaInvalidaException e) {
+      return ResponseEntity
+              .badRequest()
+              .body(new ErrorDTO(e.getMessage()));
+
+
+    } catch (HechoDuplicadoException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(new ErrorDTO(e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<HechoDTO> crearHecho(
+  public ResponseEntity<?> crearHecho(
       @RequestPart("hecho") HechoDTO hechoDTO,
       @RequestPart(value = "archivos", required = false) List<MultipartFile> archivos
   ) {
@@ -86,6 +120,13 @@ public class HechosController {
 
       HechoDTO hechoCreado = hechosService.crearHechoDesdeDTO(hechoDTO, emailUsuario);
       return ResponseEntity.status(HttpStatus.CREATED).body(hechoCreado);
+
+    }catch (FechaInvalidaException e) {
+        return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+
+    } catch (HechoDuplicadoException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(new ErrorDTO(e.getMessage()));
     } catch (IOException e) {
       return ResponseEntity.badRequest().build();
     } catch (Exception e) {
@@ -107,15 +148,27 @@ public class HechosController {
   }
 
   @PatchMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<HechoDTO> actualizarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoDTO) {
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
+  public ResponseEntity<?> actualizarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoDTO) {
     try {
       HechoDTO hechoActualizado = this.hechosService.actualizarHecho(id, hechoDTO);
       return ResponseEntity.ok(hechoActualizado);
+
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+
+    } catch (FechaInvalidaException e) {
+      return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+
+    } catch (HechoDuplicadoException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(new ErrorDTO(e.getMessage()));
+
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
   }
+
 
   @PatchMapping("/{id}/eliminar")
   @PreAuthorize("hasRole('ADMIN')")
@@ -132,9 +185,9 @@ public class HechosController {
 
   @PatchMapping("/{id}/aprobar")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<HechoDTO> aprobarHecho(@PathVariable Long id, @RequestBody HechoDTO hechoActualizado) {
+  public ResponseEntity<HechoDTO> aprobarHecho(@PathVariable Long id) {
     try {
-      HechoDTO hecho = hechosService.aprobarHecho(id, hechoActualizado);
+      HechoDTO hecho = hechosService.aprobarHecho(id);
       return ResponseEntity.ok(hecho);
     } catch (NotFoundException e) {
       return ResponseEntity.notFound().build();
@@ -144,6 +197,7 @@ public class HechosController {
       return ResponseEntity.badRequest().build();
     }
   }
+
 
   @PatchMapping("/{id}/rechazar")
   @PreAuthorize("hasRole('ADMIN')")
@@ -160,16 +214,6 @@ public class HechosController {
     }
   }
 
-  @GetMapping("/inicializar")
-  public ResponseEntity<Object> inicializarDatos() {
-    try {
-      this.seederService.init();
-      //this.seederServiceDinamicas.initDinamicas();
-      return ResponseEntity.ok(java.util.Map.of("mensaje", "Datos inicializados correctamente"));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().build();
-    }
-  }
 
   @GetMapping("/pendientes")
   @PreAuthorize("hasRole('ADMIN')")
